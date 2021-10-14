@@ -1,0 +1,8 @@
+# File with modules from npm
+node_modules
+
+# File with secret data and keys
+.env
+
+# File with compiled code
+dist
