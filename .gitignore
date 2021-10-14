@@ -6,3 +6,6 @@ node_modules
 
 # File with compiled code
 dist
+
+# Logs file
+logs

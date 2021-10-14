@@ -1,7 +1,10 @@
 import "dotenv/config";
 import { ShardingManager } from "discord.js";
 import { resolve } from "path";
+import { createLogger } from "./utilities/Logger";
 import { discordToken } from "./config";
+
+const log = createLogger("shardingManager");
 
 const manager = new ShardingManager(resolve(__dirname, "bot.js"), {
 	totalShards: "auto",
@@ -12,16 +15,16 @@ const manager = new ShardingManager(resolve(__dirname, "bot.js"), {
 
 manager
 	.on("shardCreate", (shard) => {
-		console.log(`[ShardManager] Shard #${shard.id} Spawned.`);
+		log.info(`[ShardManager] Shard #${shard.id} Spawned.`);
 		shard
 			.on("disconnect", () => {
-				console.log("SHARD DISCONNECTED");
+				log.warn("SHARD DISCONNECTED");
 			})
 			.on("reconnecting", () => {
-				console.log("SHARD RECONNECT");
+				log.info("SHARD RECONNECT");
 			});
 		if (manager.shards.size === manager.totalShards)
-			console.log("[ShardManager] All shards spawned successfully.");
+			log.info("[ShardManager] All shards spawned successfully.");
 	})
 	.spawn()
-	.catch((e) => console.log("SHARD_SPAWN_ERROR: ", e));
+	.catch((e) => log.error("SHARD_SPAWN_ERROR: ", e));
