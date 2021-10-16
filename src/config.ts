@@ -49,13 +49,10 @@ export const clientOptions: ClientOptions = {
 export const presenceData: any /*IpresenceData*/ = {
 	activities: [
 		{ name: `My default prefix is ${defaultPrefix}`, type: "PLAYING" },
-		{ name: "music with {users.size} users", type: "LISTENING" },
-		{
-			name: "{textChannels.size} of text channels in {guilds.size} guilds",
-			type: "WATCHING",
-		},
-		{ name: "Hello there, my name is {username}", type: "PLAYING" },
-		{ name: "Hello world", type: "COMPETING" },
+		{ name: "all questions and commands", type: "LISTENING" },
+		{ name: "the whole guild", type: "WATCHING" },
+		{ name: "Hello there, my name is M.A.T.T.I.S", type: "PLAYING" },
+		{ name: "with MEE6", type: "COMPETING" },
 	],
 	status: ["online"] as ClientPresenceStatus[],
 	interval: 60000,

@@ -1,11 +1,11 @@
-import fs from "fs";
-import { Mattis } from "./Mattis";
+import fs from 'fs';
+import { Mattis } from './Mattis';
 
 export class EventsHandler {
 	public constructor(public client: Mattis) {}
 
 	public load(): void {
-		fs.readdir("./dist/events", async (err, events) => {
+		fs.readdir('./dist/events', async (err, events) => {
 			this.client.logger.info(
 				`[EventHandler] Loading ${events.length} events...`
 			);
@@ -17,11 +17,8 @@ export class EventsHandler {
 				if (err) {
 					throw new Error(`Error while compiling events: ${err}`);
 				}
-				const [eventName] = file.split(".");
-				this.client.logger.info(
-					`[EventHandler] Event '${eventName}' loaded.`
-				);
-				this.client.on(eventName, (...args) => event.execute(...args));
+				this.client.logger.info(`[EventHandler] Event '${event.name}' loaded.`);
+				this.client.on(event.name, (...args) => event.execute(...args));
 			}
 		});
 	}

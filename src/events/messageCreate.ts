@@ -1,5 +1,8 @@
-import { Message } from "discord.js";
+import { Message } from 'discord.js';
 
-export const execute = (message: Message) => {
-	console.log(message.guild?.id);
+module.exports = {
+	name: 'messageCreate',
+	execute: (message: Message) => {
+		console.log(message.guild?.id);
+	},
 };
