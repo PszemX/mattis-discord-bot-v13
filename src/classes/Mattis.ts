@@ -16,7 +16,7 @@ export class Mattis extends Client {
 
 	async build(): Promise<this> {
 		const start = Date.now();
-		this.events.load();
+		//this.events.load();
 		this.on("ready", async () => {
 			console.log(`Ready took ${Date.now() - start}`);
 		});

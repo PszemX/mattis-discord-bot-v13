@@ -1,3 +1,7 @@
-export const execute = async () => {
-	console.log("MATTIS JEST ODPALONY!!!!!!");
-};
+export class ReadyEvent {
+	public readonly name: string = 'ready';
+
+	public async execute(): Promise<void> {
+		console.log("MATTIS JEST GOTOWY!!!!!!");
+	}
+}
