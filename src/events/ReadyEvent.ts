@@ -1,9 +1,12 @@
 import DiscordJS from 'discord.js';
 import { mattis } from '../bot';
 
-module.exports = {
-	name: 'ready',
-	execute: async () => {
+export class ReadyEvent {
+	public name = 'ready';
+
+	public constructor() {}
+
+	public async execute() {
 		const totalMembers = mattis.guilds.cache.reduce(
 			(membersSum: number, guild: DiscordJS.Guild) =>
 				(membersSum += guild.memberCount),
@@ -17,5 +20,5 @@ module.exports = {
 		console.log(`╠ Discord.js: ${DiscordJS.version}`);
 		console.log(`╠ Node.js: ${process.version}`);
 		console.log('╚═══════════════════════╝');
-	},
-};
+	}
+}
