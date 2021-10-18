@@ -1,5 +1,5 @@
-import { format } from "date-fns";
-import winston from "winston";
+import { format } from 'date-fns';
+import winston from 'winston';
 
 export function createLogger(
 	serviceName: string,
@@ -14,14 +14,13 @@ export function createLogger(
 				const { level, message, stack } = info;
 				const prefix = `[${format(
 					Date.now(),
-					"yyyy-MM-dd HH:mm:ss (x)"
+					'yyyy-MM-dd HH:mm:ss'
 				)}] [${level}]`;
-				if (["error", "crit"].includes(level))
-					return `${prefix}: ${stack}`;
+				if (['error', 'crit'].includes(level)) return `${prefix}: ${stack}`;
 				return `${prefix}: ${message}`;
 			})
 		),
-		level: prod ? "info" : "debug",
+		level: prod ? 'info' : 'debug',
 		levels: {
 			alert: 1,
 			debug: 5,
@@ -34,14 +33,14 @@ export function createLogger(
 			new winston.transports.File({
 				filename: `logs/${serviceName}/error-${format(
 					Date.now(),
-					"yyyy-MM-dd-HH-mm-ss"
+					'yyyy-MM-dd-HH-mm-ss'
 				)}.log`,
-				level: "error",
+				level: 'error',
 			}),
 			new winston.transports.File({
 				filename: `logs/${serviceName}/logs-${format(
 					Date.now(),
-					"yyyy-MM-dd-HH-mm-ss"
+					'yyyy-MM-dd-HH-mm-ss'
 				)}.log`,
 			}),
 		],
@@ -51,11 +50,11 @@ export function createLogger(
 			format: winston.format.combine(
 				winston.format.printf((info) => {
 					const { level, message, stack } = info;
-					const prefix = `[${format(
+					const prefix = `╠ [${format(
 						Date.now(),
-						"yyyy-MM-dd HH:mm:ss (x)"
+						'yyyy-MM-dd HH:mm:ss'
 					)}] [${level}]`;
-					if (["error", "alert"].includes(level) && !prod)
+					if (['error', 'alert'].includes(level) && !prod)
 						return `${prefix}: ${stack}`;
 					return `${prefix}: ${message}`;
 				}),

@@ -1,30 +1,40 @@
-import "dotenv/config";
-import { ShardingManager } from "discord.js";
-import { resolve } from "path";
-import { createLogger } from "./utilities/Logger";
-import { discordToken } from "./config";
+import 'dotenv/config';
+import figlet from 'figlet';
+import { ShardingManager } from 'discord.js';
+import { resolve } from 'path';
+import { createLogger } from './utilities/Logger';
+import { discordToken } from './config';
 
-const log = createLogger("shardingManager");
+const log = createLogger('shardingManager');
 
-const manager = new ShardingManager(resolve(__dirname, "bot.js"), {
-	totalShards: "auto",
+console.log(
+	figlet.textSync('M.A.T.T.I.S', {
+		font: 'Big',
+		horizontalLayout: 'fitted',
+		width: 100,
+		whitespaceBreak: true,
+	})
+);
+
+const manager = new ShardingManager(resolve(__dirname, 'bot.js'), {
+	totalShards: 'auto',
 	respawn: true,
 	token: discordToken,
-	mode: "worker",
+	mode: 'worker',
 });
 
 manager
-	.on("shardCreate", (shard) => {
+	.on('shardCreate', (shard) => {
 		log.info(`[ShardManager] Shard #${shard.id} Spawned.`);
 		shard
-			.on("disconnect", () => {
-				log.warn("SHARD DISCONNECTED");
+			.on('disconnect', () => {
+				log.warn('SHARD DISCONNECTED');
 			})
-			.on("reconnecting", () => {
-				log.info("SHARD RECONNECT");
+			.on('reconnecting', () => {
+				log.info('SHARD RECONNECT');
 			});
 		if (manager.shards.size === manager.totalShards)
-			log.info("[ShardManager] All shards spawned successfully.");
+			log.info('[ShardManager] All shards spawned successfully.');
 	})
 	.spawn()
-	.catch((e) => log.error("SHARD_SPAWN_ERROR: ", e));
+	.catch((e) => log.error('SHARD_SPAWN_ERROR: ', e));

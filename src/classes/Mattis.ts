@@ -22,7 +22,7 @@ export class Mattis extends Client {
 		const start = Date.now();
 		this.events.load();
 		this.on('ready', async () => {
-			console.log(`Ready took ${(Date.now() - start) / 1000}s`);
+			this.logger.debug(`Ready took ${(Date.now() - start) / 1000}s`);
 		});
 		await this.login();
 		return this;
