@@ -1,5 +1,4 @@
 import DiscordJS from 'discord.js';
-import figlet from 'figlet';
 import { mattis } from '../bot';
 
 export class ReadyEvent {
