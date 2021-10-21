@@ -1,0 +1,10 @@
+{
+	"id": "512412135029211176",
+	"language": "pol",
+	"prefix": "!",
+	"commands": {
+		"ping": {
+			"enable": true
+		}
+	}
+}
