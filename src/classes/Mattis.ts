@@ -1,6 +1,5 @@
 import { createLogger } from '../utilities/logger';
 import { EventsLoader } from './EventsLoader';
-import { ActionManager } from './ActionManager';
 import * as config from '../config';
 import { Client, ClientOptions } from 'discord.js';
 import { resolve } from 'path';
@@ -14,10 +13,7 @@ export class Mattis extends Client {
 		super(clientOptions);
 	}
 
-	public readonly Actions = new ActionManager(
-		this,
-		resolve(__dirname, '..', 'actions')
-	);
+	// public readonly Actions;
 
 	// public readonly Commands;
 
@@ -32,6 +28,7 @@ export class Mattis extends Client {
 		const start = Date.now();
 		this.Events.load();
 		this.on('ready', async () => {
+			console.log(this);
 			this.logger.debug(`Ready took ${(Date.now() - start) / 1000}s`);
 		});
 		await this.login();
