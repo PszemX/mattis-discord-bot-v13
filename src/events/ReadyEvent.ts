@@ -1,6 +1,8 @@
 import DiscordJS, { Presence } from 'discord.js';
-import { BaseEvent } from '../classes/BaseEvent';
 import { DefineEvent } from '../utilities/decorators/DefineEvent';
+import { BaseEvent } from '../classes/BaseEvent';
+import { Mattis } from '../classes/Mattis';
+import { IEvent } from '../typings';
 
 @DefineEvent('ready')
 export class ReadyEvent extends BaseEvent {
