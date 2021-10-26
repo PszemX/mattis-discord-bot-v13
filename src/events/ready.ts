@@ -1,10 +1,10 @@
 import DiscordJS, { Presence } from 'discord.js';
 import { mattis } from '../bot';
 
-const event = async (data: any) => {
+const event = async () => {
 	await doPresence();
 
-	const totalMembers = data.client.guilds.cache.reduce(
+	const totalMembers = mattis.guilds.cache.reduce(
 		(membersSum: number, guild: DiscordJS.Guild) =>
 			(membersSum += guild.memberCount),
 		0
@@ -12,7 +12,7 @@ const event = async (data: any) => {
 	console.log('╠═══════════════════════╗');
 	console.log('╠   Mattis is running!  ╬');
 	console.log('╠═══════════════════════╬');
-	console.log(`╠ Guilds: ${data.client.guilds.cache.size}`);
+	console.log(`╠ Guilds: ${mattis.guilds.cache.size}`);
 	console.log(`╠ Members: ${totalMembers}`);
 	console.log(`╠ Discord.js: ${DiscordJS.version}`);
 	console.log(`╠ Node.js: ${process.version}`);

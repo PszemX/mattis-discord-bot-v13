@@ -16,7 +16,7 @@ console.log(
 	})
 );
 
-const manager = new ShardingManager(resolve(__dirname, 'bot.ts'), {
+const manager = new ShardingManager(resolve(__dirname, 'bot.js'), {
 	totalShards: 'auto',
 	respawn: true,
 	token: discordToken,

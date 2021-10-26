@@ -1,7 +1,7 @@
 import fs from 'fs';
 
 const loadGuildsCache: any = () => {
-	const files = fs.readdirSync('./src/guildsData');
+	const files = fs.readdirSync('./dist/guildsData');
 	const guildsData: any = {};
 	for (const file of files) {
 		const guildCache: any = {

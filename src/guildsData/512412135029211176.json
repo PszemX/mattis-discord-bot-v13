@@ -1,0 +1,19 @@
+{
+	"id": "512412135029211176",
+	"prefix": "!",
+	"language": "pol",
+	"actions": {
+		"guildJoinPrivateMessage": {
+			"enable": true,
+			"text": ["Witaj", "na", "serwerze!"],
+			"embed": false
+		}
+	},
+	"commands": {
+		"ping": {
+			"enable": true
+		}
+	},
+	"tasks": {},
+	"slashCommands": {}
+}

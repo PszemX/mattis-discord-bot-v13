@@ -32,19 +32,39 @@ export class Mattis extends Client {
 
 	private loadEvents() {
 		fs.readdir('./dist/events', (err: any, files: any) => {
-			console.log(files);
 			if (err) return console.error(err);
 			for (const file of files) {
 				const event = require(`../events/${file}`);
 				const [eventName]: any = file.split('.');
-				this.logger.info(`Event ${eventName} loaded.`);
+				this.logger.info(`[EventsLoader] Event ${eventName} loaded.`);
 				this.on(eventName, (...args: any) => {
-					event.default(...args).then((data: any) => {
-						if (!data) return null;
+					if (eventName === 'ready') event.default();
+					this.getData(...args).then((data: any) => {
+						if (!data) return;
 					});
 				});
 			}
 			return null;
 		});
+	}
+
+	private async getData(...args: any) {
+		args = args[0];
+		const guildCache = args.guildId
+			? this.guildsCache[args.guildId]
+			: undefined;
+		if (!guildCache) return null;
+		const data = {
+			mattis: this,
+			guildCache,
+			guild: args.guild,
+			member: args.member,
+			channel: args.channel,
+			user: args.author,
+			args,
+			messageContent: args.content,
+			timestamp: null,
+		};
+		return data;
 	}
 }
