@@ -1,61 +1,54 @@
 import DiscordJS, { Presence } from 'discord.js';
-import BaseEvent from '../classes/BaseEvent';
+import { mattis } from '../bot';
 
-export default class extends BaseEvent {
-	static async execute() {
-		await this.doPresence();
+const event = async (data: any) => {
+	await doPresence();
 
-		const totalMembers = this.client.guilds.cache.reduce(
-			(membersSum: number, guild: DiscordJS.Guild) =>
-				(membersSum += guild.memberCount),
-			0
-		);
-		console.log('╠═══════════════════════╗');
-		console.log('╠   Mattis is running!  ╬');
-		console.log('╠═══════════════════════╬');
-		console.log(`╠ Guilds: ${this.client.guilds.cache.size}`);
-		console.log(`╠ Members: ${totalMembers}`);
-		console.log(`╠ Discord.js: ${DiscordJS.version}`);
-		console.log(`╠ Node.js: ${process.version}`);
-		console.log('╠═══════════════════════╝');
-	}
+	const totalMembers = data.client.guilds.cache.reduce(
+		(membersSum: number, guild: DiscordJS.Guild) =>
+			(membersSum += guild.memberCount),
+		0
+	);
+	console.log('╠═══════════════════════╗');
+	console.log('╠   Mattis is running!  ╬');
+	console.log('╠═══════════════════════╬');
+	console.log(`╠ Guilds: ${data.client.guilds.cache.size}`);
+	console.log(`╠ Members: ${totalMembers}`);
+	console.log(`╠ Discord.js: ${DiscordJS.version}`);
+	console.log(`╠ Node.js: ${process.version}`);
+	console.log('╠═══════════════════════╝');
+};
 
-	private static async setPresence(random: boolean): Promise<any> {
-		const activityNumber = random
-			? Math.floor(
-					Math.random() * this.client.config.presenceData.activities.length
-			  )
-			: 0;
-		const statusNumber = random
-			? Math.floor(
-					Math.random() * this.client.config.presenceData.status.length
-			  )
-			: 0;
-		const activity: any = (
-			await Promise.all(
-				this.client.config.presenceData.activities.map(async (a: any) =>
-					Object.assign(a, { name: await a.name })
-				)
+const setPresence = async (random: boolean): Promise<any> => {
+	const activityNumber = random
+		? Math.floor(Math.random() * mattis.config.presenceData.activities.length)
+		: 0;
+	const statusNumber = random
+		? Math.floor(Math.random() * mattis.config.presenceData.status.length)
+		: 0;
+	const activity: any = (
+		await Promise.all(
+			mattis.config.presenceData.activities.map(async (a: any) =>
+				Object.assign(a, { name: await a.name })
 			)
-		)[activityNumber];
-		return this.client.user!.setPresence({
-			activities: [activity] || [],
-			status: this.client.config.presenceData.status[statusNumber],
-		});
-	}
+		)
+	)[activityNumber];
+	return mattis.user!.setPresence({
+		activities: [activity] || [],
+		status: mattis.config.presenceData.status[statusNumber],
+	});
+};
 
-	private static async doPresence(): Promise<Presence | undefined> {
-		try {
-			return this.setPresence(false);
-		} catch (e) {
-			if ((e as Error).message !== 'Shards are still being spawned.')
-				this.client.logger.error(String(e));
-			return undefined;
-		} finally {
-			setInterval(
-				() => this.setPresence(true),
-				this.client.config.presenceData.interval
-			);
-		}
+const doPresence = async (): Promise<Presence | undefined> => {
+	try {
+		return setPresence(false);
+	} catch (e) {
+		if ((e as Error).message !== 'Shards are still being spawned.')
+			mattis.logger.error(String(e));
+		return undefined;
+	} finally {
+		setInterval(() => setPresence(true), mattis.config.presenceData.interval);
 	}
-}
+};
+
+export default event;
