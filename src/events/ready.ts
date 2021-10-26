@@ -1,12 +1,8 @@
 import DiscordJS, { Presence } from 'discord.js';
-import { DefineEvent } from '../utilities/decorators/DefineEvent';
-import { BaseEvent } from '../classes/BaseEvent';
-import { Mattis } from '../classes/Mattis';
-import { IEvent } from '../typings';
+import BaseEvent from '../classes/BaseEvent';
 
-@DefineEvent('ready')
-export class ReadyEvent extends BaseEvent {
-	public async execute() {
+export default class extends BaseEvent {
+	static async execute() {
 		await this.doPresence();
 
 		const totalMembers = this.client.guilds.cache.reduce(
@@ -24,7 +20,7 @@ export class ReadyEvent extends BaseEvent {
 		console.log('╠═══════════════════════╝');
 	}
 
-	private async setPresence(random: boolean): Promise<any> {
+	private static async setPresence(random: boolean): Promise<any> {
 		const activityNumber = random
 			? Math.floor(
 					Math.random() * this.client.config.presenceData.activities.length
@@ -48,7 +44,7 @@ export class ReadyEvent extends BaseEvent {
 		});
 	}
 
-	private async doPresence(): Promise<Presence | undefined> {
+	private static async doPresence(): Promise<Presence | undefined> {
 		try {
 			return this.setPresence(false);
 		} catch (e) {
