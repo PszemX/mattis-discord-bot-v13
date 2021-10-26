@@ -1,10 +1,9 @@
-import { Client, Collection } from 'discord.js';
+import { loadGuildsCache } from '../utilities/loadGuildsCache';
+import { createLogger } from '../utilities/Logger';
+import { clientOptions } from '../config';
+import { Client } from 'discord.js';
 import * as config from '../config';
 import fs from 'fs';
-import { clientOptions } from '../config';
-import loadGuildsCache from '../utilities/loadGuildsCache';
-import { createLogger } from '../utilities/Logger';
-import { resolve } from 'path';
 
 export class Mattis extends Client {
 	config = config;
