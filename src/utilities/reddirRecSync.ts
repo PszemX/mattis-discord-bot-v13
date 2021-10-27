@@ -8,7 +8,7 @@ const _readdirRecSync = function (basePath: any, path: any, paths: any) {
 	});
 };
 
-const readdirRecSync = function (path: any) {
+export const readdirRecSync = function (path: any) {
 	let paths: any = [];
 	_readdirRecSync(path, '', paths);
 	return paths;
