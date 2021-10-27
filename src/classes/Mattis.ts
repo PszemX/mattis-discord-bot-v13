@@ -1,4 +1,4 @@
-import { loadGuildsCache } from '../utilities/loadGuildsCache';
+import { guildsCache } from '../utilities/loadGuildsCache';
 import { createLogger } from '../utilities/Logger';
 import { clientOptions } from '../config';
 import { Client } from 'discord.js';
@@ -7,12 +7,10 @@ import fs from 'fs';
 
 export class Mattis extends Client {
 	config = config;
-	guildsCache: any;
 	logger = createLogger('bot');
 
 	constructor() {
 		super(clientOptions);
-		this.guildsCache = loadGuildsCache();
 		this.loadEvents();
 		this.build();
 	}
@@ -49,9 +47,7 @@ export class Mattis extends Client {
 
 	private async getData(...args: any) {
 		args = args[0];
-		const guildCache = args.guildId
-			? this.guildsCache[args.guildId]
-			: undefined;
+		const guildCache = args.guildId ? guildsCache[args.guildId] : undefined;
 		if (!guildCache) return null;
 		const data = {
 			mattis: this,

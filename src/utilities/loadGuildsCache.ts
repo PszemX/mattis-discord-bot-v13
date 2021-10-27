@@ -1,36 +1,89 @@
-import fs from 'fs';
+import { readdirRecSync } from '../utilities/reddirRecSync';
+import { actions } from '../utilities/actions';
 
-export const loadGuildsCache: any = () => {
-	const files = fs.readdirSync('./dist/guildsData');
-	const guildsData: any = {};
-	for (const file of files) {
-		const guildCache: any = {
-			settings: require(`../guildsData/${file}`),
-			actions: {
+const directCache = {
+	actionsByEvent: {
+		command: [],
+		messageReactionAdd: [],
+		messageReactionRemove: [],
+		message: [],
+		messageDelete: [],
+	},
+	settings: {},
+	commandsTree: null,
+};
+
+const addCommandByTriggerToTree = (command: any, trigger: any, tree: any) => {
+	let splittedTrigger = trigger.split(' ');
+	let branch = tree;
+	splittedTrigger.forEach((branchName: any) => {
+		if (!branch.b) branch.b = {};
+		if (!branch.b[branchName]) branch.b[branchName] = { b: null, c: null };
+		branch = branch.b[branchName];
+	});
+	branch.c = command;
+};
+
+const createCommandsTree = (guildCache: any) => {
+	let tree = { b: null, c: null };
+	let guildCommands = guildCache.actionsByEvent['command'];
+	guildCommands.forEach((command: any) => {
+		let commandSettings = guildCache.settings.actions[command.id];
+		commandSettings.triggers.forEach((trigger: any) => {
+			addCommandByTriggerToTree(command, trigger, tree);
+		});
+		if (command.tags.info && guildCache.settings.actions['info']?.enabled) {
+			guildCache.settings.actions['info'].triggers.forEach(
+				(infoTrigger: any) => {
+					commandSettings.triggers.forEach((trigger: any) => {
+						addCommandByTriggerToTree(
+							command,
+							infoTrigger + ' ' + trigger,
+							tree
+						);
+					});
+				}
+			);
+		}
+	});
+	return tree;
+};
+
+const guildsCache = readdirRecSync('./guilds_data').reduce(
+	(guildsCache: any, filepath: any) => {
+		let guildCache = {
+			settings: require(`../guildsData/${filepath}`),
+			actionsByEvent: <any>{
+				command: [],
+				messageReactionAdd: [],
+				messageReactionRemove: [],
+				message: [],
+				messageDelete: [],
 				guildMemberAdd: [],
+				guildMemberRemove: [],
+				voiceStateUpdate: [],
 			},
-			commands: [],
-			tasks: [],
+			commandsTree: <any>null,
 			membersCache: {},
 			channelsCache: {},
 		};
-		// Push enabled functions
-		for (const attribute of ['actions', 'commands', 'tasks']) {
-			const attributeSettings = guildCache.settings[attribute];
-			for (const funcId of Object.keys(attributeSettings)) {
-				const funcSettings = attributeSettings[funcId];
-				if (funcSettings.enabled) {
-					const func = require(`../functions/${attribute}/${funcId}`);
-					if (attribute === 'actions') {
-						guildCache.settings.actions[func.event].push(func);
-					} else {
-						guildCache.settings[attribute].push(func);
-					}
-				}
+		Object.keys(guildCache.settings.actions).forEach((actionId) => {
+			if (actionId == 'emojiRole' || actionId == 'messageRole') return;
+			let actionSettings = guildCache.settings.actions[actionId];
+			if (
+				actionSettings.enabled ||
+				((actionId == 'emojiRoleAdd' || actionId == 'emojiRoleRemove') &&
+					guildCache.settings.actions['emojiRole'].enabled)
+			) {
+				let action = actions[actionId];
+				guildCache.actionsByEvent[action.event].push(action);
 			}
-		}
-		// eslint-disable-next-line no-param-reassign
-		guildsData[guildCache.settings.id] = guildCache;
-	}
-	return guildsData;
-};
+		});
+		guildsCache[guildCache.settings.id] = guildCache;
+		guildCache.commandsTree = createCommandsTree(guildCache);
+		return guildsCache;
+	},
+	{}
+);
+
+export { guildsCache, directCache };
