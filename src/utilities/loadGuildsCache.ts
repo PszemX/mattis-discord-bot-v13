@@ -49,7 +49,7 @@ const createCommandsTree = (guildCache: any) => {
 	return tree;
 };
 
-const guildsCache = readdirRecSync('./guilds_data').reduce(
+const guildsCache = readdirRecSync('./dist/guildsData').reduce(
 	(guildsCache: any, filepath: any) => {
 		let guildCache = {
 			settings: require(`../guildsData/${filepath}`),
@@ -57,7 +57,7 @@ const guildsCache = readdirRecSync('./guilds_data').reduce(
 				command: [],
 				messageReactionAdd: [],
 				messageReactionRemove: [],
-				message: [],
+				messageCreate: [],
 				messageDelete: [],
 				guildMemberAdd: [],
 				guildMemberRemove: [],

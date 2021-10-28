@@ -36,9 +36,26 @@ export class Mattis extends Client {
 				this.logger.info(`[EventsLoader] Event ${eventName} loaded.`);
 				this.on(eventName, (...args: any) => {
 					if (eventName === 'ready') event.default();
-					this.getData(...args).then((data: any) => {
-						if (!data) return;
-					});
+					this.getData(...args)
+						.then((data: any) => {
+							if (!data) return;
+							for (const action of data.guildCache.actionsByEvent[eventName]) {
+								action
+									.trigger(data)
+									.then((triggerResult: boolean) => {
+										if (triggerResult) {
+											console.log(`Akcja ${action.id}`);
+											action.func(data, triggerResult);
+										}
+									})
+									.catch((error: any) => {
+										console.error(error);
+									});
+							}
+						})
+						.catch((error) => {
+							console.error(error);
+						});
 				});
 			}
 			return null;
