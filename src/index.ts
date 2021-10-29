@@ -2,7 +2,7 @@ import 'dotenv/config';
 import figlet from 'figlet';
 import { ShardingManager } from 'discord.js';
 import { resolve } from 'path';
-import { createLogger } from './utilities/Logger';
+import { createLogger } from './structures/Logger';
 import { discordToken } from './config';
 
 const log = createLogger('shardingManager');

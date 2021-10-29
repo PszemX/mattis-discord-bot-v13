@@ -1,5 +1,5 @@
-import { guildsCache } from '../utilities/loadGuildsCache';
-import { createLogger } from '../utilities/Logger';
+import { guildsCache } from '../utilities/guildsCache';
+import { createLogger } from './Logger';
 import { clientOptions } from '../config';
 import { Client } from 'discord.js';
 import * as config from '../config';

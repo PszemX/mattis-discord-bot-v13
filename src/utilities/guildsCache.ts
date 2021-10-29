@@ -1,5 +1,5 @@
-import { readdirRecSync } from '../utilities/reddirRecSync';
-import { actions } from '../utilities/actions';
+import { readdirRecSync } from './reddirRecSync';
+import { actions } from './actions';
 
 const directCache = {
 	actionsByEvent: {

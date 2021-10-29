@@ -1,4 +1,4 @@
-import { Mattis } from './classes/Mattis';
+import { Mattis } from './structures/Mattis';
 
 export const mattis = new Mattis();
 
