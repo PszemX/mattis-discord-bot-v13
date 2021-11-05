@@ -27,6 +27,7 @@ const addCommandByTriggerToTree = (command: any, trigger: any, tree: any) => {
 const createCommandsTree = (guildCache: any) => {
 	let tree = { b: null, c: null };
 	let guildCommands = guildCache.actionsByEvent['command'];
+	console.log(guildCommands);
 	guildCommands.forEach((command: any) => {
 		let commandSettings = guildCache.settings.actions[command.id];
 		commandSettings.triggers.forEach((trigger: any) => {

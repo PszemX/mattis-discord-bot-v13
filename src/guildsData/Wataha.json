@@ -5,6 +5,11 @@
 	"actions": {
 		"testMessageAction": {
 			"enabled": false
+		},
+		"ping": {
+			"enabled": false,
+			"triggers": ["ping", "pong"],
+			"cooldown": 3000
 		}
 	}
 }

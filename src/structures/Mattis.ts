@@ -37,6 +37,13 @@ export class Mattis extends Client {
 		for (const clientEvent of this.clientEvents) {
 			this.logger.info(`[EventsLoader] Event '${clientEvent}' loaded.`);
 			this.on(clientEvent, (...args: any) => {
+				const clientGuilds = Array.from(this.guilds.cache.keys());
+				for (const guild of clientGuilds) {
+					if (guildsCache[guild]) {
+						const guildCache = guildsCache[guild];
+						console.log(guildCache.actionsByEvent.command);
+					}
+				}
 				this.getData(...args)
 					.then((data: any) => {
 						if (!data) return;
@@ -78,5 +85,15 @@ export class Mattis extends Client {
 			timestamp: null,
 		};
 		return data;
+	}
+
+	private async loadCommands() {
+		const clientGuilds = Array.from(this.guilds.cache.keys());
+		for (const guild of clientGuilds) {
+			if (guildsCache[guild]) {
+				const guildCache = guildsCache[guild];
+				console.log(guildCache.actionsByEvent.command);
+			}
+		}
 	}
 }
