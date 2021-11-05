@@ -1,22 +1,28 @@
+import { readyEventAction } from '../utilities/readyEventAction';
 import { guildsCache } from '../utilities/guildsCache';
 import { createLogger } from './Logger';
-import { clientOptions } from '../config';
 import { Client } from 'discord.js';
 import * as config from '../config';
-import fs from 'fs';
 
 export class Mattis extends Client {
-	config = config;
-	logger = createLogger('bot');
+	public readonly config = config;
+	public readonly logger = createLogger('bot');
+	clientEvents = ['messageCreate'];
 
 	constructor() {
-		super(clientOptions);
-		this.loadEvents();
+		super(config.clientOptions);
 		this.build();
 	}
 
-	private build() {
-		super.login(this.config.discordToken).catch(() => this.reconnect());
+	private async build() {
+		const start = Date.now();
+		this.loadEvents();
+		this.on('ready', () => {
+			readyEventAction();
+			this.logger.debug(`Ready took ${(Date.now() - start) / 1000}s.`);
+		});
+		await this.login(this.config.discordToken).catch(() => this.reconnect());
+		return this;
 	}
 
 	private reconnect() {
@@ -28,38 +34,32 @@ export class Mattis extends Client {
 	}
 
 	private loadEvents() {
-		fs.readdir('./dist/events', (err: any, files: any) => {
-			if (err) return console.error(err);
-			for (const file of files) {
-				const event = require(`../events/${file}`);
-				const [eventName]: any = file.split('.');
-				this.logger.info(`[EventsLoader] Event ${eventName} loaded.`);
-				this.on(eventName, (...args: any) => {
-					if (eventName === 'ready') event.default();
-					this.getData(...args)
-						.then((data: any) => {
-							if (!data) return;
-							for (const action of data.guildCache.actionsByEvent[eventName]) {
-								action
-									.trigger(data)
-									.then((triggerResult: boolean) => {
-										if (triggerResult) {
-											console.log(`Akcja ${action.id}`);
-											action.func(data, triggerResult);
-										}
-									})
-									.catch((error: any) => {
-										console.error(error);
-									});
-							}
-						})
-						.catch((error) => {
-							console.error(error);
-						});
-				});
-			}
+		for (const clientEvent of this.clientEvents) {
+			this.logger.info(`[EventsLoader] Event '${clientEvent}' loaded.`);
+			this.on(clientEvent, (...args: any) => {
+				this.getData(...args)
+					.then((data: any) => {
+						if (!data) return;
+						for (const action of data.guildCache.actionsByEvent[clientEvent]) {
+							action
+								.trigger(data)
+								.then((triggerResult: boolean) => {
+									if (triggerResult) {
+										console.log(`Akcja ${action.id}`);
+										action.func(data, triggerResult);
+									}
+								})
+								.catch((error: any) => {
+									console.error(error);
+								});
+						}
+					})
+					.catch((error) => {
+						console.error(error);
+					});
+			});
 			return null;
-		});
+		}
 	}
 
 	private async getData(...args: any) {
