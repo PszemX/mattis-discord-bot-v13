@@ -27,7 +27,6 @@ const addCommandByTriggerToTree = (command: any, trigger: any, tree: any) => {
 const createCommandsTree = (guildCache: any) => {
 	let tree = { b: null, c: null };
 	let guildCommands = guildCache.actionsByEvent['command'];
-	console.log(guildCommands);
 	guildCommands.forEach((command: any) => {
 		let commandSettings = guildCache.settings.actions[command.id];
 		commandSettings.triggers.forEach((trigger: any) => {
@@ -56,30 +55,65 @@ const guildsCache = readdirRecSync('./dist/guildsData').reduce(
 			settings: require(`../guildsData/${filepath}`),
 			actionsByEvent: <any>{
 				command: [],
-				messageReactionAdd: [],
-				messageReactionRemove: [],
+				channelCreate: [],
+				channelDelete: [],
+				channelPinsUpdate: [],
+				channelUpdate: [],
+				emojiCreate: [],
+				emojiDelete: [],
+				emojiUpdate: [],
+				guildBanAdd: [],
+				guildBanRemove: [],
+				guildCreate: [],
+				guildDelete: [],
+				guildIntegrationsUpdate: [],
+				guildMemberAdd: [],
+				guildMemberAvailable: [],
+				guildMemberRemove: [],
+				guildMembersChunk: [],
+				guildMemberUpdate: [],
+				guildUnavailable: [],
+				guildUpdate: [],
+				interactionCreate: [],
+				inviteCreate: [],
+				inviteDelete: [],
 				messageCreate: [],
 				messageDelete: [],
-				guildMemberAdd: [],
-				guildMemberRemove: [],
+				messageDeleteBulk: [],
+				messageReactionAdd: [],
+				messageReactionRemove: [],
+				messageReactionRemoveAll: [],
+				messageReactionRemoveEmoji: [],
+				messageUpdate: [],
+				presenceUpdate: [],
+				roleCreate: [],
+				roleDelete: [],
+				roleUpdate: [],
+				stageInstanceCreate: [],
+				stageInstanceDelete: [],
+				stageInstanceUpdate: [],
+				threadCreate: [],
+				threadDelete: [],
+				threadListSync: [],
+				threadMembersUpdate: [],
+				threadMemberUpdate: [],
+				threadUpdate: [],
+				typingStart: [],
+				userUpdate: [],
 				voiceStateUpdate: [],
+				webhookUpdate: [],
 			},
 			commandsTree: <any>null,
 			membersCache: {},
 			channelsCache: {},
 		};
-		Object.keys(guildCache.settings.actions).forEach((actionId) => {
-			if (actionId == 'emojiRole' || actionId == 'messageRole') return;
+		for (const actionId of Object.keys(guildCache.settings.actions)) {
 			let actionSettings = guildCache.settings.actions[actionId];
-			if (
-				actionSettings.enabled ||
-				((actionId == 'emojiRoleAdd' || actionId == 'emojiRoleRemove') &&
-					guildCache.settings.actions['emojiRole'].enabled)
-			) {
+			if (actionSettings.enabled) {
 				let action = actions[actionId];
 				guildCache.actionsByEvent[action.event].push(action);
 			}
-		});
+		}
 		guildsCache[guildCache.settings.id] = guildCache;
 		guildCache.commandsTree = createCommandsTree(guildCache);
 		return guildsCache;

@@ -1,7 +1,7 @@
 import DiscordJS, { Presence } from 'discord.js';
 import { mattis } from '../bot';
 
-const readyEventAction = async () => {
+const botReady = async () => {
 	await doPresence();
 
 	const totalMembers = mattis.guilds.cache.reduce(
@@ -51,4 +51,4 @@ const doPresence = async (): Promise<Presence | undefined> => {
 	}
 };
 
-export { readyEventAction };
+export { botReady };

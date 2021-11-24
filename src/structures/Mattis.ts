@@ -1,4 +1,4 @@
-import { readyEventAction } from '../utilities/readyEventAction';
+import { botReady } from '../utilities/botReady';
 import { guildsCache } from '../utilities/guildsCache';
 import { createLogger } from './Logger';
 import { Client } from 'discord.js';
@@ -7,7 +7,56 @@ import * as config from '../config';
 export class Mattis extends Client {
 	public readonly config = config;
 	public readonly logger = createLogger('bot');
-	clientEvents = ['messageCreate'];
+	private readonly clientEvents = [
+		'messageCreate',
+		'channelCreate',
+		'channelDelete',
+		'channelPinsUpdate',
+		'channelUpdate',
+		'emojiCreate',
+		'emojiDelete',
+		'emojiUpdate',
+		'guildBanAdd',
+		'guildBanRemove',
+		'guildCreate',
+		'guildDelete',
+		'guildIntegrationsUpdate',
+		'guildMemberAdd',
+		'guildMemberAvailable',
+		'guildMemberRemove',
+		'guildMembersChunk',
+		'guildMemberUpdate',
+		'guildUnavailable',
+		'guildUpdate',
+		'interactionCreate',
+		'inviteCreate',
+		'inviteDelete',
+		'messageCreate',
+		'messageDelete',
+		'messageDeleteBulk',
+		'messageReactionAdd',
+		'messageReactionRemove',
+		'messageReactionRemoveAll',
+		'messageReactionRemoveEmoji',
+		'messageUpdate',
+		'presenceUpdate',
+		'roleCreate',
+		'roleDelete',
+		'roleUpdate',
+		'stageInstanceCreate',
+		'stageInstanceDelete',
+		'stageInstanceUpdate',
+		'threadCreate',
+		'threadDelete',
+		'threadListSync',
+		'threadMembersUpdate',
+		'threadMemberUpdate',
+		'threadUpdate',
+		'typingStart',
+		'userUpdate',
+		'voiceStateUpdate',
+		'webhookUpdate',
+	];
 
 	constructor() {
 		super(config.clientOptions);
@@ -16,9 +65,9 @@ export class Mattis extends Client {
 
 	private async build() {
 		const start = Date.now();
-		this.loadEvents();
+		this.handleEvents();
 		this.on('ready', () => {
-			readyEventAction();
+			botReady();
 			this.logger.debug(`Ready took ${(Date.now() - start) / 1000}s.`);
 		});
 		await this.login(this.config.discordToken).catch(() => this.reconnect());
@@ -33,21 +82,16 @@ export class Mattis extends Client {
 		setTimeout(() => new Mattis(), 30000);
 	}
 
-	private loadEvents() {
+	private handleEvents() {
 		for (const clientEvent of this.clientEvents) {
 			this.logger.info(`[EventsLoader] Event '${clientEvent}' loaded.`);
 			this.on(clientEvent, (...args: any) => {
-				const clientGuilds = Array.from(this.guilds.cache.keys());
-				for (const guild of clientGuilds) {
-					if (guildsCache[guild]) {
-						const guildCache = guildsCache[guild];
-						console.log(guildCache.actionsByEvent.command);
-					}
-				}
 				this.getData(...args)
 					.then((data: any) => {
 						if (!data) return;
-						for (const action of data.guildCache.actionsByEvent[clientEvent]) {
+						const eventActions = data.guildCache?.actionsByEvent[clientEvent];
+						if (!eventActions) return;
+						for (const action of eventActions) {
 							action
 								.trigger(data)
 								.then((triggerResult: boolean) => {
@@ -76,24 +120,9 @@ export class Mattis extends Client {
 		const data = {
 			mattis: this,
 			guildCache,
-			guild: args.guild,
-			member: args.member,
-			channel: args.channel,
-			user: args.author,
 			args,
-			messageContent: args.content,
-			timestamp: null,
+			timestamp: Date.now(),
 		};
 		return data;
-	}
-
-	private async loadCommands() {
-		const clientGuilds = Array.from(this.guilds.cache.keys());
-		for (const guild of clientGuilds) {
-			if (guildsCache[guild]) {
-				const guildCache = guildsCache[guild];
-				console.log(guildCache.actionsByEvent.command);
-			}
-		}
 	}
 }

@@ -11,6 +11,7 @@ export const discordToken =
 		? process.env.DISCORD_PRODUCTION_TOKEN
 		: process.env.DISCORD_DEVELOPMENT_TOKEN;
 
+export const mongoUri = process.env.MONGO_URI ?? '';
 export const owners: string[] = JSON.parse(process.env.OWNERS ?? '[]');
 export const defaultPrefix: string = String(process.env.DEFAULT_PREFIX);
 export const isProd: Boolean = process.env.ENVIRONMENT === 'production';
