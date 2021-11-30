@@ -4,9 +4,6 @@
 	"prefix": "!",
 	"language": "pol",
 	"actions": {
-		"testMessageAction": {
-			"enabled": false
-		},
 		"ping": {
 			"enabled": false,
 			"triggers": ["ping", "pong"],

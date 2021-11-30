@@ -4,7 +4,8 @@
 	"description": "Multifunctional And Trustworthy Technological Intelligent System",
 	"main": "index.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"compile": "tsc && node ."
 	},
 	"repository": {
 		"type": "git",
@@ -21,15 +22,18 @@
 	},
 	"homepage": "https://github.com/PszemX/mattis-discord-bot-v13#readme",
 	"dependencies": {
+		"axios": "^0.24.0",
 		"date-fns": "^2.25.0",
 		"discord.js": "^13.2.0",
 		"dotenv": "^10.0.0",
 		"figlet": "^1.5.2",
+		"latinize": "^0.5.0",
 		"mongoose": "^6.0.13",
 		"winston": "^3.3.3"
 	},
 	"devDependencies": {
 		"@types/figlet": "^1.5.4",
+		"@types/latinize": "^0.2.15",
 		"@types/node": "^16.10.4",
 		"@typescript-eslint/eslint-plugin": "^5.0.0",
 		"@typescript-eslint/parser": "^5.0.0",

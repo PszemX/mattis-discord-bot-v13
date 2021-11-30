@@ -4,6 +4,7 @@ import { createLogger } from './Logger';
 import mongoose from 'mongoose';
 import { Client } from 'discord.js';
 import * as config from '../config';
+import parseCommandParameters from '../utilities/parseCommandParameters';
 
 export class Mattis extends Client {
 	public readonly config = config;
@@ -95,31 +96,10 @@ export class Mattis extends Client {
 	private async handleEvents() {
 		for (const clientEvent of this.clientEvents) {
 			this.logger.info(`[EventsLoader] Event '${clientEvent}' loaded.`);
-			this.on(clientEvent, (...args: any) => {
-				this.getData(...args)
-					.then((data: any) => {
-						if (!data) return;
-						const eventActions = data.guildCache?.actionsByEvent[clientEvent];
-						if (!eventActions) return;
-						for (const action of eventActions) {
-							action
-								.trigger(data)
-								.then(async (triggerResult: boolean) => {
-									if (triggerResult) {
-										await action.func(data);
-										this.logger.debug(
-											`Akcja ${action.id} na serwerze ${data.args.guildId}`
-										);
-									}
-								})
-								.catch((error: any) => {
-									console.error(error);
-								});
-						}
-					})
-					.catch((error) => {
-						console.error(error);
-					});
+			this.on(clientEvent, async (...args: any) => {
+				const eventData = await this.getData(...args);
+				if (!eventData) return;
+				this.handleEventAction(eventData, clientEvent);
 			});
 		}
 	}
@@ -135,6 +115,58 @@ export class Mattis extends Client {
 			timestamp: Date.now(),
 		};
 		return data;
+	}
+
+	private async handleEventAction(data: any, event: any) {
+		if (event == 'messageCreate') this.handleCommand(data);
+		const eventActions = data.guildCache?.actionsByEvent[event];
+		if (!eventActions) return null;
+		for (const action of eventActions) {
+			const actionTriggerResult: boolean = action.trigger(data);
+			if (actionTriggerResult) {
+				try {
+					await action.func(data);
+					this.logger.debug(
+						`Akcja ${action.id} na serwerze ${data.args.guildId}`
+					);
+				} catch (error) {
+					console.log(error);
+				}
+			}
+		}
+	}
+
+	private async handleCommand(data: any) {
+		const { guildCache } = data;
+		if (data.args.content.startsWith(guildCache.settings.prefix)) {
+			const commandContent = data.args.content.slice(
+				guildCache.settings.prefix.length
+			);
+			const commandContentSplitted = commandContent.split(' ');
+			let branch = guildCache.commandsTree;
+			let commandRawParametersSplitted = [];
+			for (let i = 0; i < commandContentSplitted.length; ++i) {
+				const branchName = commandContentSplitted[i];
+				if (branch.b && branch.b[branchName]) {
+					branch = branch.b[branchName];
+				} else {
+					commandRawParametersSplitted = commandContentSplitted.slice(i);
+					break;
+				}
+			}
+			const command = branch.c;
+			if (command) {
+				const commandParameters = await parseCommandParameters(
+					data,
+					command,
+					commandRawParametersSplitted
+				);
+				await command.func(data, commandParameters);
+				this.logger.debug(
+					`Komenda ${command.id} na serwerze ${data.args.guildId}`
+				);
+			}
+		}
 	}
 
 	// private loadCommands(){}

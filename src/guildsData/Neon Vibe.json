@@ -4,13 +4,14 @@
 	"prefix": "!",
 	"language": "pol",
 	"actions": {
-		"testMessageAction": {
-			"enabled": true
-		},
 		"ping": {
 			"enabled": true,
 			"triggers": ["ping", "pong"],
 			"cooldown": 3000
+		},
+		"covid": {
+			"enabled": true,
+			"triggers": ["covid"]
 		}
 	}
 }

@@ -19,7 +19,8 @@ module.exports = {
 			],
 		},
 	],
+	syntaxes: [[]],
 	func: async function (data: any, parameters: any) {
-		data.user.send('Komenda ping');
+		data.args.author.send('Komenda ping');
 	},
 };
