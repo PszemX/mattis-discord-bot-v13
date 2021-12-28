@@ -17,7 +17,6 @@ module.exports = {
 	func: async function (data: any, parameters: any) {
 		let town = '';
 		let place = '';
-		console.log(parameters);
 		let country = parameters.country;
 		let parametersLowerCase = country.toLowerCase();
 		let targetCountryCode = countryCodes.find((countryCode) => {

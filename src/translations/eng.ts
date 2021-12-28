@@ -276,29 +276,19 @@ const translation = {
 	},
 	error: 'Error',
 	commandNotFound: "This command doesn't exist.",
-	commands: {
-		ping: (payload: any) => `Pinging ${payload.user}!`,
-		weryfikacja: {
-			'601071820686229531': (payload: any) =>
-				`Hey!\n\nI see you've just arrived on server **${
-					payload.guild
-				}**. I hope you will stay with us longer\n\nRead the ${payload.guild.channels.cache.get(
-					payload.server.rulesChannelId
-				)} carefully and follow them!\n\nRespond to this message with an emote :white_check_mark:, to confirm your knowledge of the rules and verify your account\n\nYou will automatically receive the role 'verified'.\n\nDon't forget do recommend this discord to your friends, so that they also come\n\nIf you have any questions, write to the administration\n\nSee ya`,
-		},
-		czyszczenie: {
-			errorPermissions: "You don't have permissions...",
-			errorNaN: "Bro... It's not a number!",
-			errorNumberLowerThanOne:
-				'I can delete number of messages higher or equal 1...',
-			errorNaturalNumber: 'But give me natural number...',
-		},
-	},
 	actions: {
-		badwords: {
-			rebuke: 'Watch your words!',
-			warn: (payload: any) =>
-				`You get a warn on the server ${payload.guild.name} for using inappropriate words!`,
+		covid: {
+			description: 'Statistics of COVID-19 in certain country',
+			population: '👨‍👩‍👧‍👦 Population',
+			confirmed: '✅ Cases',
+			deaths: '💀 Deaths',
+			recovered: '🏥 Recovered',
+			todayConfirmed: '📅 Today\ncases',
+			todayDeaths: '📅 Today\ndeaths',
+			todayTests: '📅 Today\ntests done',
+			seriousCritical: '🚑 Critical\ncases',
+			active: '🛏️ Active cases',
+			totalTests: '📋 All tests',
 		},
 	},
 };

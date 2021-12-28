@@ -7,11 +7,17 @@
 		"welcomeChannelMessage": {
 			"enabled": true,
 			"channelId": "720266754139357185",
-			"text": "$user, Witaj na serwerze!"
+			"text": "$user, Witaj na serwerze!",
+			"deleteTime": 0
 		},
 		"welcomePrivateMessage": {
 			"enabled": true,
-			"text": "Witaj na serwerze Neon Vibe!"
+			"text": "Witaj na serwerze Neon Vibe!",
+			"deleteTime": 0
+		},
+		"welcomeRole": {
+			"enabled": false,
+			"roleId": "720372040284110848"
 		},
 		"ping": {
 			"enabled": true,
@@ -20,7 +26,8 @@
 		},
 		"covid": {
 			"enabled": true,
-			"triggers": ["covid"]
+			"triggers": ["covid"],
+			"cooldown": 3000
 		}
 	}
 }

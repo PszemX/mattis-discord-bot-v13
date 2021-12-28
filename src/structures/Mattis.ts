@@ -128,7 +128,9 @@ export class Mattis extends Client {
 				try {
 					await action.func(data);
 					this.logger.debug(
-						`Akcja ${action.id} na serwerze ${data.args.guildId}`
+						`Akcja ${action.id} na serwerze ${
+							data.args.guildId || data.args.guild.id
+						}`
 					);
 				} catch (error) {
 					console.log(error);
