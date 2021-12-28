@@ -106,7 +106,8 @@ export class Mattis extends Client {
 
 	private async getData(...args: any) {
 		args = args[0];
-		const guildCache = args.guildId ? guildsCache[args.guildId] : undefined;
+		const guildId = args.guildId || args.guild.id;
+		const guildCache = guildId ? guildsCache[guildId] : undefined;
 		if (!guildCache) return null;
 		const data = {
 			mattis: this.user,
