@@ -93,25 +93,61 @@ export class Mattis extends Client {
 	}
 
 	private async handleEvents() {
+		this.on('raw', async (event) => {
+			this.handleRawEvent(event);
+		});
 		for (const clientEvent of this.clientEvents) {
 			this.logger.info(`[EventsLoader] Event '${clientEvent}' loaded.`);
 			this.on(clientEvent, async (...args: any) => {
 				const eventData = await this.getData(...args);
+				console.log(clientEvent);
 				if (!eventData) return;
 				this.handleEventAction(eventData, clientEvent);
 			});
 		}
 	}
 
+	private async handleRawEvent(event: any) {
+		// https://gist.github.com/Danktuary/27b3cef7ef6c42e2d3f5aff4779db8ba
+		const events: any = {
+			MESSAGE_REACTION_ADD: 'messageReactionAdd',
+			MESSAGE_REACTION_REMOVE: 'messageReactionRemove',
+		};
+
+		// `event.t` is the raw event name
+		if (!events.hasOwnProperty(event.t)) return;
+		const { d: data } = event;
+		const user = await this.users.fetch(data.user_id);
+		const channel: any =
+			this.channels.cache.get(data.channel_id) || (await user?.createDM());
+
+		// if the message is already in the cache, don't re-emit the event
+		if (channel?.messages.cache.has(data.message_id)) return;
+		// if you're on the master/v12 branch, use `channel.messages.fetch()`
+		const message = await channel.messages.fetch(data.message_id);
+
+		// custom emojis reactions are keyed in a `name:ID` format, while unicode emojis are keyed by names
+		// if you're on the master/v12 branch, custom emojis reactions are keyed by their ID
+		const emojiKey = data.emoji.id
+			? `${data.emoji.name}:${data.emoji.id}`
+			: data.emoji.name;
+		const reaction = message.reactions.cache.get(emojiKey);
+		this.emit(events[event.t], reaction, user);
+	}
+
 	private async getData(...args: any) {
-		args = args[0];
-		const guildId = args.guildId || args.guild.id;
+		for (const arg of args) {
+			if (arg?.guildId || arg?.guild?.id || arg?.message?.guildId) {
+				var guildId = arg?.guildId || arg?.guild?.id || arg?.message?.guildId;
+				break;
+			}
+		}
 		const guildCache = guildId ? guildsCache[guildId] : undefined;
 		if (!guildCache) return null;
 		const data = {
 			mattis: this,
 			guildCache,
-			args,
+			args: args.length > 1 ? args : args[0],
 			timestamp: Date.now(),
 		};
 		return data;
@@ -127,9 +163,7 @@ export class Mattis extends Client {
 				try {
 					await action.func(data);
 					this.logger.debug(
-						`Akcja ${action.id} na serwerze ${
-							data.args.guildId || data.args.guild.id
-						}`
+						`Akcja ${action.id} na serwerze ${data.guildCache.settings.id}`
 					);
 				} catch (error) {
 					console.log(error);

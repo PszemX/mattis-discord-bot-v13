@@ -26,6 +26,13 @@
 			"roleAddId": "730513984171671604",
 			"roleRemoveId": ""
 		},
+		"emojiVerification": {
+			"enabled": true,
+			"messageId": "741427498092593214",
+			"emoji": "✅",
+			"roleAddId": "709402444781715466",
+			"roleRemoveId": "730513984171671604"
+		},
 		"ping": {
 			"enabled": true,
 			"triggers": ["ping", "pong"],
