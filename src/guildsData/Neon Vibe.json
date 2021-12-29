@@ -19,6 +19,13 @@
 			"enabled": false,
 			"roleId": "720372040284110848"
 		},
+		"messageVerification": {
+			"enabled": true,
+			"messageText": "tak",
+			"messageChannelId": "720305106838487085",
+			"roleAddId": "730513984171671604",
+			"roleRemoveId": ""
+		},
 		"ping": {
 			"enabled": true,
 			"triggers": ["ping", "pong"],

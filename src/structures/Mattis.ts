@@ -7,7 +7,6 @@ import * as config from '../config';
 import parseCommandParameters from '../utilities/parseCommandParameters';
 
 export class Mattis extends Client {
-	public readonly config = config;
 	public readonly logger = createLogger('bot');
 	private readonly clientEvents = [
 		'channelCreate',
@@ -73,7 +72,7 @@ export class Mattis extends Client {
 			botReady();
 			this.logger.debug(`Ready took ${(Date.now() - start) / 1000}s.`);
 		});
-		await this.login(this.config.discordToken).catch(() => this.reconnect());
+		await this.login(config.discordToken).catch(() => this.reconnect());
 		return this;
 	}
 
@@ -110,7 +109,7 @@ export class Mattis extends Client {
 		const guildCache = guildId ? guildsCache[guildId] : undefined;
 		if (!guildCache) return null;
 		const data = {
-			mattis: this.user,
+			mattis: this,
 			guildCache,
 			args,
 			timestamp: Date.now(),
@@ -123,7 +122,7 @@ export class Mattis extends Client {
 		const eventActions = data.guildCache?.actionsByEvent[event];
 		if (!eventActions) return null;
 		for (const action of eventActions) {
-			const actionTriggerResult: boolean = action.trigger(data);
+			const actionTriggerResult: boolean = await action.trigger(data);
 			if (actionTriggerResult) {
 				try {
 					await action.func(data);
