@@ -66,8 +66,8 @@ export class Mattis extends Client {
 
 	private async build() {
 		const start = Date.now();
-		//this.databaseConnect();
 		this.handleEvents();
+		this.databaseConnect();
 		// this.loadCommands();
 		this.on('ready', () => {
 			botReady();
@@ -85,12 +85,14 @@ export class Mattis extends Client {
 		setTimeout(() => new Mattis(), 30000);
 	}
 
-	private databaseConnect() {
-		mongoose.connect(config.mongoUri);
-
-		mongoose.connection.once('open', () => {
-			this.logger.info('[Database] Mongodb connected.');
-		});
+	private async databaseConnect() {
+		try {
+			await mongoose.connect(config.mongoUri).then(() => {
+				this.logger.info('[Database] Succesfully connected to the Database.');
+			});
+		} catch (error) {
+			this.logger.error(error);
+		}
 	}
 
 	private async handleEvents() {

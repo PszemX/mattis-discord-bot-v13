@@ -8,6 +8,10 @@
 			"enabled": false,
 			"triggers": ["ping", "pong"],
 			"cooldown": 3000
+		},
+		"covid": {
+			"enabled": true,
+			"triggers": ["covid"]
 		}
 	}
 }
