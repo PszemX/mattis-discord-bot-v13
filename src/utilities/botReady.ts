@@ -1,4 +1,5 @@
 import DiscordJS, { Presence } from 'discord.js';
+import * as config from '../config';
 import { mattis } from '../bot';
 
 const botReady = async () => {
@@ -21,21 +22,21 @@ const botReady = async () => {
 
 const setPresence = async (random: boolean): Promise<any> => {
 	const activityNumber = random
-		? Math.floor(Math.random() * mattis.config.presenceData.activities.length)
+		? Math.floor(Math.random() * config.presenceData.activities.length)
 		: 0;
 	const statusNumber = random
-		? Math.floor(Math.random() * mattis.config.presenceData.status.length)
+		? Math.floor(Math.random() * config.presenceData.status.length)
 		: 0;
 	const activity: any = (
 		await Promise.all(
-			mattis.config.presenceData.activities.map(async (a: any) =>
+			config.presenceData.activities.map(async (a: any) =>
 				Object.assign(a, { name: await a.name })
 			)
 		)
 	)[activityNumber];
 	return mattis.user!.setPresence({
 		activities: [activity] || [],
-		status: mattis.config.presenceData.status[statusNumber],
+		status: config.presenceData.status[statusNumber],
 	});
 };
 
@@ -47,7 +48,7 @@ const doPresence = async (): Promise<Presence | undefined> => {
 			mattis.logger.error(String(e));
 		return undefined;
 	} finally {
-		setInterval(() => setPresence(true), mattis.config.presenceData.interval);
+		setInterval(() => setPresence(true), config.presenceData.interval);
 	}
 };
 

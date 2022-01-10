@@ -4,13 +4,22 @@
 	"prefix": "!",
 	"language": "pol",
 	"actions": {
+		"welcomeChannelMessage": {
+			"enabled": false,
+			"channelId": "720266754139357185",
+			"text": "$user, Witaj na serwerze!"
+		},
+		"welcomePrivateMessage": {
+			"enabled": false,
+			"text": "Witaj na serwerze Neon Vibe!"
+		},
 		"ping": {
 			"enabled": false,
 			"triggers": ["ping", "pong"],
 			"cooldown": 3000
 		},
 		"covid": {
-			"enabled": true,
+			"enabled": false,
 			"triggers": ["covid"]
 		}
 	}

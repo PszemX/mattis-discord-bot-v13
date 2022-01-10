@@ -24,13 +24,18 @@ export const guildCacheLastInterval: number =
 	Number(process.env.GUILDCACHE_LAST_INTERVAL) || 60000;
 export const commandsCooldown: Number = Number(process.env.COMMANDS_COOLDOWN);
 
+// const allIntents = new Intents(32767);
 export const clientOptions: ClientOptions = {
 	allowedMentions: { parse: ['users'], repliedUser: true },
 	intents: [
 		Intents.FLAGS.GUILDS,
 		Intents.FLAGS.GUILD_MESSAGES,
+		Intents.FLAGS.GUILD_MEMBERS,
 		Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS,
+		Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+		Intents.FLAGS.GUILD_MESSAGE_TYPING,
 		Intents.FLAGS.GUILD_VOICE_STATES,
+		Intents.FLAGS.GUILD_INVITES,
 		Intents.FLAGS.GUILD_BANS,
 	],
 	makeCache: Options.cacheWithLimits({
