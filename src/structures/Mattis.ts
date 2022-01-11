@@ -1,7 +1,6 @@
 import { botReady } from '../utilities/botReady';
 import { guildsCache } from '../utilities/guildsCache';
 import { createLogger } from './Logger';
-import mongoose from 'mongoose';
 import { Client } from 'discord.js';
 import * as config from '../config';
 import parseCommandParameters from '../utilities/parseCommandParameters';
@@ -66,7 +65,6 @@ export class Mattis extends Client {
 	private async build() {
 		const start = Date.now();
 		this.handleEvents();
-		this.databaseConnect();
 		// this.loadCommands();
 		this.on('ready', () => {
 			botReady();
@@ -82,16 +80,6 @@ export class Mattis extends Client {
 		);
 		this.destroy();
 		setTimeout(() => new Mattis(), 30000);
-	}
-
-	private async databaseConnect() {
-		try {
-			await mongoose.connect(config.mongoUri).then(() => {
-				this.logger.info('[Database] Succesfully connected to the Database.');
-			});
-		} catch (error) {
-			this.logger.error(error);
-		}
 	}
 
 	private async handleEvents() {
