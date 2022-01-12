@@ -1,6 +1,6 @@
 import DiscordJS, { Presence } from 'discord.js';
-import * as config from '../config';
-import { mattis } from '../bot';
+import * as config from '../../config';
+import { mattis } from '../../bot';
 
 const botReady = async () => {
 	await doPresence();

@@ -1,9 +1,11 @@
-import { botReady } from '../utilities/botReady';
+import { botReady } from '../utilities/EventsUtilities/botReady';
 import { guildsCache } from '../utilities/guildsCache';
 import { createLogger } from './Logger';
 import { Client } from 'discord.js';
+import { Database } from '../structures/Database';
 import * as config from '../config';
 import parseCommandParameters from '../utilities/parseCommandParameters';
+import { guildAddToDatabase } from '../utilities/EventsUtilities/guildAddToDatabase';
 
 export class Mattis extends Client {
 	public readonly logger = createLogger('bot');
@@ -17,7 +19,6 @@ export class Mattis extends Client {
 		'emojiUpdate',
 		'guildBanAdd',
 		'guildBanRemove',
-		'guildCreate',
 		'guildDelete',
 		'guildIntegrationsUpdate',
 		'guildMemberAdd',
@@ -56,6 +57,7 @@ export class Mattis extends Client {
 		'voiceStateUpdate',
 		'webhookUpdate',
 	];
+	public Database = new Database();
 
 	constructor() {
 		super(config.clientOptions);
@@ -64,6 +66,7 @@ export class Mattis extends Client {
 
 	private async build() {
 		const start = Date.now();
+		await this.databaseConnect();
 		this.handleEvents();
 		// this.loadCommands();
 		this.on('ready', () => {
@@ -86,11 +89,15 @@ export class Mattis extends Client {
 		this.on('raw', async (event) => {
 			this.handleRawEvent(event);
 		});
+		this.on('guildCreate', async (guild) => {
+			await guildAddToDatabase(guild, this)
+				.then(() => this.logger.info('Nowy serwer dodany do bazy danych!'))
+				.catch((error) => this.logger.error(error));
+		});
 		for (const clientEvent of this.clientEvents) {
 			this.logger.info(`[EventsLoader] Event '${clientEvent}' loaded.`);
 			this.on(clientEvent, async (...args: any) => {
 				const eventData = await this.getData(...args);
-				console.log(clientEvent);
 				if (!eventData) return;
 				this.handleEventAction(eventData, clientEvent);
 			});
@@ -193,6 +200,16 @@ export class Mattis extends Client {
 				);
 			}
 		}
+	}
+
+	private async databaseConnect() {
+		await this.Database.connect()
+			.then(() => {
+				this.Database.log.info(
+					'[Database] Succesfully connected to the Database!'
+				);
+			})
+			.catch((error) => this.Database.log.error(error));
 	}
 
 	// private loadCommands(){}

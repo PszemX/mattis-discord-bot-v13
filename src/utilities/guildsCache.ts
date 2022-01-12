@@ -1,5 +1,6 @@
 import { readdirRecSync } from './reddirRecSync';
 import { actions } from './actions';
+import { Database } from '../structures/Database';
 
 const directCache = {
 	actionsByEvent: {
@@ -47,6 +48,12 @@ const createCommandsTree = (guildCache: any) => {
 		}
 	});
 	return tree;
+};
+
+const getGuildSettings = async (Database: Database) => {
+	const guildsData = Database.db('guildsData').collection('settings').find();
+	for (const guildData in guildsData) {
+	}
 };
 
 const guildsCache = readdirRecSync('./dist/guildsData').reduce(
