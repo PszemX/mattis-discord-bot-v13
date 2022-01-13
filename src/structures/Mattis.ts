@@ -1,13 +1,16 @@
 import { botReady } from '../utilities/EventsUtilities/botReady';
-import { guildsCache } from '../utilities/guildsCache';
+import { updateGuildsData } from '../utilities/updateGuildsData';
 import { createLogger } from './Logger';
-import { Client } from 'discord.js';
+import { Client, Collection } from 'discord.js';
 import { Database } from '../structures/Database';
 import * as config from '../config';
 import parseCommandParameters from '../utilities/parseCommandParameters';
 import { guildAddToDatabase } from '../utilities/EventsUtilities/guildAddToDatabase';
+import { isThisYear } from 'date-fns/esm';
 
 export class Mattis extends Client {
+	public Database = new Database();
+	private GuildsData = new Collection();
 	public readonly logger = createLogger('bot');
 	private readonly clientEvents = [
 		'channelCreate',
@@ -57,7 +60,6 @@ export class Mattis extends Client {
 		'voiceStateUpdate',
 		'webhookUpdate',
 	];
-	public Database = new Database();
 
 	constructor() {
 		super(config.clientOptions);
@@ -67,6 +69,7 @@ export class Mattis extends Client {
 	private async build() {
 		const start = Date.now();
 		await this.databaseConnect();
+		await this.initialGuildsData();
 		this.handleEvents();
 		// this.loadCommands();
 		this.on('ready', () => {
@@ -139,7 +142,7 @@ export class Mattis extends Client {
 				break;
 			}
 		}
-		const guildCache = guildId ? guildsCache[guildId] : undefined;
+		const guildCache = guildId ? this.GuildsData.get(guildId) : undefined;
 		if (!guildCache) return null;
 		const data = {
 			mattis: this,
@@ -210,6 +213,24 @@ export class Mattis extends Client {
 				);
 			})
 			.catch((error) => this.Database.log.error(error));
+	}
+
+	private async initialGuildsData() {
+		// Wpisanie do bazy danych serwerów, których nie ma, a na których znajduje się Mattis.
+		// const mattisGuildsList = this.guilds.cache;
+
+		// Stworzenie guildsData dla każdego serwera w bazie danych.
+		const databaseGuildIds = (
+			await this.Database.db('guildsData').listCollections().toArray()
+		).map((u) => u.name);
+		for (const guildId of databaseGuildIds) {
+			const guildSettings = await this.Database.guildsData(guildId).findOne({
+				id: guildId,
+			});
+			if (guildId != 'settings') {
+				this.GuildsData.set(guildId, await updateGuildsData(guildSettings));
+			}
+		}
 	}
 
 	// private loadCommands(){}

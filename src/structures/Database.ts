@@ -9,6 +9,13 @@ export class Database extends MongoClient {
 		super(mongoUri);
 	}
 
+	public guildsData(collection: string) {
+		return this.db('guildsData').collection(collection);
+	}
+
+	public usersData(collection: string) {
+		return this.db('usersData').collection(collection);
+	}
 	// private async databaseConnect() {
 	// 	// Database -> guildsData, usersData itd...
 	// 	// Collection -> id serwera, id użytkownika itd...
