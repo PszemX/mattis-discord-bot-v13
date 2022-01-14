@@ -3,9 +3,7 @@ import actionTextReplace from '../../utilities/actionTextReplace';
 module.exports = {
 	id: 'welcomePrivateMessage',
 	event: 'guildMemberAdd',
-	tags: {
-		informative: true,
-	},
+	tags: {},
 	isOnlyForHumans: true,
 	trigger: async (data: any) => true,
 	func: async function (data: any) {

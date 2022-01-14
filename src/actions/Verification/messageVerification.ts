@@ -1,9 +1,7 @@
 module.exports = {
 	id: 'messageVerification',
 	event: 'messageCreate',
-	tags: {
-		informative: true,
-	},
+	tags: {},
 	isOnlyForHumans: true,
 	trigger: async function (data: any) {
 		return (

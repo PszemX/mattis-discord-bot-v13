@@ -1,9 +1,7 @@
 module.exports = {
 	id: 'emojiVerification',
 	event: 'messageReactionAdd',
-	tags: {
-		informative: true,
-	},
+	tags: {},
 	isOnlyForHumans: true,
 	trigger: async function (data: any) {
 		return (
