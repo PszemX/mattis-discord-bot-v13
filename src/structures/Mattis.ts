@@ -224,7 +224,7 @@ export class Mattis extends Client {
 			await this.Database.db('guildsData').listCollections().toArray()
 		).map((u) => u.name);
 		for (const guildId of databaseGuildIds) {
-			const guildSettings = await this.Database.guildsData(guildId).findOne({
+			const guildSettings = await this.Database.guildsData('settings').findOne({
 				id: guildId,
 			});
 			if (guildId != 'settings') {

@@ -12,7 +12,7 @@
 		},
 		"welcomePrivateMessage": {
 			"enabled": true,
-			"text": "Witaj na serwerze Neon Vibe!",
+			"text": "Witaj na serwerze Neon Vibe! Napisz na kanale zasady 'tak', a następnie zostaw reakcję na kanale 'weryfikacja'",
 			"deleteTime": 0
 		},
 		"welcomeRole": {
@@ -23,15 +23,15 @@
 			"enabled": true,
 			"messageText": "tak",
 			"messageChannelId": "720305106838487085",
-			"roleAddId": "730513984171671604",
+			"roleAddId": "720302115762733097",
 			"roleRemoveId": ""
 		},
 		"emojiVerification": {
 			"enabled": true,
 			"messageId": "741427498092593214",
 			"emoji": "✅",
-			"roleAddId": "709402444781715466",
-			"roleRemoveId": "730513984171671604"
+			"roleAddId": "705921111635919048",
+			"roleRemoveId": "720302115762733097"
 		},
 		"ping": {
 			"enabled": true,
@@ -41,6 +41,11 @@
 		"covid": {
 			"enabled": true,
 			"triggers": ["covid"],
+			"cooldown": 3000
+		},
+		"rps": {
+			"enabled": true,
+			"triggers": ["rps"],
 			"cooldown": 3000
 		}
 	}
