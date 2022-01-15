@@ -18,6 +18,6 @@ module.exports = {
 		} else {
 			opponent = data.targetMember.user;
 		}
-		new RpsGame({ playerOne, playerTwo, gameChannel, data });
+		new RpsGame(playerOne, opponent, gameChannel, data);
 	},
 };

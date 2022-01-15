@@ -295,7 +295,7 @@ const translation = {
 			rock: 'kamień',
 			paper: 'papier',
 			scissors: 'nożyce',
-			rpsTitle: 'Kamień, papier, nożyce',
+			rpsTitle: 'Kamień ✊, papier 🖐, nożyce ✌',
 			playOneMoreTime: 'Zagraj jeszcze raz!',
 			singlePlayerDesc: 'Kliknij reakcję, by zagrać!',
 			singlePlayerVictory: 'Wygrałeś!',

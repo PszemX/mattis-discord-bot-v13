@@ -1,31 +1,55 @@
-import { BaseClient, Message, TextChannel, User } from 'discord.js';
+import {
+	BaseClient,
+	ColorResolvable,
+	Message,
+	MessageEmbed,
+	TextChannel,
+	User,
+} from 'discord.js';
 import lang from '../../utilities/lang';
+import colors from '../../utilities/colors.json';
 
 export class RpsGame extends BaseClient {
 	private readonly invReacts = ['✅', '❌'];
 	private readonly rpsReacts = ['⛰️', '🧻', '✂️'];
 	private readonly collectorOpts = { max: 1, time: 60000, errors: ['time'] };
 	private guildMessage: Message | undefined;
-	private playerOne: User | undefined;
-	private playerTwo: User | undefined;
-	private gameChannel: TextChannel | undefined;
-	rounds = 0;
+	private rounds = 0;
+	private gameEmbed: MessageEmbed = new MessageEmbed()
+		.setColor(<ColorResolvable>colors.blue)
+		.setTitle(lang('actions.rps.rpsTitle', this.data))
+		.setTimestamp();
 	startTimestamp = Date.now();
-	data: any;
 
-	constructor(args: {
-		playerOne: User;
-		playerTwo: User;
-		gameChannel: TextChannel;
-		data: any;
-	}) {
+	constructor(
+		private playerOne: User,
+		private playerTwo: User,
+		private gameChannel: TextChannel,
+		private data: any
+	) {
 		super();
-		Object.assign(this, args);
 		this.gameStart();
 	}
 
 	private async gameStart() {
-		if (this.gameChannel) this.gameChannel.send('Siema');
+		// this.gameChannel.send({ embeds: [this.gameEmbed] });
+		if (this.playerTwo?.id == '705066462083285014') {
+			this.singlePlayerGame();
+		} else {
+			this.multiPlayerGame();
+		}
+	}
+
+	private async singlePlayerGame() {
+		this.gameEmbed
+			.setAuthor('', this.playerOne.displayAvatarURL())
+			.setDescription(`${this.playerOne} **VS** ${this.data.mattis.user}`)
+			.setFooter(lang('actions.rps.singlePlayerDesc', this.data));
+		this.gameChannel.send({ embeds: [this.gameEmbed] });
+	}
+
+	private async multiPlayerGame() {
+		this.gameChannel.send('Multiplayer');
 	}
 
 	// private async checkWinner(playerOneChoice, playerTwoChoice) {
