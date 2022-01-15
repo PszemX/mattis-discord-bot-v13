@@ -17,7 +17,7 @@ export class RpsGame extends BaseClient {
 	private rounds = 0;
 	private gameEmbed: MessageEmbed = new MessageEmbed()
 		.setColor(<ColorResolvable>colors.blue)
-		.setTitle(lang('actions.rps.rpsTitle', this.data))
+		// .setTitle(lang('actions.rps.rpsTitle', this.data))
 		.setTimestamp();
 	startTimestamp = Date.now();
 
@@ -42,7 +42,10 @@ export class RpsGame extends BaseClient {
 
 	private async singlePlayerGame() {
 		this.gameEmbed
-			.setAuthor('', this.playerOne.displayAvatarURL())
+			.setAuthor(
+				lang('actions.rps.rpsTitle', this.data),
+				this.playerOne.displayAvatarURL()
+			)
 			.setDescription(`${this.playerOne} **VS** ${this.data.mattis.user}`)
 			.setFooter(lang('actions.rps.singlePlayerDesc', this.data));
 		this.gameChannel.send({ embeds: [this.gameEmbed] });

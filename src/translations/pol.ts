@@ -297,7 +297,7 @@ const translation = {
 			scissors: 'nożyce',
 			rpsTitle: 'Kamień ✊, papier 🖐, nożyce ✌',
 			playOneMoreTime: 'Zagraj jeszcze raz!',
-			singlePlayerDesc: 'Kliknij reakcję, by zagrać!',
+			singlePlayerDesc: 'Dokonaj wyboru!',
 			singlePlayerVictory: 'Wygrałeś!',
 			singlePlayerLose: 'Przegrałeś 😢',
 			singlePlayerDraw: 'Remis!',
