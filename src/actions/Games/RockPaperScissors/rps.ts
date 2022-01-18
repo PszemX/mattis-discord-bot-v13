@@ -1,12 +1,18 @@
-import lang from '../../../utilities/lang';
-import colors from '../../../utilities/colors.json';
-import { RpsGame } from '../../../structures/ActionStructures/RpsGame';
+import { RpsGame } from '../../../structures/ActionStructures/RpsStructures/RpsGame';
 import { TextChannel, User } from 'discord.js';
 module.exports = {
 	id: 'rps',
 	event: 'command',
 	tags: { game: true },
-	syntaxes: [[], [{ type: 'member', name: 'targetMember' }]],
+	syntaxes: [
+		[],
+		[{ type: 'natural', name: 'maxPoints' }],
+		[{ type: 'member', name: 'targetMember' }],
+		[
+			{ type: 'member', name: 'targetMember' },
+			{ type: 'natural', name: 'maxPoints' },
+		],
+	],
 	func: async function (data: any, parameters: any) {
 		const playerOne: User = data.args.member.user;
 		const playerTwo: User = parameters.targetMember;
@@ -18,6 +24,8 @@ module.exports = {
 		} else {
 			opponent = data.targetMember.user;
 		}
-		new RpsGame(playerOne, opponent, gameChannel, data);
+		let maxPoints: Number = 1;
+		if (parameters.maxPoints) maxPoints = parameters.maxPoints;
+		new RpsGame(playerOne, opponent, gameChannel, maxPoints, data);
 	},
 };

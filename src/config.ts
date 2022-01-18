@@ -23,6 +23,7 @@ export const guildCacheLastDuration: Number = Number(
 export const guildCacheLastInterval: number =
 	Number(process.env.GUILDCACHE_LAST_INTERVAL) || 60000;
 export const commandsCooldown: Number = Number(process.env.COMMANDS_COOLDOWN);
+export const clientId: string = String(process.env.CLIENT_ID);
 
 // const allIntents = new Intents(32767);
 export const clientOptions: ClientOptions = {
