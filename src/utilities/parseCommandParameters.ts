@@ -10,7 +10,7 @@ const channelIdRegex = /^\<\#[0-9]+\>$/;
 const digitsRegex = /[0-9]+/;
 const lettersRegex = /[a-zA-Z]+/;
 
-const converters = {
+const converters: any = {
 	word: {
 		test: (text: string) => true,
 		convert: (text: string, data: any) => text,
@@ -89,7 +89,7 @@ const parseWords = async (
 			);
 			if (returnParameters) return returnParameters;
 		}
-	} else if ((converters as any)[syntax[0].type].test(words[0], data))
+	} else if (converters[syntax[0].type].test(words[0], data))
 		return await parseWords(
 			{
 				[syntax[0].name]: await (converters as any)[syntax[0].type].convert(
