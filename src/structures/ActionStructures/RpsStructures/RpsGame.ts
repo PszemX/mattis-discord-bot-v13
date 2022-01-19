@@ -19,10 +19,26 @@ export class RpsGame extends BaseClient {
 	private readonly possibleChoices = ['rock', 'paper', 'scissors'];
 	private gameMessage!: Message;
 	private gameEmbed: MessageEmbed = new MessageEmbed()
+		.setAuthor(
+			lang('actions.rps.rpsTitle', this.data),
+			this.playerOne.displayAvatarURL()
+		)
 		.setColor(<ColorResolvable>colors.blue)
 		.setTimestamp();
 	private isMultiplayerGame: boolean = false;
 	private actionSettings = this.data.guildCache.settings.actions['rps'];
+	private readonly playAgainButton = new MessageButton()
+		.setCustomId('restart')
+		.setLabel(lang('actions.rps.playAgain', this.data))
+		.setStyle(1);
+	private readonly acceptButton = new MessageButton()
+		.setCustomId('accept')
+		.setLabel(lang('actions.rps.accept', this.data))
+		.setStyle(3);
+	private readonly declineButton = new MessageButton()
+		.setCustomId('decline')
+		.setLabel(lang('actions.rps.decline', this.data))
+		.setStyle(4);
 
 	constructor(
 		private playerOne: User,
@@ -49,11 +65,13 @@ export class RpsGame extends BaseClient {
 	}
 
 	private async multiplayerGame() {
-		// this.inviteOpponent();
+		this.inviteOpponent();
 		// this.generateGameBeginMessage();
 		// this.gameRound();
 		this.gameChannel.send('Multiplayer');
 	}
+
+	private async inviteOpponent() {}
 
 	private async generateGameBeginMessage() {
 		const canvas = await this.createGameCanvas();
@@ -63,37 +81,21 @@ export class RpsGame extends BaseClient {
 		);
 
 		this.gameEmbed
-			.setAuthor(
-				lang('actions.rps.rpsTitle', this.data),
-				this.playerOne.displayAvatarURL()
-			)
 			.setDescription(`${this.playerOne} **VS** ${this.data.mattis.user}`)
 			.setFooter(lang('actions.rps.singlePlayerDesc', this.data))
 			.setImage('attachment://rpsBackground.png');
 
 		if (this.maxPoints > 1) this.addEmbedPlayersDashboard();
 
-		const row = new MessageActionRow().addComponents(
-			new MessageButton()
-				.setCustomId('rock')
-				.setLabel(lang('actions.rps.rock', this.data))
-				.setStyle('PRIMARY')
-				.setEmoji(lang('actions.rps.rockEmoji', this.data)),
-			new MessageButton()
-				.setCustomId('paper')
-				.setLabel(lang('actions.rps.paper', this.data))
-				.setStyle('PRIMARY')
-				.setEmoji(lang('actions.rps.paperEmoji', this.data)),
-			new MessageButton()
-				.setCustomId('scissors')
-				.setLabel(lang('actions.rps.scissors', this.data))
-				.setStyle('PRIMARY')
-				.setEmoji(lang('actions.rps.scissorsEmoji', this.data))
-		);
+		const row = this.generateRpsButtons();
+		this.setGameMessage(attachment, row);
+	}
+
+	private async setGameMessage(attachment?: any, row?: MessageActionRow) {
 		this.gameMessage = await this.gameChannel.send({
 			embeds: [this.gameEmbed],
 			files: [attachment],
-			components: [row],
+			components: row ? [row] : [],
 		});
 	}
 
@@ -143,6 +145,27 @@ export class RpsGame extends BaseClient {
 				break;
 		}
 		return embed;
+	}
+
+	private generateRpsButtons() {
+		const row = new MessageActionRow().addComponents(
+			new MessageButton()
+				.setCustomId('rock')
+				.setLabel(lang('actions.rps.rock', this.data))
+				.setStyle(1)
+				.setEmoji(lang('actions.rps.rockEmoji', this.data)),
+			new MessageButton()
+				.setCustomId('paper')
+				.setLabel(lang('actions.rps.paper', this.data))
+				.setStyle(1)
+				.setEmoji(lang('actions.rps.paperEmoji', this.data)),
+			new MessageButton()
+				.setCustomId('scissors')
+				.setLabel(lang('actions.rps.scissors', this.data))
+				.setStyle(1)
+				.setEmoji(lang('actions.rps.scissorsEmoji', this.data))
+		);
+		return row;
 	}
 
 	private async gameRound() {
@@ -208,11 +231,11 @@ export class RpsGame extends BaseClient {
 			(playerOneChoice === 'scissors' && playerTwoChoice === 'paper') ||
 			(playerOneChoice === 'paper' && playerTwoChoice === 'rock')
 		) {
-			return 'playerOne';
+			return 'victory';
 		} else if (playerOneChoice == playerTwoChoice) {
 			return 'draw';
 		} else {
-			return 'playerTwo';
+			return 'lose';
 		}
 	}
 
@@ -235,7 +258,7 @@ export class RpsGame extends BaseClient {
 				lang(`actions.rps.${loserPlayerChoice}Emoji`, this.data),
 				true
 			)
-			.setFooter(lang('actions.rps.playOneMoreTime', this.data))
+			.setFooter(lang('actions.rps.playAgain', this.data))
 			.setImage('attachment://rpsBackground.png')
 			.setTimestamp();
 
