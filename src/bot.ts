@@ -1,6 +1,7 @@
-import { Mattis } from './structures/Mattis';
+import { Mattis } from './classes/Mattis';
+import { clientOptions } from './config';
 
-export const mattis = new Mattis();
+export const mattis = new Mattis(clientOptions);
 
 process.on('exit', (code) => {
 	console.log(`NodeJS process exited with code ${code}`);
@@ -13,5 +14,7 @@ process.on('uncaughtException', (err) => {
 process.on('warning', (warning) => {
 	console.log('PROCESS_WARNING: ', warning);
 });
+
+mattis.build().catch((e) => mattis.Logger.error('PROMISE_ERR:', e));
 
 // mattis.build().catch((e: any) => console.log('PROMISE_ERR:', e));

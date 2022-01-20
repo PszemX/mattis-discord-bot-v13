@@ -1,12 +1,19 @@
-import { createLogger } from './Logger';
 import { MongoClient } from 'mongodb';
-import { mongoUri } from '../config';
+import { createLogger } from './LogsManager';
 
 export class Database extends MongoClient {
 	public readonly log = createLogger('Database');
 
 	constructor() {
-		super(mongoUri);
+		super(process.env.MONGO_URI || '');
+	}
+
+	public async makeConnection() {
+		await this.connect()
+			.then(() => {
+				this.log.info('[Database] Succesfully connected to the Database!');
+			})
+			.catch((error) => this.log.error(error));
 	}
 
 	public guildsData(collection: string) {

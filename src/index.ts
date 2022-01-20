@@ -1,9 +1,8 @@
 import 'dotenv/config';
-import figlet from 'figlet';
+import { createLogger } from './classes/LogsManager';
 import { ShardingManager } from 'discord.js';
 import { resolve } from 'path';
-import { createLogger } from './structures/Logger';
-import { discordToken } from './config';
+import figlet from 'figlet';
 
 const log = createLogger('shardingManager');
 
@@ -19,7 +18,7 @@ console.log(
 const manager = new ShardingManager(resolve(__dirname, 'bot.js'), {
 	totalShards: 'auto',
 	respawn: true,
-	token: discordToken,
+	token: process.env.DISCORD_TOKEN,
 	mode: 'worker',
 });
 

@@ -45,7 +45,7 @@ const doPresence = async (): Promise<Presence | undefined> => {
 		return setPresence(false);
 	} catch (e) {
 		if ((e as Error).message !== 'Shards are still being spawned.')
-			mattis.logger.error(String(e));
+			mattis.Logger.error(String(e));
 		return undefined;
 	} finally {
 		setInterval(() => setPresence(true), config.presenceData.interval);

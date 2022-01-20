@@ -18,27 +18,21 @@ import { clientId } from '../../../config';
 export class RpsGame extends BaseClient {
 	private readonly possibleChoices = ['rock', 'paper', 'scissors'];
 	private gameMessage!: Message;
-	private gameEmbed: MessageEmbed = new MessageEmbed()
-		.setAuthor(
-			lang('actions.rps.rpsTitle', this.data),
-			this.playerOne.displayAvatarURL()
-		)
-		.setColor(<ColorResolvable>colors.blue)
-		.setTimestamp();
+	private gameEmbed: MessageEmbed;
 	private isMultiplayerGame: boolean = false;
 	private actionSettings = this.data.guildCache.settings.actions['rps'];
-	private readonly playAgainButton = new MessageButton()
-		.setCustomId('restart')
-		.setLabel(lang('actions.rps.playAgain', this.data))
-		.setStyle(1);
-	private readonly acceptButton = new MessageButton()
-		.setCustomId('accept')
-		.setLabel(lang('actions.rps.accept', this.data))
-		.setStyle(3);
-	private readonly declineButton = new MessageButton()
-		.setCustomId('decline')
-		.setLabel(lang('actions.rps.decline', this.data))
-		.setStyle(4);
+	// private readonly playAgainButton = new MessageButton()
+	// 	.setCustomId('restart')
+	// 	.setLabel(lang('actions.rps.playAgain', this.data))
+	// 	.setStyle(1);
+	// private readonly acceptButton = new MessageButton()
+	// 	.setCustomId('accept')
+	// 	.setLabel(lang('actions.rps.accept', this.data))
+	// 	.setStyle(3);
+	// private readonly declineButton = new MessageButton()
+	// 	.setCustomId('decline')
+	// 	.setLabel(lang('actions.rps.decline', this.data))
+	// 	.setStyle(4);
 
 	constructor(
 		private playerOne: User,
@@ -48,6 +42,13 @@ export class RpsGame extends BaseClient {
 		private data: any
 	) {
 		super();
+		this.gameEmbed = new MessageEmbed()
+			.setAuthor(
+				lang('actions.rps.rpsTitle', this.data),
+				this.playerOne.displayAvatarURL()
+			)
+			.setColor(<ColorResolvable>colors.blue)
+			.setTimestamp();
 		this.gameStart();
 	}
 

@@ -123,4 +123,4 @@ const parseCommandParameters = async (
 	throw 'invalid syntax';
 };
 
-export default parseCommandParameters;
+export { parseCommandParameters };

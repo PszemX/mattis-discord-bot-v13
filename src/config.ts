@@ -1,29 +1,12 @@
+import { IpresenceData } from './typings/enum';
 import {
 	ClientOptions,
 	Intents,
 	Options,
 	LimitedCollection,
 	ClientPresenceStatus,
+	ActivityType,
 } from 'discord.js';
-
-export const discordToken =
-	process.env.ENVIRONMENT === 'production'
-		? process.env.DISCORD_PRODUCTION_TOKEN
-		: process.env.DISCORD_DEVELOPMENT_TOKEN;
-
-export const mongoUri = process.env.MONGO_URI ?? '';
-export const owners: string[] = JSON.parse(process.env.OWNERS ?? '[]');
-export const defaultPrefix: string = String(process.env.DEFAULT_PREFIX);
-export const isProd: Boolean = process.env.ENVIRONMENT === 'production';
-export const isDev: Boolean = !isProd;
-export const baseLanguage: string = String(process.env.BASE_LANGUAGE);
-export const guildCacheLastDuration: Number = Number(
-	process.env.GUILDCACHE_LAST_DURATION
-);
-export const guildCacheLastInterval: number =
-	Number(process.env.GUILDCACHE_LAST_INTERVAL) || 60000;
-export const commandsCooldown: Number = Number(process.env.COMMANDS_COOLDOWN);
-export const clientId: string = String(process.env.CLIENT_ID);
 
 // const allIntents = new Intents(32767);
 export const clientOptions: ClientOptions = {
@@ -59,15 +42,33 @@ export const clientOptions: ClientOptions = {
 	}),
 	retryLimit: 3,
 };
+export const owners: string[] = JSON.parse(process.env.OWNERS ?? '[]');
+export const defaultPrefix: string = String(process.env.DEFAULT_PREFIX);
+export const isProd: Boolean = process.env.ENVIRONMENT === 'production';
+export const isDev: Boolean = !isProd;
+export const baseLanguage: string = String(process.env.BASE_LANGUAGE);
+export const guildCacheLastDuration: Number = Number(
+	process.env.GUILDCACHE_LAST_DURATION
+);
+export const guildCacheLastInterval: number =
+	Number(process.env.GUILDCACHE_LAST_INTERVAL) || 60000;
+export const commandsCooldown: Number = Number(process.env.COMMANDS_COOLDOWN);
+export const clientId: string = String(process.env.CLIENT_ID);
+export const djRoleName = process.env.DJ_ROLE_NAME! || 'DJ';
+export const muteRoleName = process.env.MUTE_ROLE_NAME! || 'Muted';
+export const yesEmoji = process.env.YES_EMOJI! || '✅';
+export const noEmoji = process.env.NO_EMOJI! || '❌';
+export const streamStrategy = process.env.STREAM_STRATEGY! || 'youtube-dl';
 
-export const presenceData: any /*IpresenceData*/ = {
-	activities: [
-		{ name: `My default prefix is ${defaultPrefix}`, type: 'PLAYING' },
-		{ name: '@M.A.T.T.I.S', type: 'LISTENING' },
-		{ name: '{users.count} users', type: 'WATCHING' },
-		{ name: 'Hello there, my name is M.A.T.T.I.S', type: 'PLAYING' },
-		{ name: 'Wanna be my friend?', type: 'COMPETING' },
-	],
+export const presenceData: IpresenceData = {
+	activities: (JSON.parse(process.env.ACTIVITIES! || '[]') as string[]).map(
+		(x, i) => ({
+			name: x,
+			type: ((JSON.parse(process.env.ACTIVITY_TYPES! || '[]') as string[])[
+				i
+			]?.toUpperCase() || 'PLAYING') as Exclude<ActivityType, 'CUSTOM'>,
+		})
+	),
 	status: ['online'] as ClientPresenceStatus[],
-	interval: 300000,
+	interval: 60000,
 };

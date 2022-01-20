@@ -1,4 +1,4 @@
-import { RpsGame } from '../../../structures/ActionStructures/RpsStructures/RpsGame';
+import { RpsGame } from '../../../classes/ActionStructures/RpsStructures/RpsGame';
 import { TextChannel, User } from 'discord.js';
 module.exports = {
 	id: 'rps',

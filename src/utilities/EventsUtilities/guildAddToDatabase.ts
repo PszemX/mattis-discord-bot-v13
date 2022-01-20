@@ -1,6 +1,6 @@
 import { Guild } from 'discord.js';
 import { defaultPrefix, baseLanguage } from '../../config';
-import { Mattis } from '../../structures/Mattis';
+import { Mattis } from '../../classes/Mattis';
 
 const guildAddToDatabase = async (guild: Guild, Mattis: Mattis) => {
 	const guildDataSchema = {
