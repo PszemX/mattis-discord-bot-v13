@@ -2,7 +2,7 @@ import { Mattis } from '../classes/Mattis';
 import { Guild, Role } from 'discord.js';
 import { parse, resolve } from 'path';
 import { FFmpeg } from 'prism-media';
-import { IEventData, IGuildCache } from '../typings';
+import { IEventData } from '../typings';
 
 export class ClientUtils {
 	public constructor(public readonly client: Mattis) {}

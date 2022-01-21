@@ -1,4 +1,6 @@
+import { GuildCache } from '../classes/GuildCache';
 import { readdirRecSync } from './reddirRecSync';
+import { Mattis } from '../classes/Mattis';
 import { actions } from './actions';
 
 const directCache = {
@@ -49,66 +51,13 @@ const createCommandsTree = (guildCache: any) => {
 	return tree;
 };
 
-const updateGuildsData = async (guildSettings: any) => {
-	let guildCache = {
-		settings: guildSettings,
-		actionsByEvent: <any>{
-			command: [],
-			channelCreate: [],
-			channelDelete: [],
-			channelPinsUpdate: [],
-			channelUpdate: [],
-			emojiCreate: [],
-			emojiDelete: [],
-			emojiUpdate: [],
-			guildBanAdd: [],
-			guildBanRemove: [],
-			guildCreate: [],
-			guildDelete: [],
-			guildIntegrationsUpdate: [],
-			guildMemberAdd: [],
-			guildMemberAvailable: [],
-			guildMemberRemove: [],
-			guildMembersChunk: [],
-			guildMemberUpdate: [],
-			guildUnavailable: [],
-			guildUpdate: [],
-			interactionCreate: [],
-			inviteCreate: [],
-			inviteDelete: [],
-			messageCreate: [],
-			messageDelete: [],
-			messageDeleteBulk: [],
-			messageReactionAdd: [],
-			messageReactionRemove: [],
-			messageReactionRemoveAll: [],
-			messageReactionRemoveEmoji: [],
-			messageUpdate: [],
-			presenceUpdate: [],
-			roleCreate: [],
-			roleDelete: [],
-			roleUpdate: [],
-			stageInstanceCreate: [],
-			stageInstanceDelete: [],
-			stageInstanceUpdate: [],
-			threadCreate: [],
-			threadDelete: [],
-			threadListSync: [],
-			threadMembersUpdate: [],
-			threadMemberUpdate: [],
-			threadUpdate: [],
-			typingStart: [],
-			userUpdate: [],
-			voiceStateUpdate: [],
-			webhookUpdate: [],
-		},
-		commandsTree: <any>null,
-	};
+const updateGuildsData = async (Mattis: Mattis, guildSettings: any) => {
+	const guildCache = new GuildCache(guildSettings);
 	for (const actionId of Object.keys(guildCache.settings.actions)) {
 		let actionSettings = guildCache.settings.actions[actionId];
 		if (actionSettings.enabled) {
-			let action = actions[actionId];
-			guildCache.actionsByEvent[action.event].push(action);
+			let action = Mattis.Actions.get(actionId);
+			if (action) guildCache.actionsByEvent[action.event].push(action);
 		}
 	}
 	guildCache.commandsTree = createCommandsTree(guildCache);

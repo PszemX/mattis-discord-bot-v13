@@ -8,7 +8,9 @@ export class EventsManager {
 	public load(): void {
 		fs.readdir(resolve(this.path))
 			.then(async (events) => {
-				this.Mattis.Logger.info(`Loading ${events.length} events...`);
+				this.Mattis.Logger.info(
+					`[EventManager] Loading ${events.length} events...`
+				);
 				for (const file of events) {
 					const event = await this.Mattis.utils.import<IEvent>(
 						resolve(this.path, file),
@@ -17,19 +19,21 @@ export class EventsManager {
 					if (event === undefined)
 						throw new Error(`File ${file} is not a valid event file.`);
 					this.Mattis.Logger.info(
-						`Events on listener ${event.name.toString()} has been added.`
+						`[EventManager] Events on listener ${event.name.toString()} has been added.`
 					);
 
 					this.Mattis.on(event.name, async (...args) => {
 						const eventData = await this.Mattis.utils.getEventData(...args);
 						if (!eventData.guildCache) return;
 						await this.handleEventAction(eventData, event);
-						event.execute(eventData);
+						event.execute();
 					});
 				}
 			})
 			.catch((err) => this.Mattis.Logger.error('EVENTS_LOADER_ERR:', err))
-			.finally(() => this.Mattis.Logger.info('Done loading events.'));
+			.finally(() =>
+				this.Mattis.Logger.info('[EventManager] Done loading events.')
+			);
 	}
 	private async handleEventAction(
 		eventData: IEventData,
@@ -45,7 +49,7 @@ export class EventsManager {
 				const actionTriggerResult: boolean = await action.trigger(eventData);
 				if (actionTriggerResult) {
 					try {
-						await action.func(eventData);
+						await action.execute(eventData);
 						this.Mattis.Logger.debug(
 							`Akcja ${action.id} na serwerze ${eventData.guildCache.settings.id}`
 						);

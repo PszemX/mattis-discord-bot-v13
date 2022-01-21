@@ -1,4 +1,5 @@
 import { ClientUtils } from '../utilities/ClientUtils';
+import { ActionsManager } from './ActionsManager';
 import { GuildsManager } from './GuildsManager';
 import { EventsManager } from './EventsManager';
 import { LogsManager } from './LogsManager';
@@ -11,6 +12,7 @@ export class Mattis extends Client {
 	public readonly config = config;
 	public readonly Logger = new LogsManager({ prod: this.config.isProd });
 	public readonly Guilds = new GuildsManager(this);
+	public readonly Actions = new ActionsManager(this, resolve(__dirname, '..', 'actions'));
 	public readonly Events = new EventsManager(this,resolve(__dirname, '..', 'events'));
 	public readonly Database = new Database();
 	public readonly utils = new ClientUtils(this);
@@ -22,6 +24,7 @@ export class Mattis extends Client {
 	public async build() {
 		const start = Date.now();
 		await this.Database.makeConnection();
+		await this.Actions.load();
 		await this.Guilds.loadGuildsData();
 		this.Events.load();
 		this.on('ready', () => {

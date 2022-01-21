@@ -1,5 +1,6 @@
-import { ClientEvents } from 'discord.js';
+import { GuildCache } from '../classes/GuildCache';
 import { Mattis } from '../classes/Mattis';
+import { ClientEvents } from 'discord.js';
 
 export interface ILoggerOptions {
 	prod: Boolean;
@@ -9,21 +10,24 @@ export interface IEvent {
 	readonly name: keyof ClientEvents;
 	execute(...args: any): void;
 }
+export interface IAction {
+	meta: any;
+	readonly id: string;
+	readonly event: string;
+	trigger(EventData: IEventData): Promise<Boolean>;
+	execute(EventData: IEventData): Promise<void>;
+}
 
 export interface IEventData {
 	readonly mattis: Mattis;
-	readonly guildCache: IGuildCache | undefined | string;
+	readonly guildCache: GuildCache | any;
 	readonly args: any;
 	readonly timestamp: number;
 }
 
-export interface IGuildCache {
-	readonly settings: any;
-	readonly actionsByEvent: any;
-	readonly commandsTree: any;
+export interface ICategoryMeta {
+	name: string;
 }
-
-export interface IAction {}
 
 declare module 'discord.js' {
 	// @ts-expect-error Override typings

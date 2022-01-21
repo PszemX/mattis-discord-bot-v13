@@ -1,13 +1,12 @@
 import { BaseEvent } from '../classes/BaseEvent';
 import DiscordJS, { Presence } from 'discord.js';
-import { IEventData } from '../typings';
 
 export class ReadyEvent extends BaseEvent {
 	public constructor(mattis: BaseEvent['mattis']) {
 		super(mattis, 'ready');
 	}
 
-	public async execute(eventData: IEventData): Promise<void> {
+	public async execute(): Promise<void> {
 		if (this.mattis.application?.owner)
 			this.mattis.config.owners.push(this.mattis.application.owner.id);
 		//await this.client.spotify.renew();

@@ -24,6 +24,9 @@ export class GuildsManager {
 	}
 
 	public async updateGuildsData(guildId: string, guildSettings: any) {
-		return this.guildsData.set(guildId, await updateGuildsData(guildSettings));
+		return this.guildsData.set(
+			guildId,
+			await updateGuildsData(this.Mattis, guildSettings)
+		);
 	}
 }
