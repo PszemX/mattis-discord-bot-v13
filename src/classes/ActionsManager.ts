@@ -42,21 +42,12 @@ export class ActionsManager extends Collection<string, IAction> {
 							for (const file of files) {
 								try {
 									const path = resolve(this.path, category, file);
-
 									const action = await this.Mattis.utils.import<IAction>(
 										path,
-										this.Mattis,
-										{ category, path }
+										{}
 									);
 									if (action === undefined)
-										throw new Error(
-											`[ActionManager] File ${file} is not a valid action file.`
-										);
-
-									action.meta = Object.assign(action.meta, {
-										path,
-										category,
-									});
+										throw new Error(`File ${file} is not a valid action file.`);
 
 									this.set(action.id, action);
 
