@@ -134,6 +134,14 @@ export class ClientUtils {
 		return file ? new file(...args) : undefined;
 	}
 
+	public async importaAction<T>(
+		path: string,
+		...args: any[]
+	): Promise<T | undefined> {
+		const file = await import(resolve(path)).then((m) => m[parse(path).name]);
+		return file ? new file(...args) : undefined;
+	}
+
 	public getFFmpegVersion(): string {
 		try {
 			const ffmpeg = FFmpeg.getInfo();

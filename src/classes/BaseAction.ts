@@ -1,8 +1,11 @@
-import { IEventData } from '../typings';
+import { IAction, IEventData } from '../typings';
 import { Mattis } from './Mattis';
 
-export abstract class BaseEventAction {
-	public constructor() {}
+export abstract class BaseEventAction implements IAction {
+	public constructor(
+		public readonly name: IAction['name'],
+		public readonly event: IAction['event']
+	) {}
 
 	public abstract trigger(EventData: IEventData): Promise<Boolean>;
 

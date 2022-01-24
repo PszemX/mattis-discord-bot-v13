@@ -11,8 +11,7 @@ export interface IEvent {
 	execute(...args: any): void;
 }
 export interface IAction {
-	meta: any;
-	readonly id: string;
+	readonly name: string;
 	readonly event: string;
 	trigger(EventData: IEventData): Promise<Boolean>;
 	execute(EventData: IEventData): Promise<void>;

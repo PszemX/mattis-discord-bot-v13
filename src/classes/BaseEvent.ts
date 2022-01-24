@@ -7,6 +7,6 @@ export abstract class BaseEvent implements IEvent {
 		public readonly name: IEvent['name']
 	) {}
 
-	// public abstract execute(...args: any): any;
-	public abstract execute(eventData: IEventData): any;
+	public abstract execute(...args: any): any;
+	// public abstract execute(eventData: IEventData): any;
 }

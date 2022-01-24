@@ -2,12 +2,8 @@ import { BaseEventAction } from '../../classes/BaseAction';
 import { IEventData } from '../../typings';
 
 export class WelcomeRoleAction extends BaseEventAction {
-	public id = 'welcomeRole';
-	public event = 'guildMemberAdd';
-	public tags = {};
-	public isOnlyForHumans: Boolean = true;
 	public constructor() {
-		super();
+		super('welcomeRole', 'guildMemberAdd');
 	}
 
 	public async trigger(EventData: IEventData) {
@@ -15,8 +11,9 @@ export class WelcomeRoleAction extends BaseEventAction {
 	}
 
 	public async execute(EventData: IEventData) {
-		EventData.args.roles.add(
-			EventData.guildCache.settings.actions[this.id].roleId
-		);
+		// EventData.args.roles.add(
+		// 	EventData.guildCache.settings.actions[this.id].roleId
+		// );
+		EventData.args.send('Siema');
 	}
 }
