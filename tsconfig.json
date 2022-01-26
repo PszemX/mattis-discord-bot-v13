@@ -14,6 +14,8 @@
 		"noEmitHelpers": true,
 		"importHelpers": true,
 		"resolveJsonModule": true,
+		"inlineSourceMap": true,
+		"inlineSources": true,
 		"typeRoots": ["node_modules/@types", "src/typings"]
 	},
 	//"exclude": [],
