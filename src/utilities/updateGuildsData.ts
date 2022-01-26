@@ -53,10 +53,10 @@ const createCommandsTree = (guildCache: any) => {
 
 const updateGuildsData = async (Mattis: Mattis, guildSettings: any) => {
 	const guildCache = new GuildCache(guildSettings);
-	for (const actionId of Object.keys(guildCache.settings.actions)) {
-		let actionSettings = guildCache.settings.actions[actionId];
+	for (const actionName of Object.keys(guildCache.settings.actions)) {
+		let actionSettings = guildCache.settings.actions[actionName];
 		if (actionSettings.enabled) {
-			let action = Mattis.Actions.get(actionId);
+			let action = Mattis.Actions.get(actionName);
 			if (action) guildCache.actionsByEvent[action.event].push(action);
 		}
 	}

@@ -1,9 +1,9 @@
 import { BaseEventAction } from '../../classes/BaseAction';
 import { IEventData } from '../../typings';
 
-export class WelcomeRoleAction extends BaseEventAction {
+export class WelcomeDirectMessageAction extends BaseEventAction {
 	public constructor() {
-		super('welcomeRole', 'guildMemberAdd');
+		super('welcomeDirectMessage', 'guildMemberAdd');
 	}
 
 	public async trigger(EventData: IEventData) {
@@ -11,8 +11,8 @@ export class WelcomeRoleAction extends BaseEventAction {
 	}
 
 	public async execute(EventData: IEventData) {
-		EventData.args.roles.add(
-			EventData.guildCache.settings.actions[this.name].roleId
-		);
+		const welcomeDirectMessage =
+			EventData.guildCache.settings.actions[this.name].text;
+		EventData.args.send(welcomeDirectMessage);
 	}
 }
