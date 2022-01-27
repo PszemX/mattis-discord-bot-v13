@@ -24,11 +24,11 @@ export class Mattis extends Client {
 	public async build() {
 		const start = Date.now();
 		await this.Database.makeConnection();
-		await this.Actions.load();
+		await this.Actions.loadActions();
 		await this.Guilds.loadGuildsData();
 		this.Events.load();
-		this.on('ready', () => {
-			// await this.commands.load();
+		this.on('ready', async () => {
+			await this.Actions.loadCommands();
 			this.Logger.debug(`Ready took ${(Date.now() - start) / 1000}s.`);
 		});
 		await this.login();

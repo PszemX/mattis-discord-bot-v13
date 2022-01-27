@@ -10,7 +10,7 @@ export class ActionsManager extends Collection<string, IAction> {
 		super();
 	}
 
-	public async load(): Promise<void> {
+	public async loadActions(): Promise<void> {
 		this.Mattis.Logger.info(`[ActionManager] Start registering actions.`);
 		const actionPaths = readdirRecSync(this.path);
 		this.Mattis.Logger.info(
@@ -37,5 +37,9 @@ export class ActionsManager extends Collection<string, IAction> {
 			}
 		}
 		this.Mattis.Logger.info(`[ActionManager] Done registering actions.`);
+	}
+
+	public async loadCommands(): Promise<void> {
+		console.log('Ładuję komendy!');
 	}
 }
