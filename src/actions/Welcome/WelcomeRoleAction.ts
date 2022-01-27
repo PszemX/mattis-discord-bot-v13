@@ -11,7 +11,7 @@ export class WelcomeRoleAction extends BaseEventAction {
 	}
 
 	public async execute(EventData: IEventData) {
-		EventData.args.roles.add(
+		await EventData.args.roles.add(
 			EventData.guildCache.settings.actions[this.name].roleId
 		);
 	}
