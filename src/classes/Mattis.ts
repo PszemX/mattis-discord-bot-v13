@@ -10,12 +10,12 @@ import { Client, ClientOptions } from 'discord.js';
 
 export class Mattis extends Client {
 	public readonly config = config;
-	public readonly Logger = new LogsManager({ prod: this.config.isProd });
-	public readonly Guilds = new GuildsManager(this);
 	public readonly Actions = new ActionsManager(this, resolve(__dirname, '..', 'actions'));
 	public readonly Events = new EventsManager(this,resolve(__dirname, '..', 'events'));
-	public readonly Database = new Database();
+	public readonly Logger = new LogsManager({ prod: this.config.isProd });
+	public readonly Guilds = new GuildsManager(this);
 	public readonly utils = new ClientUtils(this);
+	public readonly Database = new Database();
 
 	constructor(options: ClientOptions) {
 		super(options);
