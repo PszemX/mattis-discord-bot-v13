@@ -1,4 +1,3 @@
-// TODO
 import { BaseEventAction } from '../../classes/BaseEventAction';
 import { IEventData } from '../../typings';
 
