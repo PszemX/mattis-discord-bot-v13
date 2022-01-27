@@ -1,4 +1,4 @@
-import { BaseEventAction } from '../../classes/BaseAction';
+import { BaseEventAction } from '../../classes/BaseEventAction';
 import { IEventData } from '../../typings';
 
 export class WelcomeRoleAction extends BaseEventAction {

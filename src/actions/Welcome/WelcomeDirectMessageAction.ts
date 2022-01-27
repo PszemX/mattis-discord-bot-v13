@@ -1,4 +1,5 @@
-import { BaseEventAction } from '../../classes/BaseAction';
+import { actionTextReplace } from '../../utilities/actionTextReplace';
+import { BaseEventAction } from '../../classes/BaseEventAction';
 import { IEventData } from '../../typings';
 
 export class WelcomeDirectMessageAction extends BaseEventAction {
@@ -11,8 +12,10 @@ export class WelcomeDirectMessageAction extends BaseEventAction {
 	}
 
 	public async execute(EventData: IEventData) {
-		const welcomeDirectMessage =
-			EventData.guildCache.settings.actions[this.name].text;
+		const welcomeDirectMessage = actionTextReplace(
+			EventData,
+			EventData.guildCache.settings.actions[this.name].text
+		);
 		EventData.args.send(welcomeDirectMessage);
 	}
 }

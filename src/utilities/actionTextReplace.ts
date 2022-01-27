@@ -20,7 +20,7 @@ const globalReplace = (text: String, replaceMap: Map<String, String>) => {
 	return text;
 };
 
-const actionTextReplace = (data: any, text: string) => {
+export const actionTextReplace = (data: any, text: string) => {
 	let replaceMap = new Map([
 		['$userName', data?.args.user?.username],
 		['$userId', data?.args.user?.id],
@@ -73,5 +73,3 @@ const actionTextReplace = (data: any, text: string) => {
 	]);
 	return globalReplace(text, replaceMap);
 };
-
-export default actionTextReplace;

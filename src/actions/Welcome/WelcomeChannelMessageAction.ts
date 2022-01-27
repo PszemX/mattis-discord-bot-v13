@@ -1,4 +1,5 @@
-import { BaseEventAction } from '../../classes/BaseAction';
+import { actionTextReplace } from '../../utilities/actionTextReplace';
+import { BaseEventAction } from '../../classes/BaseEventAction';
 import { IEventData } from '../../typings';
 
 export class WelcomeChannelMessageAction extends BaseEventAction {
@@ -14,8 +15,10 @@ export class WelcomeChannelMessageAction extends BaseEventAction {
 		const channelId =
 			EventData.guildCache.settings.actions[this.name].channelId;
 		const channel = EventData.args.guild.channels.cache.get(channelId);
-		const welcomeChannelMessage =
-			EventData.guildCache.settings.actions[this.name].text;
+		const welcomeChannelMessage = actionTextReplace(
+			EventData,
+			EventData.guildCache.settings.actions[this.name].text
+		);
 		channel.send(welcomeChannelMessage);
 	}
 }

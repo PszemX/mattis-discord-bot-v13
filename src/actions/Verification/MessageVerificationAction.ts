@@ -1,35 +1,35 @@
-// TODO
 import { BaseEventAction } from '../../classes/BaseEventAction';
 import { IEventData } from '../../typings';
 
-export class EmojiVerificationAction extends BaseEventAction {
+export class MessageVerificationAction extends BaseEventAction {
 	public constructor() {
-		super('emojiVerification', 'messageReactionAdd');
+		super('messageVerification', 'messageCreate');
 	}
 
 	public async trigger(EventData: IEventData) {
 		const actionSettings = EventData.guildCache.settings.actions[this.name];
 		return (
-			EventData.args[0].emoji.name == actionSettings.emoji &&
-			EventData.args[0].message.id == actionSettings.messageId
+			EventData.args.channelId == actionSettings.messageChannelId &&
+			EventData.args.content == actionSettings.messageText
 		);
 	}
 
 	public async execute(EventData: IEventData) {
 		const actionSettings = EventData.guildCache.settings.actions[this.name];
-		const reactionGuild = EventData.mattis.guilds.cache.get(
-			EventData.args[0].message.guildId
+		const messageGuild = EventData.mattis.guilds.cache.get(
+			EventData.args.guildId
 		);
-		const reactionMember = reactionGuild?.members.cache.get(
-			EventData.args[0].id
+		const messageMember = messageGuild?.members.cache.get(
+			EventData.args.author.id
 		);
+		await EventData.args.delete();
 		if (actionSettings.roleRemoveId) {
 			const removeRole = actionSettings.roleRemoveId;
-			await reactionMember?.roles.remove(removeRole);
+			await messageMember?.roles.remove(removeRole);
 		}
 		if (actionSettings.roleAddId) {
 			const addRole = actionSettings.roleAddId;
-			await reactionMember?.roles.add(addRole);
+			await messageMember?.roles.add(addRole);
 		}
 	}
 }
