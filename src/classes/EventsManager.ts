@@ -21,7 +21,11 @@ export class EventsManager {
 					this.Mattis.Logger.info(
 						`[EventManager] Events on listener ${event.name.toString()} has been added.`
 					);
-
+					// Handling raw events
+					this.Mattis.on('raw', async (event) => {
+						this.handleRawEvent(event);
+					});
+					// Handling cached events
 					this.Mattis.on(event.name, async (...args) => {
 						const eventData = await this.Mattis.utils.getEventData(...args);
 						if (!eventData.guildCache) return;
@@ -35,6 +39,7 @@ export class EventsManager {
 				this.Mattis.Logger.info('[EventManager] Done loading events.')
 			);
 	}
+
 	private async handleEventAction(
 		eventData: IEventData,
 		event: IEvent
@@ -51,7 +56,7 @@ export class EventsManager {
 					try {
 						await action.execute(eventData);
 						this.Mattis.Logger.debug(
-							`Akcja ${action.id} na serwerze ${eventData.guildCache.settings.id}`
+							`Akcja ${action.name} na serwerze ${eventData.guildCache.settings.id}`
 						);
 					} catch (error) {
 						this.Mattis.Logger.error(error);
@@ -59,5 +64,34 @@ export class EventsManager {
 				}
 			}
 		}
+	}
+
+	private async handleRawEvent(event: any) {
+		// https://gist.github.com/Danktuary/27b3cef7ef6c42e2d3f5aff4779db8ba
+		const events: any = {
+			MESSAGE_REACTION_ADD: 'messageReactionAdd',
+			MESSAGE_REACTION_REMOVE: 'messageReactionRemove',
+		};
+
+		// `event.t` is the raw event name
+		if (!events.hasOwnProperty(event.t)) return;
+		const { d: data } = event;
+		const user = await this.Mattis.users.fetch(data.user_id);
+		const channel: any =
+			this.Mattis.channels.cache.get(data.channel_id) ||
+			(await user?.createDM());
+
+		// if the message is already in the cache, don't re-emit the event
+		if (channel?.messages.cache.has(data.message_id)) return;
+		// if you're on the master/v12 branch, use `channel.messages.fetch()`
+		const message = await channel.messages.fetch(data.message_id);
+
+		// custom emojis reactions are keyed in a `name:ID` format, while unicode emojis are keyed by names
+		// if you're on the master/v12 branch, custom emojis reactions are keyed by their ID
+		const emojiKey = data.emoji.id
+			? `${data.emoji.name}:${data.emoji.id}`
+			: data.emoji.name;
+		const reaction = message.reactions.cache.get(emojiKey);
+		this.Mattis.emit(events[event.t], reaction, user);
 	}
 }

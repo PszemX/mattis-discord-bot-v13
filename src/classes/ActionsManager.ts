@@ -42,4 +42,6 @@ export class ActionsManager extends Collection<string, IAction> {
 	public async loadCommands(): Promise<void> {
 		console.log('Ładuję komendy!');
 	}
+
+	public async handleCommand(): Promise<void> {}
 }

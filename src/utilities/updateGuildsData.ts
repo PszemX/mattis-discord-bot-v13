@@ -1,7 +1,5 @@
 import { GuildCache } from '../classes/GuildCache';
-import { readdirRecSync } from './reddirRecSync';
 import { Mattis } from '../classes/Mattis';
-import { actions } from './actions';
 
 const directCache = {
 	actionsByEvent: {
@@ -30,23 +28,10 @@ const createCommandsTree = (guildCache: any) => {
 	let tree = { b: null, c: null };
 	let guildCommands = guildCache.actionsByEvent['command'];
 	guildCommands.forEach((command: any) => {
-		let commandSettings = guildCache.settings.actions[command.id];
+		let commandSettings = guildCache.settings.actions[command.name];
 		commandSettings.triggers.forEach((trigger: any) => {
 			addCommandByTriggerToTree(command, trigger, tree);
 		});
-		if (command.tags.info && guildCache.settings.actions['info']?.enabled) {
-			guildCache.settings.actions['info'].triggers.forEach(
-				(infoTrigger: any) => {
-					commandSettings.triggers.forEach((trigger: any) => {
-						addCommandByTriggerToTree(
-							command,
-							infoTrigger + ' ' + trigger,
-							tree
-						);
-					});
-				}
-			);
-		}
 	});
 	return tree;
 };
