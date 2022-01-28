@@ -31,7 +31,15 @@ export class Mattis extends Client {
 			await this.Actions.loadCommands();
 			this.Logger.debug(`Ready took ${(Date.now() - start) / 1000}s.`);
 		});
-		await this.login();
+		await this.login().catch(() => this.reconnect());
 		return this;
+	}
+
+	private reconnect() {
+		this.Logger.error(
+			'Fatal connection error with discord gateway, attepting to reconnect in 30 seconds'
+		);
+		this.destroy();
+		setTimeout(() => new Mattis(this.options).build(), 30000);
 	}
 }

@@ -12,10 +12,8 @@ export class MessageCreateEvent extends BaseEvent {
 		// TO DO: Check if Mattis isn't mentioned. If so, send info embed.
 		const EventData: IEventData = this.mattis.utils.getEventData(message);
 		const { guildCache } = EventData;
-		console.log(message.content);
 		if (message.content.startsWith(guildCache.settings.prefix)) {
-			console.log('Komenda!');
-			// Handle command.
+			this.mattis.Actions.handleCommand(EventData);
 		}
 	}
 

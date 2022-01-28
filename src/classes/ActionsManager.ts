@@ -1,9 +1,9 @@
+import { parseCommandParameters } from '../utilities/parseCommandParameters';
+import { readdirRecSync } from '../utilities/reddirRecSync';
+import { IAction, IEventData } from '../typings';
 import { Collection } from 'discord.js';
-import { promises as fs } from 'fs';
 import { Mattis } from './Mattis';
 import { resolve } from 'path';
-import { IAction, ICategoryMeta } from '../typings';
-import { readdirRecSync } from '../utilities/reddirRecSync';
 
 export class ActionsManager extends Collection<string, IAction> {
 	public constructor(public Mattis: Mattis, public path: string) {
@@ -43,5 +43,34 @@ export class ActionsManager extends Collection<string, IAction> {
 		console.log('Ładuję komendy!');
 	}
 
-	public async handleCommand(): Promise<void> {}
+	public async handleCommand(EventData: IEventData): Promise<void> {
+		const commandContent = EventData.args.content.slice(
+			EventData.guildCache.settings.prefix.length
+		);
+		const commandContentSplitted = commandContent.split(' ');
+		let branch = EventData.guildCache.commandsTree;
+		let commandRawParametersSplitted = [];
+		for (let i = 0; i < commandContentSplitted.length; ++i) {
+			const branchName = commandContentSplitted[i];
+			if (branch.b && branch.b[branchName]) {
+				branch = branch.b[branchName];
+			} else {
+				commandRawParametersSplitted = commandContentSplitted.slice(i);
+				break;
+			}
+		}
+		const command = branch.c;
+		console.log(command);
+		if (command) {
+			const commandParameters = await parseCommandParameters(
+				EventData,
+				command,
+				commandRawParametersSplitted
+			);
+			await command.execude(EventData, commandParameters);
+			this.Mattis.Logger.debug(
+				`Komenda ${command.id} na serwerze ${EventData.args.guildId}`
+			);
+		}
+	}
 }
