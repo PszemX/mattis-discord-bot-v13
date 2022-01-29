@@ -1,6 +1,10 @@
 import { GuildCache } from '../classes/GuildCache';
 import { Mattis } from '../classes/Mattis';
-import { ClientEvents } from 'discord.js';
+import {
+	ApplicationCommandOptionData,
+	ApplicationCommandType,
+	ClientEvents,
+} from 'discord.js';
 
 export interface ILoggerOptions {
 	prod: Boolean;
@@ -17,11 +21,39 @@ export interface IAction {
 	execute(EventData: IEventData): Promise<void>;
 }
 
+export interface ICommand {
+	readonly name: string;
+	readonly event: string;
+	meta?: {
+		aliases?: string[];
+		cooldown?: number;
+		disable?: boolean;
+		readonly path?: string;
+		devOnly?: boolean;
+		description?: string;
+		readonly category?: string;
+		name: string;
+		usage?: string;
+		slash?: SlashOption;
+		contextChat?: string;
+		contextUser?: string;
+	};
+	execute(EventData: IEventData, commandParameters: any): any;
+}
+
 export interface IEventData {
 	readonly mattis: Mattis;
 	readonly guildCache: GuildCache | any;
 	readonly args: any;
 	readonly timestamp: number;
+}
+
+export interface SlashOption {
+	name?: string;
+	description?: string;
+	type?: ApplicationCommandType;
+	options?: ApplicationCommandOptionData[];
+	defaultPermission?: boolean;
 }
 
 export interface ICategoryMeta {

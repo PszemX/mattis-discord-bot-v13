@@ -1,0 +1,52 @@
+{
+	"id": "512412135029211176",
+	"name": "Neon Vibe",
+	"prefix": "!",
+	"language": "pol",
+	"actions": {
+		"welcomeChannelMessage": {
+			"enabled": true,
+			"channelId": "720266754139357185",
+			"text": "$user, Witaj na serwerze!",
+			"deleteTime": 0
+		},
+		"welcomePrivateMessage": {
+			"enabled": true,
+			"text": "Witaj na serwerze Neon Vibe! Napisz na kanale zasady 'tak', a następnie zostaw reakcję na kanale 'weryfikacja'",
+			"deleteTime": 0
+		},
+		"welcomeRole": {
+			"enabled": false,
+			"roleId": "720372040284110848"
+		},
+		"messageVerification": {
+			"enabled": true,
+			"messageText": "tak",
+			"messageChannelId": "720305106838487085",
+			"roleAddId": "720302115762733097",
+			"roleRemoveId": ""
+		},
+		"emojiVerification": {
+			"enabled": true,
+			"messageId": "741427498092593214",
+			"emoji": "✅",
+			"roleAddId": "705921111635919048",
+			"roleRemoveId": "720302115762733097"
+		},
+		"ping": {
+			"enabled": true,
+			"aliases": ["ping", "pong"],
+			"cooldown": 3000
+		},
+		"covid": {
+			"enabled": true,
+			"aliases": ["covid"],
+			"cooldown": 3000
+		},
+		"rps": {
+			"enabled": true,
+			"aliases": ["rps"],
+			"cooldown": 3000
+		}
+	}
+}

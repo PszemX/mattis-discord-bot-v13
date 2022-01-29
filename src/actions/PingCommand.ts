@@ -1,18 +1,14 @@
-import { BaseEventAction } from '../classes/BaseEventAction';
-import * as colors from '../utilities/colors.json';
 import { ColorResolvable, MessageEmbed } from 'discord.js';
+import { BaseCommand } from '../classes/BaseCommand';
+import * as colors from '../utilities/colors.json';
 import { IEventData } from '../typings';
 
-export class PingCommand extends BaseEventAction {
+export class PingCommand extends BaseCommand {
 	public constructor() {
 		super('ping', 'command');
 	}
 
-	public async trigger(EventData: IEventData) {
-		return true;
-	}
-
-	public async execute(EventData: IEventData) {
+	public async execute(EventData: IEventData, parameters: any) {
 		const before = Date.now();
 		const latency = Date.now() - before;
 		const wsLatency = EventData.mattis.ws.ping.toFixed(0);

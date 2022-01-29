@@ -1,4 +1,4 @@
-import { IEvent, IEventData } from '../typings';
+import { IEvent } from '../typings';
 import { Mattis } from './Mattis';
 
 export abstract class BaseEvent implements IEvent {
@@ -8,5 +8,4 @@ export abstract class BaseEvent implements IEvent {
 	) {}
 
 	public abstract execute(...args: any): any;
-	// public abstract execute(eventData: IEventData): any;
 }

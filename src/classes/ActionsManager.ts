@@ -1,11 +1,11 @@
 import { parseCommandParameters } from '../utilities/parseCommandParameters';
 import { readdirRecSync } from '../utilities/reddirRecSync';
-import { IAction, IEventData } from '../typings';
+import { IAction, ICommand, IEventData } from '../typings';
 import { Collection } from 'discord.js';
 import { Mattis } from './Mattis';
 import { resolve } from 'path';
 
-export class ActionsManager extends Collection<string, IAction> {
+export class ActionsManager extends Collection<string, IAction | ICommand> {
 	public constructor(public Mattis: Mattis, public path: string) {
 		super();
 	}
@@ -19,7 +19,10 @@ export class ActionsManager extends Collection<string, IAction> {
 		for (const actionPath of actionPaths) {
 			const actionFile: string = resolve(this.path, actionPath);
 			try {
-				const action = await this.Mattis.utils.import<IAction>(actionFile, []);
+				const action = await this.Mattis.utils.import<IAction | ICommand>(
+					actionFile,
+					[]
+				);
 				if (action === undefined)
 					throw new Error(`File ${actionPath} is not a valid action file.`);
 
