@@ -63,17 +63,24 @@ export class ActionsManager extends Collection<string, IAction | ICommand> {
 			}
 		}
 		const command = branch.c;
-		console.log(command);
 		if (command) {
 			const commandParameters = await parseCommandParameters(
 				EventData,
 				command,
 				commandRawParametersSplitted
 			);
-			await command.execude(EventData, commandParameters);
-			this.Mattis.Logger.debug(
-				`Komenda ${command.id} na serwerze ${EventData.args.guildId}`
-			);
+			try {
+				await command.execute(EventData, commandParameters);
+				this.Mattis.Logger.debug(
+					`Komenda ${command.name} na serwerze ${EventData.args.guildId}`
+				);
+			} catch (err) {
+				this.Mattis.Logger.error(
+					`Error occured while executing ${command.name}: ${
+						(err as Error).message
+					}`
+				);
+			}
 		}
 	}
 }

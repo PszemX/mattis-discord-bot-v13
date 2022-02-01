@@ -24,7 +24,8 @@ export interface IAction {
 export interface ICommand {
 	readonly name: string;
 	readonly event: string;
-	meta?: {
+	readonly meta: {
+		syntaxes: any[];
 		aliases?: string[];
 		cooldown?: number;
 		disable?: boolean;
@@ -32,7 +33,7 @@ export interface ICommand {
 		devOnly?: boolean;
 		description?: string;
 		readonly category?: string;
-		name: string;
+		name?: string;
 		usage?: string;
 		slash?: SlashOption;
 		contextChat?: string;

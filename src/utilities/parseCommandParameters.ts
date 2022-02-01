@@ -111,7 +111,7 @@ const parseCommandParameters = async (
 	command: any,
 	rawParametersSplitted: any
 ) => {
-	for (let syntax of command.syntaxes) {
+	for (let syntax of command.meta.syntaxes) {
 		let parse = await parseWords(
 			{ _size: 0 },
 			syntax,

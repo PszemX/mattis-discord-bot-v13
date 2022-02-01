@@ -5,7 +5,20 @@ import { IEventData } from '../typings';
 
 export class PingCommand extends BaseCommand {
 	public constructor() {
-		super('ping', 'command');
+		super('ping', 'command', {
+			syntaxes: [[]],
+			aliases: ['ping'],
+			cooldown: 1000,
+			disable: false,
+			devOnly: false,
+			description: "Show the current client's ping.",
+			category: 'general',
+			name: 'ping',
+			usage: '{prefix}ping',
+			//slash: SlashOption,
+			//contextChat: string,
+			//contextUser: string,
+		});
 	}
 
 	public async execute(EventData: IEventData, parameters: any) {
@@ -17,12 +30,12 @@ export class PingCommand extends BaseCommand {
 			.setAuthor('🏓 PONG', EventData.mattis.user!.displayAvatarURL())
 			.addFields(
 				{
-					name: '📶 **|** API',
+					name: '📶 API',
 					value: `**\`${latency}\`** ms`,
 					inline: true,
 				},
 				{
-					name: '🌐 **|** WebSocket',
+					name: '🌐 WebSocket',
 					value: `**\`${wsLatency}\`** ms`,
 					inline: true,
 				}
