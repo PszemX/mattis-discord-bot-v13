@@ -131,19 +131,8 @@ export class RpsGame extends BaseClient {
 
 	private async timeoutEmbed(reason: string) {
 		let embed = new MessageEmbed().setColor(<ColorResolvable>colors.red);
-		switch (reason) {
-			case 'invitationTimeExpired':
-				embed.setDescription(
-					lang('actions.rps.invitationTimeExpired', this.data)
-				);
-				break;
-			case 'invitationDeclined':
-				embed.setDescription(lang('actions.rps.invitationDeclined', this.data));
-				break;
-			case 'moveTimeExpired':
-				embed.setDescription(lang('actions.rps.moveTimeExpired', this.data));
-				break;
-		}
+		const langPath: string = `actions.rps.${reason}`;
+		embed.setDescription(lang(langPath, this.data));
 		return embed;
 	}
 
