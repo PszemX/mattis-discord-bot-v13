@@ -70,10 +70,11 @@ export class ActionsManager extends Collection<string, IAction | ICommand> {
 				commandRawParametersSplitted
 			);
 			try {
-				await command.execute(EventData, commandParameters);
-				this.Mattis.Logger.debug(
-					`Komenda ${command.name} na serwerze ${EventData.args.guildId}`
-				);
+				await command.execute(EventData, commandParameters).then(() => {
+					this.Mattis.Logger.debug(
+						`Komenda ${command.name} na serwerze ${EventData.args.guildId}`
+					);
+				});
 			} catch (err) {
 				this.Mattis.Logger.error(
 					`Error occured while executing ${command.name}: ${

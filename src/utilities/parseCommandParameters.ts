@@ -46,7 +46,7 @@ const converters: any = {
 	member: {
 		test: (text: string) => memberIdRegex.test(text),
 		convert: async (text: any, data: any) =>
-			data.guild.members
+			data.args.guild.members
 				.fetch(text.match(digitsRegex)[0])
 				.then((member: GuildMember) => member)
 				.catch((error: any) => null),
