@@ -26,6 +26,7 @@ export class RpsGame extends BaseClient {
 		.setColor(<ColorResolvable>colors.blue)
 		.setTimestamp();
 	private isMultiplayerGame: boolean = false;
+	private playersCount: number = 1;
 	private actionSettings = this.data.guildCache.settings.actions['rps'];
 	private readonly playAgainButton = new MessageButton()
 		.setCustomId('restart')
@@ -55,20 +56,20 @@ export class RpsGame extends BaseClient {
 		if (this.playerTwo?.id == clientId) {
 			await this.singleplayerGame();
 		} else {
-			this.isMultiplayerGame = true;
 			this.multiplayerGame();
 		}
 	}
 	private async singleplayerGame() {
 		await this.generateGameBeginMessage();
-		await this.gameRound();
+		await this.singleplayerGameRound();
 	}
 
 	private async multiplayerGame() {
-		this.inviteOpponent();
-		// this.generateGameBeginMessage();
-		// this.gameRound();
-		this.gameChannel.send('Multiplayer');
+		this.playersCount = 2;
+		this.isMultiplayerGame = true;
+		await this.inviteOpponent();
+		await this.generateGameBeginMessage();
+		await this.multiplayerGameRound();
 	}
 
 	private async inviteOpponent() {}
@@ -81,7 +82,7 @@ export class RpsGame extends BaseClient {
 		);
 
 		this.gameEmbed
-			.setDescription(`${this.playerOne} **VS** ${this.data.mattis.user}`)
+			.setDescription(`${this.playerOne} **VS** ${this.playerTwo}`)
 			.setFooter(lang('actions.rps.singlePlayerDesc', this.data))
 			.setImage('attachment://rpsBackground.png');
 
@@ -101,7 +102,11 @@ export class RpsGame extends BaseClient {
 
 	private async addEmbedPlayersDashboard() {
 		this.gameEmbed
-			.addField(lang('actions.rps.players', this.data), 'Pszemo\nMattis', true)
+			.addField(
+				lang('actions.rps.players', this.data),
+				`${this.playerOne.username}\n${this.playerTwo.username}`,
+				true
+			)
 			.addField(lang('actions.rps.points', this.data), '0\n0', true);
 	}
 
@@ -157,25 +162,36 @@ export class RpsGame extends BaseClient {
 		return row;
 	}
 
-	private async gameRound() {
+	private async singleplayerGameRound() {
 		const filter = (btnInteraction: any) => {
 			btnInteraction.deferUpdate();
 			return (
-				btnInteraction.user.id === this.playerOne.id &&
+				(btnInteraction.user.id === this.playerOne.id ||
+					btnInteraction.user.id === this.playerTwo.id) &&
 				btnInteraction.message.id === this.gameMessage.id
 			);
 		};
 		const collector = this.gameMessage.createMessageComponentCollector({
 			filter,
 			componentType: 'BUTTON',
-			max: 1,
+			max: this.playersCount,
 			time: 30000,
 		});
-		const botChoice: string = this.randomMove();
 
 		collector.on('collect', async (i) => {
-			const playerOneChoice = i.customId;
-			const roundStatus = await this.roundWinner(playerOneChoice, botChoice);
+			let playerOneChoice!: string;
+			let playerTwoChoice: string = this.isMultiplayerGame
+				? ''
+				: this.randomMove();
+			if (i.user.id == this.playerOne.id) {
+				playerOneChoice = i.customId;
+			} else {
+				playerTwoChoice = i.customId;
+			}
+			const roundStatus = await this.roundWinner(
+				playerOneChoice,
+				playerTwoChoice
+			);
 			if (this.gameMessage) {
 				this.gameMessage.edit({
 					embeds: [
@@ -184,7 +200,7 @@ export class RpsGame extends BaseClient {
 							this.playerOne,
 							this.playerTwo,
 							playerOneChoice,
-							botChoice
+							playerTwoChoice
 						),
 					],
 					components: [],
@@ -192,7 +208,7 @@ export class RpsGame extends BaseClient {
 			}
 		});
 		collector.on('end', async (collection) => {
-			if (collection.size == 0) {
+			if (collection.size < this.playersCount) {
 				const timeoutEmbed: MessageEmbed = await this.timeoutEmbed(
 					'moveTimeExpired'
 				);
@@ -202,6 +218,54 @@ export class RpsGame extends BaseClient {
 						files: [],
 						components: [],
 						attachments: [],
+					});
+				}
+			}
+		});
+	}
+
+	private async multiplayerGameRound() {
+		const filter = (btnInteraction: any) => {
+			btnInteraction.deferUpdate();
+			return (
+				(btnInteraction.user.id === this.playerOne.id ||
+					btnInteraction.user.id === this.playerTwo.id) &&
+				btnInteraction.message.id === this.gameMessage.id
+			);
+		};
+		const collector = this.gameMessage.createMessageComponentCollector({
+			filter,
+			componentType: 'BUTTON',
+			max: this.playersCount,
+			time: 30000,
+		});
+		let collected = 0;
+		let playerOneChoice: string = '';
+		let playerTwoChoice: string = '';
+		collector.on('collect', async (i) => {
+			if (i.user.id == this.playerOne.id) {
+				playerOneChoice = i.customId;
+			} else {
+				playerTwoChoice = i.customId;
+			}
+			collected++;
+			if (collected == this.playersCount) {
+				const roundStatus = await this.roundWinner(
+					playerOneChoice,
+					playerTwoChoice
+				);
+				if (this.gameMessage) {
+					this.gameMessage.edit({
+						embeds: [
+							await this.generateRoundEndEmbed(
+								roundStatus,
+								this.playerOne,
+								this.playerTwo,
+								playerOneChoice,
+								playerTwoChoice
+							),
+						],
+						components: [],
 					});
 				}
 			}
