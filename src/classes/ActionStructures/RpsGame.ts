@@ -270,6 +270,21 @@ export class RpsGame extends BaseClient {
 				}
 			}
 		});
+		collector.on('end', async (collection) => {
+			if (collection.size < this.playersCount) {
+				const timeoutEmbed: MessageEmbed = await this.timeoutEmbed(
+					'moveTimeExpired'
+				);
+				if (this.gameMessage) {
+					this.gameMessage.edit({
+						embeds: [timeoutEmbed],
+						files: [],
+						components: [],
+						attachments: [],
+					});
+				}
+			}
+		});
 	}
 
 	private randomMove() {
