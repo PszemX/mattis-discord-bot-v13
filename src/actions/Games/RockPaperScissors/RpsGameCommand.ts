@@ -43,11 +43,6 @@ export class RpsGameCommand extends BaseCommand {
 
 		let maxPoints: Number = 1;
 		if (parameters.maxPoints) maxPoints = parameters.maxPoints;
-		// console.log('PLAYERONE: ', playerOne);
-		// console.log('GAMECHANNEL: ', gameChannel);
-		// console.log('MAXPOINTS: ', maxPoints);
-		// console.log('EVENTDATA: ', EventData);
-		// console.log('OPPONENT: ', opponent);
 
 		new RpsGame(playerOne, opponent, gameChannel, maxPoints, EventData);
 	}

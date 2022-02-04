@@ -22,6 +22,8 @@ export class RpsGame extends BaseClient {
 		this.data.guildCache.settings.actions['rps'];
 	private readonly possibleChoices = ['rock', 'paper', 'scissors'];
 	private isMultiplayerGame: boolean = false;
+	private playerOnePoints: number = 0;
+	private playerTwoPoints: number = 0;
 	private playersCount: number = 1;
 	private gameMessage!: Message;
 	private gameEmbed: MessageEmbed = new MessageEmbed()
@@ -219,7 +221,7 @@ export class RpsGame extends BaseClient {
 			.setFooter(lang('actions.rps.singlePlayerDesc', this.data))
 			.setImage('attachment://rpsBackground.png');
 
-		if (this.maxPoints > 1) this.addEmbedPlayersDashboard();
+		if (this.maxPoints > 1) this.addEmbedPlayersDashboard(this.gameEmbed);
 
 		const row = this.generateRpsButtons();
 		await this.sendGameMessage(attachment, row);
@@ -266,10 +268,12 @@ export class RpsGame extends BaseClient {
 			(playerOneChoice === 'scissors' && playerTwoChoice === 'paper') ||
 			(playerOneChoice === 'paper' && playerTwoChoice === 'rock')
 		) {
+			this.playerOnePoints++;
 			return 'victory';
 		} else if (playerOneChoice == playerTwoChoice) {
 			return 'draw';
 		} else {
+			this.playerTwoPoints++;
 			return 'lose';
 		}
 	}
@@ -339,13 +343,14 @@ export class RpsGame extends BaseClient {
 				)
 				.setColor(<ColorResolvable>colors.orange);
 		}
+		if (this.maxPoints > 1) this.addEmbedPlayersDashboard(embed);
 		return embed;
 	}
 
 	private async createGameCanvas() {
 		const canvas = Canvas.createCanvas(1000, 300);
 		const context = canvas.getContext('2d');
-		const background = await Canvas.loadImage('src/images/RpsBackground.jpg');
+		const background = await Canvas.loadImage('src/images/RpsBackground2.jpg');
 		context.drawImage(background, 0, 0, canvas.width, canvas.height);
 		context.font = '100px Arial Black';
 		context.fillStyle = '#ffffff';
@@ -365,14 +370,19 @@ export class RpsGame extends BaseClient {
 		context.drawImage(playerTwoAvatar, 650, 25, 250, 250);
 		return canvas;
 	}
-	private async addEmbedPlayersDashboard() {
-		this.gameEmbed
+
+	private async addEmbedPlayersDashboard(embed: MessageEmbed) {
+		embed
 			.addField(
 				lang('actions.rps.players', this.data),
-				`${this.playerOne.username}\n${this.playerTwo.username}`,
+				`${this.playerOne}\n${this.playerTwo}`,
 				true
 			)
-			.addField(lang('actions.rps.points', this.data), '0\n0', true);
+			.addField(
+				lang('actions.rps.points', this.data),
+				`${this.playerOnePoints}\n${this.playerTwoPoints}`,
+				true
+			);
 	}
 
 	private async timeoutEmbed(reason: string) {
