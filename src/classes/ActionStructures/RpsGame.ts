@@ -1,7 +1,9 @@
 import {
 	BaseClient,
 	ButtonInteraction,
+	Collection,
 	ColorResolvable,
+	InteractionCollector,
 	Message,
 	MessageActionRow,
 	MessageAttachment,
@@ -16,7 +18,11 @@ import { clientId } from '../../config';
 import Canvas from 'canvas';
 
 export class RpsGame extends BaseClient {
+	private readonly actionSettings =
+		this.data.guildCache.settings.actions['rps'];
 	private readonly possibleChoices = ['rock', 'paper', 'scissors'];
+	private isMultiplayerGame: boolean = false;
+	private playersCount: number = 1;
 	private gameMessage!: Message;
 	private gameEmbed: MessageEmbed = new MessageEmbed()
 		.setAuthor(
@@ -25,9 +31,6 @@ export class RpsGame extends BaseClient {
 		)
 		.setColor(<ColorResolvable>colors.blue)
 		.setTimestamp();
-	private isMultiplayerGame: boolean = false;
-	private playersCount: number = 1;
-	private actionSettings = this.data.guildCache.settings.actions['rps'];
 	private readonly playAgainButton = new MessageButton()
 		.setCustomId('restart')
 		.setLabel(lang('actions.rps.playAgain', this.data))
@@ -53,26 +56,154 @@ export class RpsGame extends BaseClient {
 	}
 
 	private async gameStart() {
-		if (this.playerTwo?.id == clientId) {
-			await this.singleplayerGame();
+		if (this.playerTwo?.id != clientId) {
+			this.playersCount = 2;
+			this.isMultiplayerGame = true;
+		}
+		await this.gameBegin();
+	}
+
+	private async gameBegin() {
+		if (this.isMultiplayerGame) {
+			await this.inviteOpponent();
 		} else {
-			this.multiplayerGame();
+			await this.generateGameBeginMessage();
 		}
 	}
-	private async singleplayerGame() {
-		await this.generateGameBeginMessage();
-		await this.singleplayerGameRound();
+
+	private async inviteOpponent() {
+		this.setInvitationEmbed();
+		const row = await this.createButtonRow([
+			this.acceptButton,
+			this.declineButton,
+		]);
+		await this.sendGameMessage(null, row);
+		this.createRpsMessageButtonsCollector(Infinity, 'invitation');
 	}
 
-	private async multiplayerGame() {
-		this.playersCount = 2;
-		this.isMultiplayerGame = true;
-		await this.inviteOpponent();
-		await this.generateGameBeginMessage();
-		await this.multiplayerGameRound();
+	private async createRpsMessageButtonsCollector(max: number, type: string) {
+		const filter = (btnInteraction: any) => {
+			btnInteraction.deferUpdate();
+			return (
+				(btnInteraction.user.id === this.playerOne.id ||
+					btnInteraction.user.id === this.playerTwo.id) &&
+				btnInteraction.message.id === this.gameMessage.id
+			);
+		};
+		const collector = this.gameMessage.createMessageComponentCollector({
+			filter,
+			componentType: 'BUTTON',
+			max: max,
+			time: 30000,
+		});
+		switch (type) {
+			case 'invitation':
+				await this.invitationButtonsCollector(collector);
+				break;
+			case 'game':
+				await this.gameButtonsCollector(collector);
+				break;
+		}
 	}
 
-	private async inviteOpponent() {}
+	private async invitationButtonsCollector(
+		collector: InteractionCollector<ButtonInteraction>
+	) {
+		collector.on('collect', async (i) => {
+			if (i.customId == 'decline') {
+				await this.collectorTimeExpired('invitationDeclined');
+			} else if (i.customId == 'accept' && i.user.id == this.playerTwo.id) {
+				collector.stop();
+			}
+		});
+		collector.on('end', async (collection) => {
+			if (collection.size < 1) {
+				await this.collectorTimeExpired('invitationTimeExpired');
+			} else {
+				await this.generateGameBeginMessage();
+			}
+		});
+	}
+
+	private async gameButtonsCollector(
+		collector: InteractionCollector<ButtonInteraction>
+	) {
+		let collected = 0;
+		let playerOneChoice: string = '';
+		let playerTwoChoice: string = '';
+		collector.on('collect', async (i) => {
+			if (i.user.id == this.playerOne.id) {
+				playerOneChoice = i.customId;
+			} else {
+				playerTwoChoice = i.customId;
+			}
+			collected++;
+			if (this.isMultiplayerGame) {
+				if (collected == this.playersCount) {
+					const roundStatus = await this.roundWinner(
+						playerOneChoice,
+						playerTwoChoice
+					);
+					if (this.gameMessage) {
+						this.gameMessage.edit({
+							embeds: [
+								await this.generateRoundEndEmbed(
+									roundStatus,
+									playerOneChoice,
+									playerTwoChoice
+								),
+							],
+							components: [],
+						});
+					}
+				}
+			} else {
+				playerTwoChoice = this.randomMove();
+				const roundStatus = await this.roundWinner(
+					playerOneChoice,
+					playerTwoChoice
+				);
+				if (this.gameMessage) {
+					this.gameMessage.edit({
+						embeds: [
+							await this.generateRoundEndEmbed(
+								roundStatus,
+								playerOneChoice,
+								playerTwoChoice
+							),
+						],
+						components: [],
+					});
+				}
+			}
+		});
+		collector.on('end', async (collection) => {
+			if (collection.size < this.playersCount) {
+				await this.collectorTimeExpired('moveTimeExpired');
+			}
+		});
+	}
+
+	private async setInvitationEmbed() {
+		this.gameEmbed
+			.setTitle(lang('actions.rps.invitationSent', this.data))
+			.setThumbnail(this.playerTwo.displayAvatarURL())
+			.setDescription(
+				lang('actions.rps.multiPlayerInvitation', this.data, {
+					p1: this.playerOne,
+					p2: this.playerTwo,
+				})
+			)
+			.setFooter(lang('actions.rps.multiPlayerAccept', this.data));
+	}
+
+	private async createButtonRow(buttons: MessageButton[]) {
+		let row = new MessageActionRow();
+		for (const button of buttons) {
+			row.addComponents(button);
+		}
+		return row;
+	}
 
 	private async generateGameBeginMessage() {
 		const canvas = await this.createGameCanvas();
@@ -83,31 +214,132 @@ export class RpsGame extends BaseClient {
 
 		this.gameEmbed
 			.setDescription(`${this.playerOne} **VS** ${this.playerTwo}`)
+			.setThumbnail('')
+			.setTitle('')
 			.setFooter(lang('actions.rps.singlePlayerDesc', this.data))
 			.setImage('attachment://rpsBackground.png');
 
 		if (this.maxPoints > 1) this.addEmbedPlayersDashboard();
 
 		const row = this.generateRpsButtons();
-		await this.setGameMessage(attachment, row);
+		await this.sendGameMessage(attachment, row);
+		await this.createRpsMessageButtonsCollector(2, 'game');
 	}
 
-	private async setGameMessage(attachment?: any, row?: MessageActionRow) {
-		this.gameMessage = await this.gameChannel.send({
-			embeds: [this.gameEmbed],
-			files: [attachment],
-			components: row ? [row] : [],
-		});
+	private async sendGameMessage(attachment: any, row: MessageActionRow) {
+		if (this.gameMessage) {
+			this.gameMessage.edit({
+				embeds: [this.gameEmbed],
+				files: attachment ? [attachment] : [],
+				components: row ? [row] : [],
+			});
+		} else {
+			this.gameMessage = await this.gameChannel.send({
+				embeds: [this.gameEmbed],
+				files: attachment ? [attachment] : [],
+				components: row ? [row] : [],
+			});
+		}
 	}
 
-	private async addEmbedPlayersDashboard() {
-		this.gameEmbed
+	private async collectorTimeExpired(reason: string) {
+		const timeoutEmbed: MessageEmbed = await this.timeoutEmbed(reason);
+		if (this.gameMessage) {
+			this.gameMessage.edit({
+				embeds: [timeoutEmbed],
+				files: [],
+				components: [],
+				attachments: [],
+			});
+		}
+	}
+
+	private randomMove() {
+		return this.possibleChoices[
+			Math.floor(Math.random() * this.possibleChoices.length)
+		];
+	}
+
+	private async roundWinner(playerOneChoice: string, playerTwoChoice: string) {
+		if (
+			(playerOneChoice === 'rock' && playerTwoChoice === 'scissors') ||
+			(playerOneChoice === 'scissors' && playerTwoChoice === 'paper') ||
+			(playerOneChoice === 'paper' && playerTwoChoice === 'rock')
+		) {
+			return 'victory';
+		} else if (playerOneChoice == playerTwoChoice) {
+			return 'draw';
+		} else {
+			return 'lose';
+		}
+	}
+
+	private async generateRoundEndEmbed(
+		status: string,
+		playerOneChoice: string,
+		playerTwoChoice: string
+	) {
+		let embed = new MessageEmbed()
 			.addField(
-				lang('actions.rps.players', this.data),
-				`${this.playerOne.username}\n${this.playerTwo.username}`,
+				this.playerOne.username,
+				lang(`actions.rps.${playerOneChoice}Emoji`, this.data),
 				true
 			)
-			.addField(lang('actions.rps.points', this.data), '0\n0', true);
+			.addField('**VS**', '\u200b', true)
+			.addField(
+				this.playerTwo.username,
+				lang(`actions.rps.${playerTwoChoice}Emoji`, this.data),
+				true
+			)
+			.setFooter(lang('actions.rps.playAgain', this.data))
+			.setImage('attachment://rpsBackground.png')
+			.setTimestamp();
+
+		if (status == 'victory') {
+			embed
+				.setAuthor(
+					this.isMultiplayerGame
+						? lang(
+								'actions.rps.multiPlayerVictory',
+								this.data,
+								this.playerOne.username
+						  )
+						: lang('actions.rps.singlePlayerLose', this.data),
+					this.playerOne.displayAvatarURL()
+				)
+				.setColor(
+					this.isMultiplayerGame
+						? <ColorResolvable>colors.blue
+						: <ColorResolvable>colors.green
+				);
+		} else if (status == 'lose') {
+			embed
+				.setAuthor(
+					this.isMultiplayerGame
+						? lang(
+								'actions.rps.multiPlayerVictory',
+								this.data,
+								this.playerTwo.username
+						  )
+						: lang('actions.rps.singlePlayerLose', this.data),
+					this.isMultiplayerGame
+						? this.playerTwo.displayAvatarURL()
+						: this.playerOne.displayAvatarURL()
+				)
+				.setColor(
+					this.isMultiplayerGame
+						? <ColorResolvable>colors.blue
+						: <ColorResolvable>colors.red
+				);
+		} else if (status == 'draw') {
+			embed
+				.setAuthor(
+					lang('actions.rps.singlePlayerDraw', this.data),
+					this.playerOne.displayAvatarURL()
+				)
+				.setColor(<ColorResolvable>colors.orange);
+		}
+		return embed;
 	}
 
 	private async createGameCanvas() {
@@ -133,6 +365,15 @@ export class RpsGame extends BaseClient {
 		context.drawImage(playerTwoAvatar, 650, 25, 250, 250);
 		return canvas;
 	}
+	private async addEmbedPlayersDashboard() {
+		this.gameEmbed
+			.addField(
+				lang('actions.rps.players', this.data),
+				`${this.playerOne.username}\n${this.playerTwo.username}`,
+				true
+			)
+			.addField(lang('actions.rps.points', this.data), '0\n0', true);
+	}
 
 	private async timeoutEmbed(reason: string) {
 		let embed = new MessageEmbed().setColor(<ColorResolvable>colors.red);
@@ -140,7 +381,6 @@ export class RpsGame extends BaseClient {
 		embed.setDescription(lang(langPath, this.data));
 		return embed;
 	}
-
 	private generateRpsButtons() {
 		const row = new MessageActionRow().addComponents(
 			new MessageButton()
@@ -160,198 +400,5 @@ export class RpsGame extends BaseClient {
 				.setEmoji(lang('actions.rps.scissorsEmoji', this.data))
 		);
 		return row;
-	}
-
-	private async singleplayerGameRound() {
-		const filter = (btnInteraction: any) => {
-			btnInteraction.deferUpdate();
-			return (
-				(btnInteraction.user.id === this.playerOne.id ||
-					btnInteraction.user.id === this.playerTwo.id) &&
-				btnInteraction.message.id === this.gameMessage.id
-			);
-		};
-		const collector = this.gameMessage.createMessageComponentCollector({
-			filter,
-			componentType: 'BUTTON',
-			max: this.playersCount,
-			time: 30000,
-		});
-
-		collector.on('collect', async (i) => {
-			let playerOneChoice!: string;
-			let playerTwoChoice: string = this.isMultiplayerGame
-				? ''
-				: this.randomMove();
-			if (i.user.id == this.playerOne.id) {
-				playerOneChoice = i.customId;
-			} else {
-				playerTwoChoice = i.customId;
-			}
-			const roundStatus = await this.roundWinner(
-				playerOneChoice,
-				playerTwoChoice
-			);
-			if (this.gameMessage) {
-				this.gameMessage.edit({
-					embeds: [
-						await this.generateRoundEndEmbed(
-							roundStatus,
-							this.playerOne,
-							this.playerTwo,
-							playerOneChoice,
-							playerTwoChoice
-						),
-					],
-					components: [],
-				});
-			}
-		});
-		collector.on('end', async (collection) => {
-			if (collection.size < this.playersCount) {
-				const timeoutEmbed: MessageEmbed = await this.timeoutEmbed(
-					'moveTimeExpired'
-				);
-				if (this.gameMessage) {
-					this.gameMessage.edit({
-						embeds: [timeoutEmbed],
-						files: [],
-						components: [],
-						attachments: [],
-					});
-				}
-			}
-		});
-	}
-
-	private async multiplayerGameRound() {
-		const filter = (btnInteraction: any) => {
-			btnInteraction.deferUpdate();
-			return (
-				(btnInteraction.user.id === this.playerOne.id ||
-					btnInteraction.user.id === this.playerTwo.id) &&
-				btnInteraction.message.id === this.gameMessage.id
-			);
-		};
-		const collector = this.gameMessage.createMessageComponentCollector({
-			filter,
-			componentType: 'BUTTON',
-			max: this.playersCount,
-			time: 30000,
-		});
-		let collected = 0;
-		let playerOneChoice: string = '';
-		let playerTwoChoice: string = '';
-		collector.on('collect', async (i) => {
-			if (i.user.id == this.playerOne.id) {
-				playerOneChoice = i.customId;
-			} else {
-				playerTwoChoice = i.customId;
-			}
-			collected++;
-			if (collected == this.playersCount) {
-				const roundStatus = await this.roundWinner(
-					playerOneChoice,
-					playerTwoChoice
-				);
-				if (this.gameMessage) {
-					this.gameMessage.edit({
-						embeds: [
-							await this.generateRoundEndEmbed(
-								roundStatus,
-								this.playerOne,
-								this.playerTwo,
-								playerOneChoice,
-								playerTwoChoice
-							),
-						],
-						components: [],
-					});
-				}
-			}
-		});
-		collector.on('end', async (collection) => {
-			if (collection.size < this.playersCount) {
-				const timeoutEmbed: MessageEmbed = await this.timeoutEmbed(
-					'moveTimeExpired'
-				);
-				if (this.gameMessage) {
-					this.gameMessage.edit({
-						embeds: [timeoutEmbed],
-						files: [],
-						components: [],
-						attachments: [],
-					});
-				}
-			}
-		});
-	}
-
-	private randomMove() {
-		return this.possibleChoices[
-			Math.floor(Math.random() * this.possibleChoices.length)
-		];
-	}
-
-	private async roundWinner(playerOneChoice: string, playerTwoChoice: string) {
-		if (
-			(playerOneChoice === 'rock' && playerTwoChoice === 'scissors') ||
-			(playerOneChoice === 'scissors' && playerTwoChoice === 'paper') ||
-			(playerOneChoice === 'paper' && playerTwoChoice === 'rock')
-		) {
-			return 'victory';
-		} else if (playerOneChoice == playerTwoChoice) {
-			return 'draw';
-		} else {
-			return 'lose';
-		}
-	}
-
-	private async generateRoundEndEmbed(
-		status: string,
-		winningPlayer: User,
-		loserPlayer: User,
-		winningPlayerChoice: string,
-		loserPlayerChoice: string
-	) {
-		let embed = new MessageEmbed()
-			.addField(
-				winningPlayer.username,
-				lang(`actions.rps.${winningPlayerChoice}Emoji`, this.data),
-				true
-			)
-			.addField('**VS**', '\u200b', true)
-			.addField(
-				loserPlayer.username,
-				lang(`actions.rps.${loserPlayerChoice}Emoji`, this.data),
-				true
-			)
-			.setFooter(lang('actions.rps.playAgain', this.data))
-			.setImage('attachment://rpsBackground.png')
-			.setTimestamp();
-
-		if (status == 'victory') {
-			embed
-				.setAuthor(
-					lang('actions.rps.singlePlayerVictory', this.data),
-					winningPlayer.displayAvatarURL()
-				)
-				.setColor(<ColorResolvable>colors.green);
-		} else if (status == 'lose') {
-			embed
-				.setAuthor(
-					lang('actions.rps.singlePlayerLose', this.data),
-					winningPlayer.displayAvatarURL()
-				)
-				.setColor(<ColorResolvable>colors.red);
-		} else if (status == 'draw') {
-			embed
-				.setAuthor(
-					lang('actions.rps.singlePlayerDraw', this.data),
-					winningPlayer.displayAvatarURL()
-				)
-				.setColor(<ColorResolvable>colors.orange);
-		}
-		return embed;
 	}
 }

@@ -311,10 +311,10 @@ const translation = {
 			invitationTimeExpired: 'Minął czas na zaakceptowanie zaproszenia ⌛',
 			invitationDeclined: 'Zaproszenie zostało odrzucone/wycofane ❌',
 			moveTimeExpired: 'Minął czas na wykonanie ruchu ⌛',
-			invitationSent: 'Zostałeś zaproszony do gry w "Kamień, papier, nożyce"',
+			invitationSent: 'Zaproszenie zostało wysłane 📨',
 			multiPlayerInvitation: (data: any, payload: any) =>
 				`${payload.p2}, zostałeś zaproszony przez ${payload.p1} do gry.`,
-			multiPlayerAccept: (data: any, payload: any) => `Zareaguj, by zagrać`,
+			multiPlayerAccept: `Zaakceptuj!`,
 			multiPlayerVictory: (data: any, payload: any) =>
 				`${payload} wygrał grę 🥇`,
 		},
