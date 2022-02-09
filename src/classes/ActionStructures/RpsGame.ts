@@ -157,6 +157,7 @@ export class RpsGame extends BaseClient {
 							],
 							components: [],
 						});
+						collector.stop();
 					}
 				}
 			} else {
@@ -176,12 +177,19 @@ export class RpsGame extends BaseClient {
 						],
 						components: [],
 					});
+					collector.stop();
 				}
 			}
 		});
 		collector.on('end', async (collection) => {
 			if (collection.size < this.playersCount) {
 				await this.collectorTimeExpired('moveTimeExpired');
+			}
+			if (
+				this.playerOnePoints < this.maxPoints &&
+				this.playerTwoPoints < this.maxPoints
+			) {
+				await this.generateGameBeginMessage();
 			}
 		});
 	}
@@ -215,6 +223,7 @@ export class RpsGame extends BaseClient {
 		);
 
 		this.gameEmbed
+			.spliceFields(0, 2)
 			.setDescription(`${this.playerOne} **VS** ${this.playerTwo}`)
 			.setThumbnail('')
 			.setTitle('')
@@ -304,11 +313,13 @@ export class RpsGame extends BaseClient {
 				.setAuthor(
 					this.isMultiplayerGame
 						? lang(
-								'actions.rps.multiPlayerVictory',
+								this.playerOnePoints < this.maxPoints
+									? 'actions.rps.multiPlayerRoundVictory'
+									: 'actions.rps.multiPlayerGameVictory',
 								this.data,
 								this.playerOne.username
 						  )
-						: lang('actions.rps.singlePlayerLose', this.data),
+						: lang('actions.rps.singlePlayerVictory', this.data),
 					this.playerOne.displayAvatarURL()
 				)
 				.setColor(
@@ -321,7 +332,9 @@ export class RpsGame extends BaseClient {
 				.setAuthor(
 					this.isMultiplayerGame
 						? lang(
-								'actions.rps.multiPlayerVictory',
+								this.playerTwoPoints < this.maxPoints
+									? 'actions.rps.multiPlayerRoundVictory'
+									: 'actions.rps.multiPlayerGameVictory',
 								this.data,
 								this.playerTwo.username
 						  )

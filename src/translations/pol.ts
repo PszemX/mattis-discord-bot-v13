@@ -319,7 +319,9 @@ const translation = {
 			multiPlayerInvitation: (data: any, payload: any) =>
 				`${payload.p2}, zostałeś zaproszony przez ${payload.p1} do gry.`,
 			multiPlayerAccept: `Zaakceptuj!`,
-			multiPlayerVictory: (data: any, payload: any) =>
+			multiPlayerRoundVictory: (data: any, payload: any) =>
+				`${payload} wygrał rundę!`,
+			multiPlayerGameVictory: (data: any, payload: any) =>
 				`${payload} wygrał grę 🥇`,
 		},
 		pokemons: {
