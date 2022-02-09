@@ -282,6 +282,10 @@ const translation = {
 			`Następną komendę możesz napisać za ${payload}s.`,
 	},
 	actions: {
+		ping: {
+			actionDescripton: 'Pokazuje aktualny ping Mattisa.', //Show the current client's ping.
+			footer: (data: any) => `Aktualny ping ${data.mattis.user!.tag}`,
+		},
 		badwords: {
 			rebuke: 'Uważaj na słownictwo! Otrzymujesz ostrzeżenie!',
 			warn: (payload: any) =>
