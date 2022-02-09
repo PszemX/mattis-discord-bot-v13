@@ -1,3 +1,7 @@
+import * as colors from '../../utilities/colors.json';
+import lang from '../../utilities/lang';
+import { clientId } from '../../config';
+import Canvas from 'canvas';
 import {
 	BaseClient,
 	ButtonInteraction,
@@ -12,10 +16,6 @@ import {
 	TextChannel,
 	User,
 } from 'discord.js';
-import * as colors from '../../utilities/colors.json';
-import lang from '../../utilities/lang';
-import { clientId } from '../../config';
-import Canvas from 'canvas';
 
 export class RpsGame extends BaseClient {
 	private readonly actionSettings =
@@ -189,7 +189,7 @@ export class RpsGame extends BaseClient {
 				this.playerOnePoints < this.maxPoints &&
 				this.playerTwoPoints < this.maxPoints
 			) {
-				await this.generateGameBeginMessage();
+				setTimeout(async () => await this.generateGameBeginMessage(), 2000);
 			}
 		});
 	}
@@ -215,7 +215,7 @@ export class RpsGame extends BaseClient {
 		return row;
 	}
 
-	private async generateGameBeginMessage() {
+	private async generateGameBeginMessage(): Promise<void> {
 		const canvas = await this.createGameCanvas();
 		const attachment = new MessageAttachment(
 			canvas.toBuffer(),

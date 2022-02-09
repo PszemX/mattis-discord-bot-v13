@@ -16,7 +16,8 @@
 		"resolveJsonModule": true,
 		"inlineSourceMap": true,
 		"inlineSources": true,
-		"typeRoots": ["node_modules/@types", "src/typings"]
+		"typeRoots": ["node_modules/@types", "src/typings"],
+		"types": []
 	},
 	//"exclude": [],
 	"include": ["src/**/*.ts", "src/**/*.json"]
