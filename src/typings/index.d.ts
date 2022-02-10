@@ -49,6 +49,12 @@ export interface IEventData {
 	readonly timestamp: number;
 }
 
+export interface IJob {
+	readonly name: string;
+	readonly event: string;
+	execute(GuildCache: GuildCache): any;
+}
+
 export interface SlashOption {
 	name?: string;
 	description?: string;

@@ -47,6 +47,7 @@
 			"enabled": true,
 			"aliases": ["rps"],
 			"cooldown": 3000
-		}
+		},
+		"sendMessage": {}
 	}
 }

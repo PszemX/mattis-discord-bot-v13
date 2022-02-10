@@ -1,5 +1,5 @@
-import { MongoClient } from 'mongodb';
 import { createLogger } from './LogsManager';
+import { MongoClient } from 'mongodb';
 
 export class Database extends MongoClient {
 	public readonly log = createLogger('Database');

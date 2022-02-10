@@ -2,6 +2,7 @@ export class GuildCache {
 	public settings: any;
 	public actionsByEvent: any = {
 		command: [],
+		job: [],
 		channelCreate: [],
 		channelDelete: [],
 		channelPinsUpdate: [],
