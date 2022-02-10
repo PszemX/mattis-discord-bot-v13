@@ -135,11 +135,12 @@ export class RpsGame extends BaseClient {
 		let playerTwoChoice: string = '';
 		collector.on('collect', async (i) => {
 			if (i.user.id == this.playerOne.id) {
+				if (!playerOneChoice) collected++;
 				playerOneChoice = i.customId;
 			} else {
+				if (!playerTwoChoice) collected++;
 				playerTwoChoice = i.customId;
 			}
-			collected++;
 			if (this.isMultiplayerGame) {
 				if (collected == this.playersCount) {
 					const roundStatus = await this.roundWinner(
@@ -184,8 +185,7 @@ export class RpsGame extends BaseClient {
 		collector.on('end', async (collection) => {
 			if (collection.size < this.playersCount) {
 				await this.collectorTimeExpired('moveTimeExpired');
-			}
-			if (
+			} else if (
 				this.playerOnePoints < this.maxPoints &&
 				this.playerTwoPoints < this.maxPoints
 			) {
