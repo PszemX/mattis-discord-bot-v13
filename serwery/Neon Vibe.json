@@ -48,6 +48,24 @@
 			"aliases": ["rps"],
 			"cooldown": 3000
 		},
-		"sendMessage": {}
+		"sendMessageJob": {
+			"enabled": true,
+			"messages": [
+				{
+					"enabled": true,
+					"channel": "816457834027548772",
+					"message": "Testowy job",
+					"intervalTime": "",
+					"firstTimeSent": ""
+				},
+				{
+					"enabled": true,
+					"channel": "816457834027548772",
+					"message": "Testowy job 2",
+					"intervalTime": "",
+					"firstTimeSent": ""
+				}
+			]
+		}
 	}
 }

@@ -1,3 +1,4 @@
+import { JobsManager } from '../classes/JobsManager';
 import { GuildCache } from '../classes/GuildCache';
 import { Mattis } from '../classes/Mattis';
 
@@ -46,6 +47,10 @@ const updateGuildsData = async (Mattis: Mattis, guildSettings: any) => {
 		}
 	}
 	guildCache.commandsTree = createCommandsTree(guildCache);
+	if (guildCache.actionsByEvent.job) {
+		guildCache.jobs = new JobsManager(Mattis, guildCache);
+		await guildCache.jobs.run();
+	}
 	return guildCache;
 };
 

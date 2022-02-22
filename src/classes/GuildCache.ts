@@ -1,3 +1,5 @@
+import { JobsManager } from './JobsManager';
+
 export class GuildCache {
 	public settings: any;
 	public actionsByEvent: any = {
@@ -52,6 +54,7 @@ export class GuildCache {
 		webhookUpdate: [],
 	};
 	public commandsTree: any = null;
+	public jobs: JobsManager | undefined;
 	constructor(guildSettings: any) {
 		this.settings = guildSettings;
 	}

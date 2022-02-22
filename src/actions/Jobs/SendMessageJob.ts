@@ -3,8 +3,8 @@ import { BaseJob } from '../../classes/BaseJob';
 
 export class SendMessageJob extends BaseJob {
 	public constructor() {
-		super('sendMessage', 'job');
+		super('sendMessageJob', 'job');
 	}
 
-	public async execute(GuildCache: GuildCache) {}
+	public async execute(guildCache: GuildCache) {}
 }

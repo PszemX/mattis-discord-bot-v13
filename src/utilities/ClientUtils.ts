@@ -165,7 +165,7 @@ export class ClientUtils {
 		}
 		// 'guildless' guildCache is for events without guild e.g. 'onReady' event.
 		const guildCache: IEventData['guildCache'] = guildId
-			? this.client.Guilds.guildsData.get(guildId)
+			? this.client.Guilds.get(guildId)
 			: 'guildless';
 		const eventData = {
 			mattis: this.client,
