@@ -6,5 +6,5 @@ export class SendMessageJob extends BaseJob {
 		super('sendMessageJob', 'job');
 	}
 
-	public async execute(guildCache: GuildCache) {}
+	public async execute(messageSettings: any): Promise<void> {}
 }
