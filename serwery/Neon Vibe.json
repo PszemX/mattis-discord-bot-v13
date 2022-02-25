@@ -50,22 +50,22 @@
 		},
 		"sendMessageJob": {
 			"enabled": true,
-			"messages": [
+			"messageJobs": [
 				{
 					"enabled": true,
-					"channel": "816457834027548772",
+					"channelId": "816457834027548772",
 					"message": "Testowy job",
 					"intervalTime": 2000,
-					"firstTimeSent": "",
-					"lastTimeSent": ""
+					"firstTimeSending": 0,
+					"lastTimeSent": 0
 				},
 				{
 					"enabled": true,
-					"channel": "816457834027548772",
+					"channelId": "816457834027548772",
 					"message": "Testowy job 2",
 					"intervalTime": 1000,
-					"firstTimeSent": "",
-					"lastTimeSent": ""
+					"firstTimeSending": 0,
+					"lastTimeSent": 0
 				}
 			]
 		}

@@ -1,6 +1,7 @@
 import { updateGuildsData } from '../utilities/updateGuildsData';
 import { Collection } from 'discord.js';
 import { Mattis } from './Mattis';
+import { GuildCache } from './GuildCache';
 
 export class GuildsManager extends Collection<string, any> {
 	public constructor(public readonly Mattis: Mattis) {
@@ -27,5 +28,15 @@ export class GuildsManager extends Collection<string, any> {
 			guildId,
 			await updateGuildsData(this.Mattis, guildSettings)
 		);
+	}
+
+	public async runJobs() {
+		for (const guildCache of this.values()) {
+			await this.runJob(guildCache);
+		}
+	}
+
+	public async runJob(guildCache: GuildCache) {
+		if (guildCache.jobs) await guildCache.jobs.run();
 	}
 }

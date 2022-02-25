@@ -49,7 +49,6 @@ const updateGuildsData = async (Mattis: Mattis, guildSettings: any) => {
 	guildCache.commandsTree = createCommandsTree(guildCache);
 	if (guildCache.actionsByEvent.job) {
 		guildCache.jobs = new JobsManager(Mattis, guildCache);
-		await guildCache.jobs.run();
 	}
 	return guildCache;
 };

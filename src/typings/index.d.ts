@@ -4,6 +4,7 @@ import {
 	ApplicationCommandOptionData,
 	ApplicationCommandType,
 	ClientEvents,
+	Guild,
 } from 'discord.js';
 
 export interface ILoggerOptions {
@@ -52,7 +53,7 @@ export interface IEventData {
 export interface IJob {
 	readonly name: string;
 	readonly event: string;
-	execute(GuildCache: GuildCache): any;
+	execute(guild: Guild, GuildCache: GuildCache): any;
 }
 
 export interface SlashOption {

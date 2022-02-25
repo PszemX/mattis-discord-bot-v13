@@ -29,6 +29,7 @@ export class Mattis extends Client {
 		this.Events.load();
 		this.on('ready', async () => {
 			await this.Actions.loadCommands();
+			await this.Guilds.runJobs();
 			this.Logger.debug(`Ready took ${(Date.now() - start) / 1000}s.`);
 		});
 		await this.login().catch(() => this.reconnect());
