@@ -8,8 +8,16 @@ export class GuildCreateEvent extends BaseEvent {
 	}
 
 	public async execute(guild: Guild): Promise<void> {
-		await this.mattis.Database.guildsData('settings').insertOne(
-			guildDataModel(guild)
-		);
+		if (await this.checkGuildDatabaseExistance(guild.id)) return;
+		await this.mattis.Database.guildsData(guild.id, 'settings')
+			.insertOne(guildDataModel(guild))
+			.then(() => {
+				this.mattis.Logger.debug(`Serwer ${guild.id} dodany do bazy danych.`);
+			});
+	}
+
+	private async checkGuildDatabaseExistance(guildId: string) {
+		const guildsNames = await this.mattis.Database.guildNamesList();
+		return guildsNames.includes(guildId);
 	}
 }

@@ -9,18 +9,16 @@ export class GuildsManager extends Collection<string, any> {
 
 	public async loadGuildsData() {
 		// Stworzenie guildsData dla każdego serwera w bazie danych.
-		const databaseGuildIds = (
-			await this.Mattis.Database.db('guildsData').listCollections().toArray()
-		).map((u) => u.name);
+		const databaseGuildIds = await this.Mattis.Database.guildNamesList();
+
 		for (const guildId of databaseGuildIds) {
 			const guildSettings = await this.Mattis.Database.guildsData(
+				guildId,
 				'settings'
 			).findOne({
 				id: guildId,
 			});
-			if (guildId != 'settings') {
-				this.updateGuildsData(guildId, guildSettings);
-			}
+			this.updateGuildsData(guildId, guildSettings);
 		}
 	}
 

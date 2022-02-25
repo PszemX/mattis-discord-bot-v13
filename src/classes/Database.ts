@@ -16,13 +16,17 @@ export class Database extends MongoClient {
 			.catch((error) => this.log.error(error));
 	}
 
-	public guildsData(collection: string) {
-		return this.db('guildsData').collection(collection);
+	public async guildNamesList(): Promise<string[]> {
+		const guildNames = (await this.db().admin().listDatabases()).databases
+			.filter((db) => !isNaN(Number(db.name)))
+			.map((db) => db.name);
+		return guildNames;
 	}
 
-	public usersData(collection: string) {
-		return this.db('usersData').collection(collection);
+	public guildsData(guildId: string, collection: string) {
+		return this.db(guildId).collection(collection);
 	}
+
 	// private async databaseConnect() {
 	// 	// Database -> guildsData, usersData itd...
 	// 	// Collection -> id serwera, id użytkownika itd...
