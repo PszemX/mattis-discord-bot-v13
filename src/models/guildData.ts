@@ -52,6 +52,11 @@ export const guildDataModel = (guild: Guild) => {
 				aliases: ['rps'],
 				cooldown: 3000,
 			},
+			reload: {
+				enabled: false,
+				aliases: ['reload'],
+				cooldown: 3000,
+			},
 			sendMessageJob: {
 				enabled: false,
 				messageJobs: [

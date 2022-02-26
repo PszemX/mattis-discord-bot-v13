@@ -48,8 +48,13 @@
 			"aliases": ["rps"],
 			"cooldown": 3000
 		},
-		"sendMessageJob": {
+		"reload": {
 			"enabled": true,
+			"aliases": ["reload"],
+			"cooldown": 3000
+		},
+		"sendMessageJob": {
+			"enabled": false,
 			"messageJobs": [
 				{
 					"enabled": true,

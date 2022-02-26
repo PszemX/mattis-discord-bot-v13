@@ -13,17 +13,17 @@ export class GuildsManager extends Collection<string, any> {
 		const databaseGuildIds = await this.Mattis.Database.guildNamesList();
 
 		for (const guildId of databaseGuildIds) {
-			const guildSettings = await this.Mattis.Database.guildsData(
-				guildId,
-				'settings'
-			).findOne({
-				id: guildId,
-			});
-			this.updateGuildsData(guildId, guildSettings);
+			this.updateGuildsData(guildId);
 		}
 	}
 
-	public async updateGuildsData(guildId: string, guildSettings: any) {
+	public async updateGuildsData(guildId: string) {
+		const guildSettings = await this.Mattis.Database.guildsData(
+			guildId,
+			'settings'
+		).findOne({
+			id: guildId,
+		});
 		return this.set(
 			guildId,
 			await updateGuildsData(this.Mattis, guildSettings)
