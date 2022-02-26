@@ -1,14 +1,5 @@
 import { Mattis } from './classes/Mattis';
 import { clientOptions } from './config';
-import express from 'express';
-
-const app = express();
-
-app.get('/', (req: any, res: any) => {
-	res.send('Mattis on!');
-});
-
-app.listen(process.env.PORT || 80);
 
 export const mattis = new Mattis(clientOptions);
 

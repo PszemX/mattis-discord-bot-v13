@@ -3,6 +3,9 @@
 	"version": "1.0.0",
 	"description": "Multifunctional And Trustworthy Technological Intelligent System",
 	"main": "index.js",
+	"engines": {
+		"node": "16.9.0"
+	},
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"compile": "tsc && node ."
