@@ -9,7 +9,7 @@ import { LogsManager } from './LogsManager';
 import { Database } from './Database';
 import * as config from '../config';
 
-// const app = express();
+const app = express();
 
 export class Mattis extends Client {
 	public readonly config = config;
@@ -31,7 +31,7 @@ export class Mattis extends Client {
 		await this.Guilds.loadGuildsData();
 		this.Events.load();
 		this.on('ready', async () => {
-			// await this.httpServer();
+			await this.httpServer();
 			await this.Actions.loadCommands();
 			await this.Guilds.runJobs();
 			this.Logger.debug(`Ready took ${(Date.now() - start) / 1000}s.`);
@@ -48,11 +48,11 @@ export class Mattis extends Client {
 		setTimeout(() => new Mattis().build(), 30000);
 	}
 
-	// private async httpServer() {
-	// 	app.get('/', (req: any, res: any) => {
-	// 		res.send('Mattis on!');
-	// 	});
+	private async httpServer() {
+		app.get('/', (req: any, res: any) => {
+			res.send('Mattis on!');
+		});
 
-	// 	app.listen(process.env.PORT || 80);
-	// }
+		app.listen(process.env.PORT || 80);
+	}
 }

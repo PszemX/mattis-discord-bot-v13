@@ -24,7 +24,6 @@ export class PingCommand extends BaseCommand {
 
 	public async execute(EventData: IEventData, parameters: any) {
 		const before = Date.now();
-		const latency = Date.now() - before;
 		const wsLatency = EventData.mattis.ws.ping.toFixed(0);
 		const vcLatency = 0;
 		const embed = new MessageEmbed()
@@ -33,7 +32,7 @@ export class PingCommand extends BaseCommand {
 			.addFields(
 				{
 					name: '📶 API',
-					value: `**\`${latency}\`** ms`,
+					value: `**\`${Date.now() - before}\`** ms`,
 					inline: true,
 				},
 				{
