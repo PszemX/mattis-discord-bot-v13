@@ -339,7 +339,7 @@ const translation = {
 			seriousCritical: '🚑 Krytyczne\nprzypadki',
 			active: '🛏️ Aktywne przypadki',
 			totalTests: '📋 Wszystkie testy',
-			countryNotFound: `Nie znaleziono kraju`,
+			countryNotFound: 'Nie znaleziono kraju',
 		},
 		logs: {
 			channelCreate: {

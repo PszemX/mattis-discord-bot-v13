@@ -1,3 +1,6 @@
+import { Client, ClientOptions } from 'discord.js';
+import express from 'express';
+import { resolve } from 'path';
 import { ClientUtils } from '../utilities/ClientUtils';
 import { ActionsManager } from './ActionsManager';
 import { GuildsManager } from './GuildsManager';
@@ -5,23 +8,20 @@ import { EventsManager } from './EventsManager';
 import { LogsManager } from './LogsManager';
 import { Database } from './Database';
 import * as config from '../config';
-import { resolve } from 'path';
-import express from 'express';
-import { Client, ClientOptions } from 'discord.js';
 
 const app = express();
 
 export class Mattis extends Client {
 	public readonly config = config;
 	public readonly Actions = new ActionsManager(this, resolve(__dirname, '..', 'actions'));
-	public readonly Events = new EventsManager(this,resolve(__dirname, '..', 'events'));
+	public readonly Events = new EventsManager(this, resolve(__dirname, '..', 'events'));
 	public readonly Logger = new LogsManager({ prod: this.config.isProd });
 	public readonly Guilds = new GuildsManager(this);
 	public readonly utils = new ClientUtils(this);
 	public readonly Database = new Database();
 
-	constructor(options: ClientOptions) {
-		super(options);
+	constructor() {
+		super(<ClientOptions>config.clientOptions);
 	}
 
 	public async build() {
@@ -42,13 +42,13 @@ export class Mattis extends Client {
 
 	private reconnect() {
 		this.Logger.error(
-			'Fatal connection error with discord gateway, attepting to reconnect in 30 seconds'
+			'Fatal connection error with discord gateway, attepting to reconnect in 30 seconds',
 		);
 		this.destroy();
-		setTimeout(() => new Mattis(this.options).build(), 30000);
+		setTimeout(() => new Mattis().build(), 30000);
 	}
 
-	private async httpServer(){
+	private async httpServer() {
 		app.get('/', (req: any, res: any) => {
 			res.send('Mattis on!');
 		});

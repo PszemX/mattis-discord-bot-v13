@@ -1,6 +1,6 @@
+import { Guild } from 'discord.js';
 import { GuildCache } from '../../classes/GuildCache';
 import { BaseJob } from '../../classes/BaseJob';
-import { Guild } from 'discord.js';
 
 export class SendMessageJob extends BaseJob {
 	public constructor() {

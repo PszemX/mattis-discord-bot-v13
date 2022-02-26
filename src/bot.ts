@@ -1,7 +1,6 @@
 import { Mattis } from './classes/Mattis';
-import { clientOptions } from './config';
 
-export const mattis = new Mattis(clientOptions);
+export const mattis = new Mattis();
 
 process.on('exit', (code) => {
 	console.log(`NodeJS process exited with code ${code}`);
