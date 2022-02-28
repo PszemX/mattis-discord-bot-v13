@@ -18,25 +18,25 @@ export class GuildsManager extends Collection<string, any> {
 	}
 
 	public async updateGuildsData(guildId: string) {
+		if (this.Mattis.Guilds.get(guildId)) {
+			this.clearJob(this.Mattis.Guilds.get(guildId));
+		}
 		const guildSettings = await this.Mattis.Database.guildsData(
 			guildId,
 			'settings'
 		).findOne({
 			id: guildId,
 		});
-		return this.set(
-			guildId,
-			await updateGuildsData(this.Mattis, guildSettings)
-		);
+		const guildCache = await updateGuildsData(this.Mattis, guildSettings);
+		this.set(guildId, guildCache);
+		await this.runJob(guildCache);
 	}
 
-	public async runJobs() {
-		for (const guildCache of this.values()) {
-			await this.runJob(guildCache);
-		}
-	}
-
-	public async runJob(guildCache: GuildCache) {
+	private async runJob(guildCache: GuildCache) {
 		if (guildCache.jobs) await guildCache.jobs.run();
+	}
+
+	private async clearJob(guildCache: GuildCache) {
+		if (guildCache.jobs) await guildCache.jobs.clear();
 	}
 }

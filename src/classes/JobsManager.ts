@@ -11,4 +11,10 @@ export class JobsManager {
 			job.execute(guild, this.guildCache);
 		}
 	}
+
+	public async clear(): Promise<void> {
+		for (const job of this.guildCache.actionsByEvent.job) {
+			job.clear();
+		}
+	}
 }
