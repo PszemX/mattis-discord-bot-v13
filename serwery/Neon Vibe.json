@@ -58,6 +58,7 @@
 			"messageJobs": [
 				{
 					"enabled": true,
+					"id": 1,
 					"channelId": "816457834027548772",
 					"message": "Testowy job",
 					"intervalTime": 2000,
@@ -66,6 +67,7 @@
 				},
 				{
 					"enabled": true,
+					"id": 2,
 					"channelId": "816457834027548772",
 					"message": "Testowy job 2",
 					"intervalTime": 1000,
