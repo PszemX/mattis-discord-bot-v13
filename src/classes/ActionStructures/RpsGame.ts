@@ -22,6 +22,7 @@ export class RpsGame extends BaseClient {
 		this.data.guildCache.settings.actions['rps'];
 	private readonly possibleChoices = ['rock', 'paper', 'scissors'];
 	private isMultiplayerGame: boolean = false;
+	private attachment?: MessageAttachment;
 	private playerOnePoints: number = 0;
 	private playerTwoPoints: number = 0;
 	private playersCount: number = 1;
@@ -66,11 +67,20 @@ export class RpsGame extends BaseClient {
 	}
 
 	private async gameBegin() {
+		if (!this.attachment) await this.createMessageAttachment();
 		if (this.isMultiplayerGame) {
 			await this.inviteOpponent();
 		} else {
 			await this.generateGameBeginMessage();
 		}
+	}
+
+	private async createMessageAttachment() {
+		const canvas = await this.createGameCanvas();
+		this.attachment = new MessageAttachment(
+			canvas.toBuffer(),
+			'rpsBackground.png'
+		);
 	}
 
 	private async inviteOpponent() {
@@ -216,12 +226,6 @@ export class RpsGame extends BaseClient {
 	}
 
 	private async generateGameBeginMessage(): Promise<void> {
-		const canvas = await this.createGameCanvas();
-		const attachment = new MessageAttachment(
-			canvas.toBuffer(),
-			'rpsBackground.png'
-		);
-
 		this.gameEmbed
 			.spliceFields(0, 2)
 			.setDescription(`${this.playerOne} **VS** ${this.playerTwo}`)
@@ -233,7 +237,7 @@ export class RpsGame extends BaseClient {
 		if (this.maxPoints > 1) this.addEmbedPlayersDashboard(this.gameEmbed);
 
 		const row = this.generateRpsButtons();
-		await this.sendGameMessage(attachment, row);
+		await this.sendGameMessage(this.attachment, row);
 		await this.createRpsMessageButtonsCollector(2, 'game');
 	}
 
