@@ -53,7 +53,7 @@ export interface IEventData {
 export interface IJob {
 	readonly name: string;
 	readonly event: string;
-	execute(guild: Guild, GuildCache: GuildCache): any;
+	execute(mattis: Mattis, guild: Guild, GuildCache: GuildCache): any;
 }
 
 export interface SlashOption {

@@ -1,6 +1,7 @@
 import { GuildCache } from './GuildCache';
 import { Guild } from 'discord.js';
 import { IJob } from '../typings';
+import { Mattis } from './Mattis';
 
 export abstract class BaseJob implements IJob {
 	public constructor(
@@ -8,5 +9,9 @@ export abstract class BaseJob implements IJob {
 		public readonly event: IJob['event'] // public readonly meta: ICommand['meta']
 	) {}
 
-	public abstract execute(guild: Guild, guildCache: GuildCache): Promise<void>;
+	public abstract execute(
+		mattis: Mattis,
+		guild: Guild,
+		guildCache: GuildCache
+	): Promise<void>;
 }

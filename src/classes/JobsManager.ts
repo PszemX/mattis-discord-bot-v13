@@ -2,13 +2,13 @@ import { GuildCache } from './GuildCache';
 import { Mattis } from './Mattis';
 
 export class JobsManager {
-	public constructor(public Mattis: Mattis, public guildCache: GuildCache) {}
+	public constructor(public mattis: Mattis, public guildCache: GuildCache) {}
 
 	public async run(): Promise<void> {
 		const guildId = this.guildCache.settings.id;
-		const guild = this.Mattis.guilds.cache.get(guildId);
+		const guild = this.mattis.guilds.cache.get(guildId);
 		for (const job of this.guildCache.actionsByEvent.job) {
-			job.execute(guild, this.guildCache);
+			job.execute(this.mattis, guild, this.guildCache);
 		}
 	}
 
