@@ -61,7 +61,11 @@ export class SendMessageJob extends BaseJob {
 		} else if (Math.abs(dateDifference) < messageJob.intervalTime) {
 			timeout = setTimeout(async () => {
 				await this.sendMessageInterval(mattis, guild, messageJob);
-			}, messageJob.intervalTime - dateDifference);
+			}, messageJob.intervalTime - Math.abs(dateDifference));
+		} else if (Date.now() - messageJob.lastTimeSent < messageJob.intervalTime) {
+			timeout = setTimeout(async () => {
+				await this.sendMessageInterval(mattis, guild, messageJob);
+			}, messageJob.intervalTime - (Date.now() - messageJob.lastTimeSent));
 		} else {
 			await this.sendMessageInterval(mattis, guild, messageJob);
 		}
