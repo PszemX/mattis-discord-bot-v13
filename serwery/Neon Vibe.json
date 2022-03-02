@@ -33,6 +33,10 @@
 			"roleAddId": "705921111635919048",
 			"roleRemoveId": "720302115762733097"
 		},
+		"captchaVerification": {
+			"enabled": true,
+			"roleAddId": "705921111635919048"
+		},
 		"ping": {
 			"enabled": true,
 			"aliases": ["ping", "pong"],
