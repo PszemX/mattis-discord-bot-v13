@@ -1,5 +1,5 @@
-import { createLogger } from './LogsManager';
 import { MongoClient } from 'mongodb';
+import { createLogger } from './LogsManager';
 
 export class Database extends MongoClient {
 	public readonly log = createLogger('Database');
@@ -18,7 +18,7 @@ export class Database extends MongoClient {
 
 	public async guildNamesList(): Promise<string[]> {
 		const guildNames = (await this.db().admin().listDatabases()).databases
-			.filter((db) => !isNaN(Number(db.name)))
+			.filter((db) => !Number.isNaN(Number(db.name)))
 			.map((db) => db.name);
 		return guildNames;
 	}

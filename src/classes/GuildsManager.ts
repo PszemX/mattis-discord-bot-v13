@@ -1,5 +1,5 @@
-import { updateGuildsData } from '../utilities/updateGuildsData';
 import { Collection } from 'discord.js';
+import { updateGuildsData } from '../utilities/updateGuildsData';
 import { Mattis } from './Mattis';
 import { GuildCache } from './GuildCache';
 

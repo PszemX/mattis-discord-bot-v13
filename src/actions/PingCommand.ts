@@ -1,6 +1,5 @@
 import { ColorResolvable, MessageEmbed } from 'discord.js';
 import { BaseCommand } from '../classes/BaseCommand';
-import * as colors from '../utilities/colors.json';
 import { IEventData } from '../typings';
 import lang from '../utilities/lang';
 
@@ -16,9 +15,9 @@ export class PingCommand extends BaseCommand {
 			category: 'general',
 			name: 'ping',
 			usage: '{prefix}ping',
-			//slash: SlashOption,
-			//contextChat: string,
-			//contextUser: string,
+			// slash: SlashOption,
+			// contextChat: string,
+			// contextUser: string,
 		});
 	}
 

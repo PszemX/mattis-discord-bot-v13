@@ -1,5 +1,6 @@
-import { BaseEvent } from '../classes/BaseEvent';
+/* eslint-disable indent */
 import DiscordJS, { Presence } from 'discord.js';
+import { BaseEvent } from '../classes/BaseEvent';
 
 export class ReadyEvent extends BaseEvent {
 	public constructor(mattis: BaseEvent['mattis']) {
@@ -7,9 +8,10 @@ export class ReadyEvent extends BaseEvent {
 	}
 
 	public async execute(): Promise<void> {
-		if (this.mattis.application?.owner)
+		if (this.mattis.application?.owner) {
 			this.mattis.config.owners.push(this.mattis.application.owner.id);
-		//await this.client.spotify.renew();
+		}
+		// await this.client.spotify.renew();
 		await this.doPresence();
 		const totalMembers = await this.formatString('{userCount}');
 		const totalServers = await this.formatString('{serverCount}');
@@ -18,10 +20,10 @@ export class ReadyEvent extends BaseEvent {
 		console.log('╠═══════════════════════╗');
 		console.log('╠   Mattis is running!  ╬');
 		console.log('╠═══════════════════════╬');
-		console.log(`╠ Members: ` + totalMembers);
-		console.log(`╠ Guilds: ` + totalServers);
-		console.log(`╠ Text Channels: ` + totalTextChannels);
-		console.log(`╠ VoiceChannels: ` + totalVoiceChannels);
+		console.log(`╠ Members: ${totalMembers}`);
+		console.log(`╠ Guilds: ${totalServers}`);
+		console.log(`╠ Text Channels: ${totalTextChannels}`);
+		console.log(`╠ VoiceChannels: ${totalVoiceChannels}`);
 		console.log(`╠ Discord.js: ${DiscordJS.version}`);
 		console.log(`╠ Node.js: ${process.version}`);
 		console.log('╠═══════════════════════╝');
@@ -88,8 +90,9 @@ export class ReadyEvent extends BaseEvent {
 		try {
 			return this.setPresence(false);
 		} catch (e) {
-			if ((e as Error).message !== 'Shards are still being spawned.')
+			if ((e as Error).message !== 'Shards are still being spawned.') {
 				this.mattis.Logger.error(String(e));
+			}
 			return undefined;
 		} finally {
 			setInterval(

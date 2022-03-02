@@ -1,4 +1,5 @@
-//@ts-nocheck
+/* eslint-disable no-dupe-keys */
+// @ts-nocheck
 const translation = {
 	continents: {
 		africa: 'Africa',

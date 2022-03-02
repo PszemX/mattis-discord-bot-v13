@@ -1,6 +1,8 @@
-import { ILoggerOptions } from '../typings';
+/* eslint-disable no-nested-ternary */
+/* eslint-disable indent */
 import { format } from 'date-fns';
 import winston from 'winston';
+import { ILoggerOptions } from '../typings';
 
 enum Colors {
 	Reset = '\x1b[0m',
@@ -106,8 +108,9 @@ export function createLogger(
 						Date.now(),
 						'yyyy-MM-dd HH:mm:ss'
 					)}] [${level}]`;
-					if (['error', 'alert'].includes(level) && !prod)
+					if (['error', 'alert'].includes(level) && !prod) {
 						return `${prefix}: ${stack}`;
+					}
 					return `${prefix}: ${message}`;
 				}),
 				winston.format.align(),

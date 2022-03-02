@@ -1,9 +1,9 @@
+import { Collection } from 'discord.js';
+import { resolve } from 'path';
 import { parseCommandParameters } from '../utilities/parseCommandParameters';
 import { readdirRecSync } from '../utilities/reddirRecSync';
 import { IAction, ICommand, IEventData } from '../typings';
-import { Collection } from 'discord.js';
 import { Mattis } from './Mattis';
-import { resolve } from 'path';
 
 export class ActionsManager extends Collection<string, IAction | ICommand> {
 	public constructor(public Mattis: Mattis, public path: string) {

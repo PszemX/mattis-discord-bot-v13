@@ -1,8 +1,8 @@
-import { Mattis } from '../classes/Mattis';
 import { Guild, Role } from 'discord.js';
 import { parse, resolve } from 'path';
 import { FFmpeg } from 'prism-media';
 import { IEventData } from '../typings';
+import { Mattis } from '../classes/Mattis';
 
 export class ClientUtils {
 	public constructor(public readonly client: Mattis) {}
@@ -65,19 +65,19 @@ export class ClientUtils {
 
 		if (this.client.shard) {
 			const shardChannels = await this.client.shard.broadcastEval(
-				(c, t) =>
-					c.channels.cache
-						.filter((ch) => {
-							if (t)
-								return (
-									ch.type === 'GUILD_TEXT' ||
+				(c, t) => c.channels.cache
+					.filter((ch) => {
+						if (t) {
+							return (
+								ch.type === 'GUILD_TEXT' ||
 									ch.type === 'GUILD_PUBLIC_THREAD' ||
 									ch.type === 'GUILD_PRIVATE_THREAD'
-								);
+							);
+						}
 
-							return true;
-						})
-						.map((ch) => ch.id),
+						return true;
+					})
+					.map((ch) => ch.id),
 				{
 					context: textOnly,
 				}
@@ -89,12 +89,13 @@ export class ClientUtils {
 		} else {
 			arr = this.client.channels.cache
 				.filter((ch) => {
-					if (textOnly)
+					if (textOnly) {
 						return (
 							ch.type === 'GUILD_TEXT' ||
 							ch.type === 'GUILD_PUBLIC_THREAD' ||
 							ch.type === 'GUILD_PRIVATE_THREAD'
 						);
+					}
 
 					return true;
 				})

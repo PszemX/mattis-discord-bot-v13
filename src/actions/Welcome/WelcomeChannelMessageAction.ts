@@ -12,8 +12,7 @@ export class WelcomeChannelMessageAction extends BaseEventAction {
 	}
 
 	public async execute(EventData: IEventData) {
-		const channelId =
-			EventData.guildCache.settings.actions[this.name].channelId;
+		const { channelId } = EventData.guildCache.settings.actions[this.name];
 		const channel = EventData.args.guild.channels.cache.get(channelId);
 		const welcomeChannelMessage = actionTextReplace(
 			EventData,

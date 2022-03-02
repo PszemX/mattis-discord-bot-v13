@@ -1,4 +1,4 @@
-//@ts-nocheck
+// @ts-nocheck
 const translation = {
 	continents: {
 		africa: 'Afryka',
@@ -274,28 +274,25 @@ const translation = {
 		orange: 'pomarańczowy',
 	},
 	errors: {
-		error: `Błąd...`,
-		commandNotFound: `Nie ma takiej komendy!`,
-		commandNotFoundPrompt: (data: any, payload: any) =>
-			`Nie ma takiej komendy! Czy chodziło ci o ${payload}?`,
-		commandsCooldown: (data: any, payload: any) =>
-			`Następną komendę możesz napisać za ${payload}s.`,
+		error: 'Błąd...',
+		commandNotFound: 'Nie ma takiej komendy!',
+		commandNotFoundPrompt: (data: any, payload: any) => `Nie ma takiej komendy! Czy chodziło ci o ${payload}?`,
+		commandsCooldown: (data: any, payload: any) => `Następną komendę możesz napisać za ${payload}s.`,
 	},
 	actions: {
 		ping: {
-			actionDescripton: 'Pokazuje aktualny ping Mattisa.', //Show the current client's ping.
+			actionDescripton: 'Pokazuje aktualny ping Mattisa.', // Show the current client's ping.
 			footer: (data: any) => `Aktualny ping ${data.mattis.user!.tag}`,
 		},
 		badwords: {
 			rebuke: 'Uważaj na słownictwo! Otrzymujesz ostrzeżenie!',
-			warn: (payload: any) =>
-				`Otrzymujesz warna na serwerze ${payload.guild.name} za używanie niewłaściwego słownictwa!`,
+			warn: (payload: any) => `Otrzymujesz warna na serwerze ${payload.guild.name} za używanie niewłaściwego słownictwa!`,
 		},
 		rps: {
 			errorNoChoice: 'Użytkownik nie dokonał wyboru!',
-			playerChoice: `Wybór`,
-			playerOne: `Gracz 1.`,
-			playerTwo: `Gracz 2.`,
+			playerChoice: 'Wybór',
+			playerOne: 'Gracz 1.',
+			playerTwo: 'Gracz 2.',
 			rock: 'Kamień',
 			rockEmoji: '✊',
 			paper: 'Papier',
@@ -316,13 +313,10 @@ const translation = {
 			invitationDeclined: 'Zaproszenie zostało odrzucone/wycofane ❌',
 			moveTimeExpired: 'Minął czas na wykonanie ruchu ⌛',
 			invitationSent: 'Zaproszenie zostało wysłane 📨',
-			multiPlayerInvitation: (data: any, payload: any) =>
-				`${payload.p2}, zostałeś zaproszony przez ${payload.p1} do gry.`,
-			multiPlayerAccept: `Zaakceptuj!`,
-			multiPlayerRoundVictory: (data: any, payload: any) =>
-				`${payload} wygrał rundę!`,
-			multiPlayerGameVictory: (data: any, payload: any) =>
-				`${payload} wygrał grę 🥇`,
+			multiPlayerInvitation: (data: any, payload: any) => `${payload.p2}, zostałeś zaproszony przez ${payload.p1} do gry.`,
+			multiPlayerAccept: 'Zaakceptuj!',
+			multiPlayerRoundVictory: (data: any, payload: any) => `${payload} wygrał rundę!`,
+			multiPlayerGameVictory: (data: any, payload: any) => `${payload} wygrał grę 🥇`,
 		},
 		pokemons: {
 			newPokemon: 'Pojawił się nowy pokemon!',
@@ -375,11 +369,11 @@ const translation = {
 		},
 	},
 	player: {
-		played: `Gra🎵`,
-		noVoiceChannel: `Nie jesteś na żadnym kanale głosowym!`,
-		notOnVoiceChannel: `Aktualnie bot nie jest na żadnym kanale głosowym!`,
-		onAnotherVoiceChannel: `Jesteś na innym kanale głosowym, niż bot!`,
-		emptyQueue: `Aktualna kolejka utworów jest pusta!`,
+		played: 'Gra🎵',
+		noVoiceChannel: 'Nie jesteś na żadnym kanale głosowym!',
+		notOnVoiceChannel: 'Aktualnie bot nie jest na żadnym kanale głosowym!',
+		onAnotherVoiceChannel: 'Jesteś na innym kanale głosowym, niż bot!',
+		emptyQueue: 'Aktualna kolejka utworów jest pusta!',
 	},
 };
 

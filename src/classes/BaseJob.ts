@@ -1,5 +1,5 @@
-import { GuildCache } from './GuildCache';
 import { Guild } from 'discord.js';
+import { GuildCache } from './GuildCache';
 import { IJob } from '../typings';
 import { Mattis } from './Mattis';
 

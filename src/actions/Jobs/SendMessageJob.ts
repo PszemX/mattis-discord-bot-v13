@@ -1,7 +1,8 @@
+/* eslint-disable no-undef */
+import { clearTimeout } from 'timers';
 import { Guild } from 'discord.js';
 import { GuildCache } from '../../classes/GuildCache';
 import { BaseJob } from '../../classes/BaseJob';
-import { clearTimeout } from 'timers';
 import { Mattis } from '../../classes/Mattis';
 
 export class SendMessageJob extends BaseJob {
@@ -20,8 +21,9 @@ export class SendMessageJob extends BaseJob {
 		this.guildMessageJobs =
 			guildCache.settings.actions.sendMessageJob.messageJobs;
 		for (const messageJob of this.guildMessageJobs) {
-			if (messageJob.enabled)
+			if (messageJob.enabled) {
 				await this.setupInterval(mattis, guild, messageJob);
+			}
 		}
 	}
 
@@ -43,7 +45,7 @@ export class SendMessageJob extends BaseJob {
 		const database: any = mattis.Database;
 		await channel.send(messageJob.message).then(async () => {
 			await this.updateLastTimeSent(database, guild, messageJob);
-			var interval = setInterval(async () => {
+			const interval = setInterval(async () => {
 				await channel.send(messageJob.message);
 				await this.updateLastTimeSent(database, guild, messageJob);
 			}, messageJob.intervalTime);

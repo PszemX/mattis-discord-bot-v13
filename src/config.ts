@@ -1,4 +1,3 @@
-import { IpresenceData } from './typings/enum';
 import {
 	ClientOptions,
 	Intents,
@@ -7,6 +6,7 @@ import {
 	ClientPresenceStatus,
 	ActivityType,
 } from 'discord.js';
+import { IpresenceData } from './typings/enum';
 
 // const allIntents = new Intents(32767);
 export const clientOptions: ClientOptions = {

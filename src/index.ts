@@ -1,8 +1,8 @@
-import 'dotenv/config';
-import { createLogger } from './classes/LogsManager';
 import { ShardingManager } from 'discord.js';
 import { resolve } from 'path';
 import figlet from 'figlet';
+import 'dotenv/config';
+import { createLogger } from './classes/LogsManager';
 
 const log = createLogger('shardingManager');
 
@@ -32,8 +32,7 @@ manager
 			.on('reconnecting', () => {
 				log.info('SHARD RECONNECT');
 			});
-		if (manager.shards.size === manager.totalShards)
-			log.info('[ShardManager] All shards spawned successfully.');
+		if (manager.shards.size === manager.totalShards) { log.info('[ShardManager] All shards spawned successfully.'); }
 	})
 	.spawn()
 	.catch((e) => log.error('SHARD_SPAWN_ERROR: ', e));

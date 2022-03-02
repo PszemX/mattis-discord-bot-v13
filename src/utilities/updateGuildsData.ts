@@ -15,7 +15,7 @@ const directCache = {
 };
 
 const addCommandByTriggerToTree = (command: any, trigger: any, tree: any) => {
-	let splittedTrigger = trigger.split(' ');
+	const splittedTrigger = trigger.split(' ');
 	let branch = tree;
 	splittedTrigger.forEach((branchName: any) => {
 		if (!branch.b) branch.b = {};
@@ -26,10 +26,10 @@ const addCommandByTriggerToTree = (command: any, trigger: any, tree: any) => {
 };
 
 const createCommandsTree = (guildCache: any) => {
-	let tree = { b: null, c: null };
-	let guildCommands = guildCache.actionsByEvent['command'];
+	const tree = { b: null, c: null };
+	const guildCommands = guildCache.actionsByEvent.command;
 	guildCommands.forEach((command: any) => {
-		let commandSettings = guildCache.settings.actions[command.name];
+		const commandSettings = guildCache.settings.actions[command.name];
 		commandSettings.aliases.forEach((trigger: any) => {
 			addCommandByTriggerToTree(command, trigger, tree);
 		});
@@ -40,9 +40,9 @@ const createCommandsTree = (guildCache: any) => {
 const updateGuildsData = async (Mattis: Mattis, guildSettings: any) => {
 	const guildCache = new GuildCache(guildSettings);
 	for (const actionName of Object.keys(guildCache.settings.actions)) {
-		let actionSettings = guildCache.settings.actions[actionName];
+		const actionSettings = guildCache.settings.actions[actionName];
 		if (actionSettings.enabled) {
-			let action = Mattis.Actions.get(actionName);
+			const action = Mattis.Actions.get(actionName);
 			if (action) guildCache.actionsByEvent[action.event].push(action);
 		}
 	}

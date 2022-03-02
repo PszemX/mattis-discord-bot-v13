@@ -1,5 +1,5 @@
-import { RpsGame } from '../../../classes/ActionStructures/RpsGame';
 import { GuildMember, TextChannel, User } from 'discord.js';
+import { RpsGame } from '../../../classes/ActionStructures/RpsGame';
 import { BaseCommand } from '../../../classes/BaseCommand';
 import { IEventData } from '../../../typings';
 
@@ -23,9 +23,9 @@ export class RpsGameCommand extends BaseCommand {
 			category: 'game',
 			name: 'rps',
 			usage: '{prefix}rps',
-			//slash: SlashOption,
-			//contextChat: string,
-			//contextUser: string,
+			// slash: SlashOption,
+			// contextChat: string,
+			// contextUser: string,
 		});
 	}
 

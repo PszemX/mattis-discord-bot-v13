@@ -1,12 +1,13 @@
+/* eslint-disable array-callback-return */
+import { ColorResolvable, MessageEmbed } from 'discord.js';
+import latinize from 'latinize';
+import axios from 'axios';
 import continentsIds from '../utilities/continents_ids.json';
 import countryCodes from '../utilities/country_codes.json';
-import { ColorResolvable, MessageEmbed } from 'discord.js';
 import { BaseCommand } from '../classes/BaseCommand';
 import * as colors from '../utilities/colors.json';
 import { IEventData } from '../typings';
 import lang from '../utilities/lang';
-import latinize from 'latinize';
-import axios from 'axios';
 
 export class CovidCommand extends BaseCommand {
 	public constructor() {
@@ -20,27 +21,32 @@ export class CovidCommand extends BaseCommand {
 			category: 'general',
 			name: 'ping',
 			usage: '{prefix}covid {country}',
-			//slash: SlashOption,
-			//contextChat: string,
-			//contextUser: string,
+			// slash: SlashOption,
+			// contextChat: string,
+			// contextUser: string,
 		});
 	}
 
 	public async execute(EventData: IEventData, parameters: any) {
 		const country = latinize(parameters.country).toLowerCase();
 		const targetCountryCode = countryCodes.find((countryCode) => {
-			if (lang(`countries.${countryCode}`, EventData).toLowerCase() == country)
+			if (
+				lang(`countries.${countryCode}`, EventData).toLowerCase() == country
+			) {
 				return countryCode;
+			}
 			if (
 				lang(`countries.${countryCode}`, EventData, '', 'eng').toLowerCase() ==
 				country
-			)
+			) {
 				return countryCode;
+			}
 		});
-		if (!targetCountryCode)
+		if (!targetCountryCode) {
 			return EventData.args.reply(
 				lang('actions.covid.countryNotFound', EventData)
 			);
+		}
 		const targetCountryName = lang(`countries.${targetCountryCode}`, EventData);
 		const targetCountryNameEncoded = encodeURIComponent(
 			lang(`countries.${targetCountryCode}`, EventData, '', 'eng')
@@ -57,23 +63,23 @@ export class CovidCommand extends BaseCommand {
 			.then(async (response) => {
 				const covid = response.data;
 				const allCases = covid.cases;
-				const todayCases = covid.todayCases;
+				const { todayCases } = covid;
 				const allDeaths = covid.deaths;
-				const todayDeaths = covid.todayDeaths;
-				const country = covid.country;
-				const critical = covid.critical;
+				const { todayDeaths } = covid;
+				// const country = covid.country;
+				const { critical } = covid;
 				for (let i = 0; i < continentsIds.length; ++i) {
 					if (
 						lang(`continents.${continentsIds[i]}`, EventData) == covid.continent
 					) {
-						var continent = lang(`continents.${continentsIds[i]}`, EventData);
+						const continent = lang(`continents.${continentsIds[i]}`, EventData);
 						break;
 					}
 				}
-				const population = covid.population;
+				const { population } = covid;
 				const deathRate = ((allDeaths / allCases) * 100).toFixed(2);
 				const allRecovered = covid.recovered;
-				const todayRecovered = covid.todayRecovered;
+				// const todayRecovered = covid.todayRecovered;
 				const wyzdrowienia = ((allRecovered / allCases) * 100).toFixed(2);
 				const allTests = covid.tests;
 				const criticalPercent = ((critical / allCases) * 100).toFixed(2);
@@ -112,80 +118,82 @@ export class CovidCommand extends BaseCommand {
 						},
 						{
 							name: lang('actions.covid.deaths', EventData),
-							value:
-								allDeaths
-									.toString()
-									.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',') +
-								` (**${deathRate}%**)`,
+							value: `${allDeaths
+								.toString()
+								.replace(
+									/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g,
+									','
+								)} (**${deathRate}%**)`,
 							inline: true,
 						},
 						{
 							name: lang('actions.covid.recovered', EventData),
-							value:
-								allRecovered
-									.toString()
-									.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',') +
-								`\n(**${wyzdrowienia}%**)`,
+							value: `${allRecovered
+								.toString()
+								.replace(
+									/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g,
+									','
+								)}\n(**${wyzdrowienia}%**)`,
 							inline: true,
 						},
 						{
 							name: lang('actions.covid.todayConfirmed', EventData),
-							value:
-								'+' +
-								todayCases
-									.toString()
-									.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',') +
-								`\n(**${((todayCases / allCases) * 100).toFixed(2)}%**)`,
+							value: `+${todayCases
+								.toString()
+								.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')}\n(**${(
+								(todayCases / allCases) *
+								100
+							).toFixed(2)}%**)`,
 							inline: true,
 						},
 						{
 							name: lang('actions.covid.todayDeaths', EventData),
-							value:
-								'+' +
-								todayDeaths
-									.toString()
-									.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',') +
-								` (**${((todayDeaths / allCases) * 100).toFixed(2)}%**)`,
+							value: `+${todayDeaths
+								.toString()
+								.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')} (**${(
+								(todayDeaths / allCases) *
+								100
+							).toFixed(2)}%**)`,
 							inline: true,
 						},
 						{
 							name: lang('actions.covid.todayTests', EventData),
-							value:
-								'+' +
-								todayTests
-									.toString()
-									.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',') +
-								`\n(**${((todayTests / population) * 100).toFixed(2)}%**)`,
+							value: `+${todayTests
+								.toString()
+								.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')}\n(**${(
+								(todayTests / population) *
+								100
+							).toFixed(2)}%**)`,
 							inline: true,
 						},
 						{
 							name: lang('actions.covid.seriousCritical', EventData),
-							value:
-								critical
-									.toString()
-									.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',') +
-								` (**${criticalPercent}%**)`,
+							value: `${critical
+								.toString()
+								.replace(
+									/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g,
+									','
+								)} (**${criticalPercent}%**)`,
 							inline: true,
 						},
 						{
 							name: lang('actions.covid.active', EventData),
-							value:
-								(allCases - (allRecovered + allDeaths))
-									.toString()
-									.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',') +
-								`\n(**${(
-									((allCases - (allRecovered + allDeaths)) / allCases) *
-									100
-								).toFixed(2)}%**)`,
+							value: `${(allCases - (allRecovered + allDeaths))
+								.toString()
+								.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')}\n(**${(
+								((allCases - (allRecovered + allDeaths)) / allCases) *
+								100
+							).toFixed(2)}%**)`,
 							inline: true,
 						},
 						{
 							name: lang('actions.covid.totalTests', EventData),
-							value:
-								allTests
-									.toString()
-									.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',') +
-								`\n(**${testPercentage}%**)`,
+							value: `${allTests
+								.toString()
+								.replace(
+									/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g,
+									','
+								)}\n(**${testPercentage}%**)`,
 							inline: true,
 						},
 					]);

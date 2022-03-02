@@ -1,11 +1,10 @@
-import * as colors from '../../utilities/colors.json';
-import lang from '../../utilities/lang';
-import { clientId } from '../../config';
+/* eslint-disable no-mixed-spaces-and-tabs */
+/* eslint-disable indent */
+/* eslint-disable default-case */
 import Canvas from 'canvas';
 import {
 	BaseClient,
 	ButtonInteraction,
-	Collection,
 	ColorResolvable,
 	InteractionCollector,
 	Message,
@@ -16,10 +15,12 @@ import {
 	TextChannel,
 	User,
 } from 'discord.js';
+import * as colors from '../../utilities/colors.json';
+import lang from '../../utilities/lang';
+import { clientId } from '../../config';
 
 export class RpsGame extends BaseClient {
-	private readonly actionSettings =
-		this.data.guildCache.settings.actions['rps'];
+	private readonly actionSettings = this.data.guildCache.settings.actions.rps;
 	private readonly possibleChoices = ['rock', 'paper', 'scissors'];
 	private isMultiplayerGame: boolean = false;
 	private attachment?: MessageAttachment;
@@ -105,7 +106,7 @@ export class RpsGame extends BaseClient {
 		const collector = this.gameMessage.createMessageComponentCollector({
 			filter,
 			componentType: 'BUTTON',
-			max: max,
+			max,
 			time: 30000,
 		});
 		switch (type) {
@@ -199,6 +200,7 @@ export class RpsGame extends BaseClient {
 				this.playerOnePoints < this.maxPoints &&
 				this.playerTwoPoints < this.maxPoints
 			) {
+				// eslint-disable-next-line no-return-await
 				setTimeout(async () => await this.generateGameBeginMessage(), 2000);
 			}
 		});
@@ -218,7 +220,7 @@ export class RpsGame extends BaseClient {
 	}
 
 	private async createButtonRow(buttons: MessageButton[]) {
-		let row = new MessageActionRow();
+		const row = new MessageActionRow();
 		for (const button of buttons) {
 			row.addComponents(button);
 		}
@@ -283,12 +285,12 @@ export class RpsGame extends BaseClient {
 		) {
 			this.playerOnePoints++;
 			return 'victory';
-		} else if (playerOneChoice == playerTwoChoice) {
-			return 'draw';
-		} else {
-			this.playerTwoPoints++;
-			return 'lose';
 		}
+		if (playerOneChoice == playerTwoChoice) {
+			return 'draw';
+		}
+		this.playerTwoPoints++;
+		return 'lose';
 	}
 
 	private async generateRoundEndEmbed(
@@ -296,7 +298,7 @@ export class RpsGame extends BaseClient {
 		playerOneChoice: string,
 		playerTwoChoice: string
 	) {
-		let embed = new MessageEmbed()
+		const embed = new MessageEmbed()
 			.addField(
 				this.playerOne.username,
 				lang(`actions.rps.${playerOneChoice}Emoji`, this.data),
@@ -403,7 +405,7 @@ export class RpsGame extends BaseClient {
 	}
 
 	private async timeoutEmbed(reason: string) {
-		let embed = new MessageEmbed().setColor(<ColorResolvable>colors.red);
+		const embed = new MessageEmbed().setColor(<ColorResolvable>colors.red);
 		const langPath: string = `actions.rps.${reason}`;
 		embed.setDescription(lang(langPath, this.data));
 		return embed;
