@@ -276,8 +276,10 @@ const translation = {
 	errors: {
 		error: 'Błąd...',
 		commandNotFound: 'Nie ma takiej komendy!',
-		commandNotFoundPrompt: (data: any, payload: any) => `Nie ma takiej komendy! Czy chodziło ci o ${payload}?`,
-		commandsCooldown: (data: any, payload: any) => `Następną komendę możesz napisać za ${payload}s.`,
+		commandNotFoundPrompt: (data: any, payload: any) =>
+			`Nie ma takiej komendy! Czy chodziło ci o ${payload}?`,
+		commandsCooldown: (data: any, payload: any) =>
+			`Następną komendę możesz napisać za ${payload}s.`,
 	},
 	actions: {
 		ping: {
@@ -286,7 +288,17 @@ const translation = {
 		},
 		badwords: {
 			rebuke: 'Uważaj na słownictwo! Otrzymujesz ostrzeżenie!',
-			warn: (payload: any) => `Otrzymujesz warna na serwerze ${payload.guild.name} za używanie niewłaściwego słownictwa!`,
+			warn: (payload: any) =>
+				`Otrzymujesz warna na serwerze ${payload.guild.name} za używanie niewłaściwego słownictwa!`,
+		},
+		captchaVerification: {
+			captchaEmbed: {
+				title: 'Captcha',
+				description: (data: any, payload: any) =>
+					`**👋 Witaj ${payload.user}**\nPrzepisz podany niżej kod, aby otrzymać dalszy dostęp na serwerze **${payload.guild}**\n\nKod: ||${payload.captcha}||\n\n**Uważaj:** Wielkość liter ma znaczenie oraz kod nie zawiera spacji!`,
+				footer: 'Kod wygaśnie za 5 minut',
+			},
+			errorEmbed: {},
 		},
 		rps: {
 			errorNoChoice: 'Użytkownik nie dokonał wyboru!',
@@ -313,10 +325,13 @@ const translation = {
 			invitationDeclined: 'Zaproszenie zostało odrzucone/wycofane ❌',
 			moveTimeExpired: 'Minął czas na wykonanie ruchu ⌛',
 			invitationSent: 'Zaproszenie zostało wysłane 📨',
-			multiPlayerInvitation: (data: any, payload: any) => `${payload.p2}, zostałeś zaproszony przez ${payload.p1} do gry.`,
+			multiPlayerInvitation: (data: any, payload: any) =>
+				`${payload.p2}, zostałeś zaproszony przez ${payload.p1} do gry.`,
 			multiPlayerAccept: 'Zaakceptuj!',
-			multiPlayerRoundVictory: (data: any, payload: any) => `${payload} wygrał rundę!`,
-			multiPlayerGameVictory: (data: any, payload: any) => `${payload} wygrał grę 🥇`,
+			multiPlayerRoundVictory: (data: any, payload: any) =>
+				`${payload} wygrał rundę!`,
+			multiPlayerGameVictory: (data: any, payload: any) =>
+				`${payload} wygrał grę 🥇`,
 		},
 		pokemons: {
 			newPokemon: 'Pojawił się nowy pokemon!',
