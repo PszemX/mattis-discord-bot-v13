@@ -20,7 +20,7 @@ export class EmojiVerificationAction extends BaseEventAction {
 			EventData.args[0].message.guildId
 		);
 		const reactionMember = reactionGuild?.members.cache.get(
-			EventData.args[0].id
+			EventData.args[1].id
 		);
 		if (actionSettings.roleRemoveId) {
 			const removeRole = actionSettings.roleRemoveId;
