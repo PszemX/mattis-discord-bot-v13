@@ -298,7 +298,13 @@ const translation = {
 					`**👋 Witaj ${payload.user}**\nPrzepisz podany niżej kod, aby otrzymać dalszy dostęp na serwerze **${payload.guild}**\n\nKod: ||${payload.captcha}||\n\n**Uważaj:** Wielkość liter ma znaczenie oraz kod nie zawiera spacji!`,
 				footer: 'Kod wygaśnie za 5 minut',
 			},
-			errorEmbed: {},
+			errorEmbed: {
+				timeoutTitle: 'Minął czas na przepisanie kodu Captcha ⌛',
+				wrongTitle: 'Zbyt duża ilość niepowodzeń ❌',
+			},
+			correctEmbed: {
+				title: 'Kod Captcha został przepisany prawiłowo ✅',
+			},
 		},
 		rps: {
 			errorNoChoice: 'Użytkownik nie dokonał wyboru!',

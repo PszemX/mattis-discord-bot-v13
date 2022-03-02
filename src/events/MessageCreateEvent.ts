@@ -10,6 +10,9 @@ export class MessageCreateEvent extends BaseEvent {
 	public async execute(message: Message): Promise<Message | void> {
 		// TO DO: Check if message was sent on DM, author is the bot or commands are not ready.
 		// TO DO: Check if Mattis isn't mentioned. If so, send info embed.
+		if (message.channel.type === 'DM') return;
+		if (message.guild === null) return;
+		if (message.author.bot) return;
 		const EventData: IEventData = this.mattis.utils.getEventData(message);
 		const { guildCache } = EventData;
 		if (message.content.startsWith(guildCache.settings.prefix)) {
