@@ -21,6 +21,9 @@ export const clientOptions: ClientOptions = {
 		Intents.FLAGS.GUILD_VOICE_STATES,
 		Intents.FLAGS.GUILD_INVITES,
 		Intents.FLAGS.GUILD_BANS,
+		Intents.FLAGS.DIRECT_MESSAGES,
+		Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
+		Intents.FLAGS.DIRECT_MESSAGE_TYPING,
 	],
 	makeCache: Options.cacheWithLimits({
 		MessageManager: {
