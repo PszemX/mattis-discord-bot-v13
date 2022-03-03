@@ -53,7 +53,7 @@ export const guildDataModel = (guild: Guild) => {
 				cooldown: 3000,
 			},
 			reload: {
-				enabled: false,
+				enabled: true,
 				aliases: ['reload'],
 				cooldown: 3000,
 			},
