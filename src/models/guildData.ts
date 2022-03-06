@@ -37,6 +37,10 @@ export const guildDataModel = (guild: Guild) => {
 				roleAddId: '',
 				roleRemoveId: '',
 			},
+			captchaVerification: {
+				enabled: false,
+				roleId: '',
+			},
 			ping: {
 				enabled: false,
 				aliases: ['ping'],
