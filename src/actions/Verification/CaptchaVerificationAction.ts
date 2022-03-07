@@ -24,46 +24,55 @@ export class CaptchaVerificationAction extends BaseEventAction {
 		const captchaCode = this.createCode();
 		const captchaEmbed = this.createEmbed(EventData, captchaCode);
 		const user: User = EventData.args.user;
-		try {
-			const userDirectChannel: DMChannel = await user.createDM();
-			const userDirectMessage = await userDirectChannel.send({
-				embeds: [captchaEmbed],
-			});
-			const filter = (message: Message) => {
-				return message.author.id == user.id;
-			};
-			const collector = userDirectChannel.createMessageCollector({
-				filter,
-				max: 3,
-				time: 300000,
-			});
-			collector.on('collect', async (message: Message) => {
-				if (message.content == captchaCode) {
-					const actionSettings =
-						EventData.guildCache.settings.actions[this.name];
-					const role = actionSettings.roleAddId;
-					EventData.args.roles.add(role);
-					userDirectMessage.edit({
-						embeds: [this.endEmbed('correct', EventData)],
-					});
-				} else {
-					await userDirectChannel.send('Nieprawidlowy kod, wyślij ponownie!');
-				}
-			});
+		let tries: number = 3;
 
-			collector.on('end', (collection) => {
-				if (collection.size < 3) {
-					userDirectMessage.edit({
-						embeds: [this.endEmbed('timeout', EventData)],
-					});
-				} else {
-					userDirectMessage.edit({
-						embeds: [this.endEmbed('wrong', EventData)],
-					});
+		const userDirectChannel: DMChannel = await user.createDM();
+		const userDirectMessage = await userDirectChannel.send({
+			embeds: [captchaEmbed],
+		});
+		const filter = (message: Message) => {
+			return message.author.id == user.id;
+		};
+		const collector = userDirectChannel.createMessageCollector({
+			filter,
+			max: 3,
+			time: 300_000,
+		});
+		collector.on('collect', async (message: Message) => {
+			if (message.content == captchaCode) {
+				const actionSettings = EventData.guildCache.settings.actions[this.name];
+				const role = actionSettings.roleAddId;
+				EventData.args.roles.add(role);
+				userDirectMessage.edit({
+					embeds: [this.endEmbed('correct', EventData)],
+				});
+				tries = -1;
+				collector.stop();
+			} else {
+				tries -= 1;
+				if (tries > 0) {
+					const response = lang(
+						'actions.captchaVerification.captchaEmbed.wrongResponse',
+						EventData,
+						{ tries }
+					);
+					await userDirectChannel.send(response);
 				}
-			});
-		} finally {
-		}
+			}
+		});
+		collector.on('end', (collection) => {
+			if (collection.size < 3 && tries != -1) {
+				userDirectMessage.edit({
+					embeds: [this.endEmbed('timeout', EventData)],
+				});
+				EventData.args.kick();
+			} else {
+				userDirectMessage.edit({
+					embeds: [this.endEmbed('wrong', EventData)],
+				});
+				EventData.args.kick();
+			}
+		});
 	}
 
 	private createCode(): string {
@@ -104,31 +113,36 @@ export class CaptchaVerificationAction extends BaseEventAction {
 	}
 
 	private endEmbed(status: string, EventData: IEventData): MessageEmbed {
-		let title = '';
+		const title = lang(
+			'actions.captchaVerification.captchaEmbed.title',
+			EventData
+		);
+		let description = '';
 		switch (status) {
 			case 'correct':
-				title = lang(
+				description = lang(
 					'actions.captchaVerification.correctEmbed.title',
 					EventData
 				);
 				break;
 
 			case 'timeout':
-				title = lang(
+				description = lang(
 					'actions.captchaVerification.errorEmbed.timeoutTitle',
 					EventData
 				);
 				break;
 
 			case 'wrong':
-				title = lang(
+				description = lang(
 					'actions.captchaVerification.errorEmbed.wrongTitle',
 					EventData
 				);
 		}
 		const color = status == 'correct' ? colors.green : colors.red;
 		const embed = new MessageEmbed()
-			.setTitle(title)
+			.setAuthor(title, EventData.args.displayAvatarURL())
+			.setDescription(description)
 			.setColor(<ColorResolvable>color)
 			.setTimestamp();
 

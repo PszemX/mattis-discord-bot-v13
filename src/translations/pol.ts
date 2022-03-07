@@ -297,6 +297,8 @@ const translation = {
 				description: (data: any, payload: any) =>
 					`**👋 Witaj ${payload.user}**\nPrzepisz podany niżej kod, aby otrzymać dalszy dostęp na serwerze **${payload.guild}**\n\nKod: ||${payload.captcha}||\n\n**Uważaj:** Wielkość liter ma znaczenie oraz kod nie zawiera spacji!`,
 				footer: 'Kod wygaśnie za 5 minut',
+				wrongResponse: (data: any, payload: any) =>
+					`Nieprawidłowy kod! Pozostałych prób: **${payload.tries}**.`,
 			},
 			errorEmbed: {
 				timeoutTitle: 'Minął czas na przepisanie kodu Captcha ⌛',
