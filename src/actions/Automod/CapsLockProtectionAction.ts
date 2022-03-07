@@ -9,7 +9,7 @@ export class CapsLockProtectionAction extends BaseEventAction {
 	public async trigger(EventData: IEventData) {
 		let settings = EventData.guildCache.settings.actions[this.name];
 		let message = EventData.args.content;
-		if (message.length <= settings.minLength) return false;
+		if (message.length <= settings.minMessageLength) return false;
 		let caps = message.toUpperCase();
 		let nocaps = message.toLowerCase();
 		let sum = 0;
