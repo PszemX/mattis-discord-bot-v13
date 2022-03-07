@@ -6,7 +6,7 @@ import {
 	MessageEmbed,
 	User,
 } from 'discord.js';
-import { BaseEventAction } from '../../classes/BaseEventAction';
+import { BaseEventAction } from '../../classes/BaseStructures/BaseEventAction';
 import * as colors from '../../utilities/colors.json';
 import { IEventData } from '../../typings';
 import lang from '../../utilities/lang';

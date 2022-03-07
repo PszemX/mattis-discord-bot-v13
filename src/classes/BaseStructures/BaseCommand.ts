@@ -1,4 +1,4 @@
-import { ICommand, IEventData } from '../typings';
+import { ICommand, IEventData } from '../../typings';
 
 export abstract class BaseCommand implements ICommand {
 	public constructor(

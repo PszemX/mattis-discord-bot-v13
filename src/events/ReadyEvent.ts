@@ -1,6 +1,6 @@
 /* eslint-disable indent */
 import DiscordJS, { Presence } from 'discord.js';
-import { BaseEvent } from '../classes/BaseEvent';
+import { BaseEvent } from '../classes/BaseStructures/BaseEvent';
 
 export class ReadyEvent extends BaseEvent {
 	public constructor(mattis: BaseEvent['mattis']) {

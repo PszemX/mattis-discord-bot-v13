@@ -1,4 +1,4 @@
-import { IAction, IEventData } from '../typings';
+import { IAction, IEventData } from '../../typings';
 
 export abstract class BaseEventAction implements IAction {
 	public constructor(

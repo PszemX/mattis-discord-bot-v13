@@ -1,6 +1,6 @@
 import { GuildMember, TextChannel, User } from 'discord.js';
 import { RpsGame } from '../../../classes/ActionStructures/RpsGame';
-import { BaseCommand } from '../../../classes/BaseCommand';
+import { BaseCommand } from '../../../classes/BaseStructures/BaseCommand';
 import { IEventData } from '../../../typings';
 
 export class RpsGameCommand extends BaseCommand {

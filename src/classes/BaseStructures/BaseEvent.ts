@@ -1,5 +1,5 @@
-import { IEvent } from '../typings';
-import { Mattis } from './Mattis';
+import { IEvent } from '../../typings';
+import { Mattis } from '../Mattis';
 
 export abstract class BaseEvent implements IEvent {
 	public constructor(

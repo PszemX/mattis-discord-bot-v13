@@ -1,7 +1,7 @@
 import { Guild } from 'discord.js';
-import { GuildCache } from './GuildCache';
-import { IJob } from '../typings';
-import { Mattis } from './Mattis';
+import { GuildCache } from '../GuildCache';
+import { IJob } from '../../typings';
+import { Mattis } from '../Mattis';
 
 export abstract class BaseJob implements IJob {
 	public constructor(

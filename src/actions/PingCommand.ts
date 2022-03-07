@@ -1,5 +1,5 @@
 import { ColorResolvable, MessageEmbed } from 'discord.js';
-import { BaseCommand } from '../classes/BaseCommand';
+import { BaseCommand } from '../classes/BaseStructures/BaseCommand';
 import { IEventData } from '../typings';
 import lang from '../utilities/lang';
 

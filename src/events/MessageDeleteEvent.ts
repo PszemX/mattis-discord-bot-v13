@@ -1,4 +1,4 @@
-import { BaseEvent } from '../classes/BaseEvent';
+import { BaseEvent } from '../classes/BaseStructures/BaseEvent';
 
 export class MessageDeleteEvent extends BaseEvent {
 	public constructor(mattis: BaseEvent['mattis']) {

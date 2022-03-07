@@ -2,7 +2,7 @@
 import { clearTimeout } from 'timers';
 import { Guild } from 'discord.js';
 import { GuildCache } from '../../classes/GuildCache';
-import { BaseJob } from '../../classes/BaseJob';
+import { BaseJob } from '../../classes/BaseStructures/BaseJob';
 import { Mattis } from '../../classes/Mattis';
 
 export class SendMessageJob extends BaseJob {

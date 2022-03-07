@@ -1,4 +1,4 @@
-import { BaseCommand } from '../../classes/BaseCommand';
+import { BaseCommand } from '../../classes/BaseStructures/BaseCommand';
 import { IEventData } from '../../typings';
 
 export class ReloadCommand extends BaseCommand {

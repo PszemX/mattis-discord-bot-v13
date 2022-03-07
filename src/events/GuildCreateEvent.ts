@@ -1,5 +1,5 @@
 import { Guild } from 'discord.js';
-import { BaseEvent } from '../classes/BaseEvent';
+import { BaseEvent } from '../classes/BaseStructures/BaseEvent';
 import { guildDataModel } from '../models/guildData';
 
 export class GuildCreateEvent extends BaseEvent {

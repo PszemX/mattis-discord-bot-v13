@@ -1,5 +1,5 @@
 import { Message, User } from 'discord.js';
-import { BaseEvent } from '../classes/BaseEvent';
+import { BaseEvent } from '../classes/BaseStructures/BaseEvent';
 import { IEventData } from '../typings';
 
 export class MessageCreateEvent extends BaseEvent {

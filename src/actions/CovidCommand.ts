@@ -4,7 +4,7 @@ import latinize from 'latinize';
 import axios from 'axios';
 import continentsIds from '../utilities/continents_ids.json';
 import countryCodes from '../utilities/country_codes.json';
-import { BaseCommand } from '../classes/BaseCommand';
+import { BaseCommand } from '../classes/BaseStructures/BaseCommand';
 import * as colors from '../utilities/colors.json';
 import { IEventData } from '../typings';
 import lang from '../utilities/lang';

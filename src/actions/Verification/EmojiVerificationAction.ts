@@ -1,4 +1,4 @@
-import { BaseEventAction } from '../../classes/BaseEventAction';
+import { BaseEventAction } from '../../classes/BaseStructures/BaseEventAction';
 import { IEventData } from '../../typings';
 
 export class EmojiVerificationAction extends BaseEventAction {
