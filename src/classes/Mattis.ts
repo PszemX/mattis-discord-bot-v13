@@ -55,3 +55,20 @@ export class Mattis extends Client {
 		app.listen(process.env.PORT || 80);
 	}
 }
+
+/* TO DO:
+	- fetchGuild util
+	- fetchUser util
+	- add tags to actions and commands and its usage
+	- change Guilds to used by shard
+	- slashCommands
+	- make more typings
+	- make cacheManager
+	- correct all ESLint errors
+	- automod
+	- moderating commands 
+	- more logs 
+	- overall codereview
+	- english lang version 
+	- default values and more possibilites to set action settings for guild
+*/
