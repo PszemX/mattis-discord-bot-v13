@@ -1,4 +1,4 @@
-import { JobsManager } from '../classes/JobsManager';
+import { JobsManager } from '../classes/Managers/JobsManager';
 import { GuildCache } from '../classes/GuildCache';
 import { Mattis } from '../classes/Mattis';
 

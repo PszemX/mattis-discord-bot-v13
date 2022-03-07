@@ -1,7 +1,7 @@
 import { Collection } from 'discord.js';
-import { updateGuildsData } from '../utilities/updateGuildsData';
-import { Mattis } from './Mattis';
-import { GuildCache } from './GuildCache';
+import { updateGuildsData } from '../../utilities/updateGuildsData';
+import { Mattis } from '../Mattis';
+import { GuildCache } from '../GuildCache';
 
 export class GuildsManager extends Collection<string, any> {
 	public constructor(public readonly Mattis: Mattis) {

@@ -2,10 +2,10 @@ import { Client, ClientOptions } from 'discord.js';
 import express from 'express';
 import { resolve } from 'path';
 import { ClientUtils } from '../utilities/ClientUtils';
-import { ActionsManager } from './ActionsManager';
-import { GuildsManager } from './GuildsManager';
-import { EventsManager } from './EventsManager';
-import { LogsManager } from './LogsManager';
+import { ActionsManager } from './Managers/ActionsManager';
+import { GuildsManager } from './Managers/GuildsManager';
+import { EventsManager } from './Managers/EventsManager';
+import { LogsManager } from './Managers/LogsManager';
 import { Database } from './Database';
 import * as config from '../config';
 

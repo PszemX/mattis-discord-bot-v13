@@ -1,5 +1,5 @@
-import { GuildCache } from './GuildCache';
-import { Mattis } from './Mattis';
+import { GuildCache } from '../GuildCache';
+import { Mattis } from '../Mattis';
 
 export class JobsManager {
 	public constructor(public mattis: Mattis, public guildCache: GuildCache) {}

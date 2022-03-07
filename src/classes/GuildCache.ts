@@ -1,4 +1,4 @@
-import { JobsManager } from './JobsManager';
+import { JobsManager } from './Managers/JobsManager';
 
 export class GuildCache {
 	public settings: any;

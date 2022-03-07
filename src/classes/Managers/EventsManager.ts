@@ -1,8 +1,8 @@
 /* eslint-disable no-prototype-builtins */
 import { promises as fs } from 'fs';
 import { resolve } from 'path';
-import { Mattis } from './Mattis';
-import { IEvent, IEventData } from '../typings';
+import { Mattis } from '../Mattis';
+import { IEvent, IEventData } from '../../typings';
 
 export class EventsManager {
 	public constructor(public Mattis: Mattis, public path: string) {}
@@ -17,7 +17,9 @@ export class EventsManager {
 						resolve(this.path, file),
 						this.Mattis
 					);
-					if (event === undefined) { throw new Error(`File ${file} is not a valid event file.`); }
+					if (event === undefined) {
+						throw new Error(`File ${file} is not a valid event file.`);
+					}
 					this.Mattis.Logger.info(
 						`[EventManager] Events on listener ${event.name.toString()} has been added.`
 					);
@@ -35,7 +37,9 @@ export class EventsManager {
 				}
 			})
 			.catch((err) => this.Mattis.Logger.error('EVENTS_LOADER_ERR:', err))
-			.finally(() => this.Mattis.Logger.info('[EventManager] Done loading events.'));
+			.finally(() =>
+				this.Mattis.Logger.info('[EventManager] Done loading events.')
+			);
 	}
 
 	private async handleEventAction(

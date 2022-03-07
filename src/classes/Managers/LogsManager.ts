@@ -2,7 +2,7 @@
 /* eslint-disable indent */
 import { format } from 'date-fns';
 import winston from 'winston';
-import { ILoggerOptions } from '../typings';
+import { ILoggerOptions } from '../../typings';
 
 enum Colors {
 	Reset = '\x1b[0m',
