@@ -60,17 +60,18 @@ export class CaptchaVerificationAction extends BaseEventAction {
 				}
 			}
 		});
-		collector.on('end', (collection) => {
-			if (collection.size < 3 && tries != -1) {
-				userDirectMessage.edit({
-					embeds: [this.endEmbed('timeout', EventData)],
-				});
-				EventData.args.kick();
-			} else {
-				userDirectMessage.edit({
-					embeds: [this.endEmbed('wrong', EventData)],
-				});
-				EventData.args.kick();
+		collector.on('end', async (collection) => {
+			if (tries != -1) {
+				if (collection.size < 3) {
+					userDirectMessage.edit({
+						embeds: [this.endEmbed('timeout', EventData)],
+					});
+				} else {
+					userDirectMessage.edit({
+						embeds: [this.endEmbed('wrong', EventData)],
+					});
+				}
+				await EventData.args.kick();
 			}
 		});
 	}
