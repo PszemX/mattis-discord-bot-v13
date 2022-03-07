@@ -72,4 +72,5 @@ export class Mattis extends Client {
 	- english lang version 
 	- default values and more possibilites to set action settings for guild
 	- add jsDoc
+	- correct models/guildsData
 */
