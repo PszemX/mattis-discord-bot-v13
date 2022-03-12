@@ -24,6 +24,8 @@ export class CaptchaVerificationAction extends BaseEventAction {
 		const captchaCode = this.createCode();
 		const captchaEmbed = this.createEmbed(EventData, captchaCode);
 		const user: User = EventData.args.user;
+		const actionSettings = EventData.guildCache.settings.actions[this.name];
+		const addRole = actionSettings?.roleAddId;
 		let tries: number = 3;
 
 		const userDirectChannel: DMChannel = await user.createDM();
@@ -40,9 +42,14 @@ export class CaptchaVerificationAction extends BaseEventAction {
 		});
 		collector.on('collect', async (message: Message) => {
 			if (message.content == captchaCode) {
-				const actionSettings = EventData.guildCache.settings.actions[this.name];
-				const role = actionSettings.roleAddId;
-				EventData.args.roles.add(role);
+				if (actionSettings.roleRemoveId) {
+					const removeRole = actionSettings.roleRemoveId;
+					await EventData.args?.roles.remove(removeRole);
+				}
+				if (actionSettings.roleAddId) {
+					await EventData.args?.roles.add(addRole);
+				}
+				EventData.args.roles.add(addRole);
 				userDirectMessage.edit({
 					embeds: [this.endEmbed('correct', EventData)],
 				});
@@ -71,7 +78,9 @@ export class CaptchaVerificationAction extends BaseEventAction {
 						embeds: [this.endEmbed('wrong', EventData)],
 					});
 				}
-				await EventData.args.kick();
+				if (!EventData.args.roles.cache.has(addRole)) {
+					await EventData.args.kick();
+				}
 			}
 		});
 	}
