@@ -27,6 +27,8 @@ export class Database extends MongoClient {
 		return this.db(guildId).collection(collection);
 	}
 
+	public saveCase() {}
+
 	// private async databaseConnect() {
 	// 	// Database -> guildsData, usersData itd...
 	// 	// Collection -> id serwera, id użytkownika itd...
