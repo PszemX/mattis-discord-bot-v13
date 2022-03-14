@@ -66,17 +66,10 @@ export const guildDataModel = (guild: Guild) => {
 				messageJobs: [
 					{
 						enabled: false,
+						id: 1,
 						channelId: '',
 						message: '',
 						intervalTime: 2000,
-						firstTimeSending: 0,
-						lastTimeSent: 0,
-					},
-					{
-						enabled: false,
-						channelId: '',
-						message: '',
-						intervalTime: 1000,
 						firstTimeSending: 0,
 						lastTimeSent: 0,
 					},

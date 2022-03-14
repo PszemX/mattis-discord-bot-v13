@@ -10,7 +10,7 @@ export class ReloadCommand extends BaseCommand {
 			disable: false,
 			devOnly: false,
 			description: 'Reload guildsData of current server',
-			category: 'general',
+			category: 'ownerOnly',
 			name: 'ping',
 			usage: '{prefix}reload',
 			// slash: SlashOption,
