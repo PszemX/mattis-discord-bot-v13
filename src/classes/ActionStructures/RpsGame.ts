@@ -369,7 +369,7 @@ export class RpsGame extends BaseClient {
 	private async createGameCanvas() {
 		const canvas = Canvas.createCanvas(1000, 300);
 		const context = canvas.getContext('2d');
-		const background = await Canvas.loadImage('src/images/RpsBackground2.jpg');
+		const background = await Canvas.loadImage('images/RpsBackground2.jpg');
 		context.drawImage(background, 0, 0, canvas.width, canvas.height);
 		context.font = '100px Arial Black';
 		context.fillStyle = '#ffffff';

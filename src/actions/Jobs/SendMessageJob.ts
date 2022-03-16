@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import { clearTimeout } from 'timers';
-import { Guild } from 'discord.js';
+import { Guild, MessageAttachment } from 'discord.js';
 import { GuildCache } from '../../classes/GuildCache';
 import { BaseJob } from '../../classes/BaseStructures/BaseJob';
 import { Mattis } from '../../classes/Mattis';
@@ -43,13 +43,19 @@ export class SendMessageJob extends BaseJob {
 	) {
 		const channel: any = guild.channels.cache.get(messageJob.channelId);
 		const database: any = mattis.Database;
-		const image: string = `../../images/${messageJob.image}`;
+		const image = new MessageAttachment(`images/${messageJob.image}`);
 		await channel
-			.send(messageJob.message, { files: [image] })
+			.send({
+				content: messageJob.content,
+				files: [image],
+			})
 			.then(async () => {
 				await this.updateLastTimeSent(database, guild, messageJob);
 				const interval = setInterval(async () => {
-					await channel.send(messageJob.message, { files: [image] });
+					await channel.send({
+						content: messageJob.message,
+						files: [image],
+					});
 					await this.updateLastTimeSent(database, guild, messageJob);
 				}, messageJob.intervalTime);
 				this.intervals.push(interval);
