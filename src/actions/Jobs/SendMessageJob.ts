@@ -1,4 +1,5 @@
 /* eslint-disable no-undef */
+import { existsSync } from 'fs';
 import { clearTimeout } from 'timers';
 import { Guild, MessageAttachment } from 'discord.js';
 import { GuildCache } from '../../classes/GuildCache';
@@ -43,10 +44,12 @@ export class SendMessageJob extends BaseJob {
 	) {
 		const channel: any = guild.channels.cache.get(messageJob.channelId);
 		const database: any = mattis.Database;
-		const image = new MessageAttachment(`images/${messageJob.image}`);
+		const image = messageJob.image
+			? await this.createAttachment(messageJob.image)
+			: '';
 		await channel
-			.send(messageJob.message, {
-				content: messageJob.content,
+			.send({
+				content: messageJob.message,
 				files: [image],
 			})
 			.then(async () => {
@@ -99,5 +102,21 @@ export class SendMessageJob extends BaseJob {
 				},
 			}
 		);
+	}
+
+	private async createAttachment(image: string) {
+		const path = `./images/${image}`;
+		let fileExists = false;
+		try {
+			if (existsSync(path)) {
+				fileExists = true;
+			}
+		} catch (err) {
+			console.log(err);
+		} finally {
+		}
+
+		const attachment = fileExists ? new MessageAttachment(path, image) : '';
+		return attachment;
 	}
 }
