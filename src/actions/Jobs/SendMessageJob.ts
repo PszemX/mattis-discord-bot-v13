@@ -43,14 +43,17 @@ export class SendMessageJob extends BaseJob {
 	) {
 		const channel: any = guild.channels.cache.get(messageJob.channelId);
 		const database: any = mattis.Database;
-		await channel.send(messageJob.message).then(async () => {
-			await this.updateLastTimeSent(database, guild, messageJob);
-			const interval = setInterval(async () => {
-				await channel.send(messageJob.message);
+		const image: string = `../../images/${messageJob.image}`;
+		await channel
+			.send(messageJob.message, { files: [image] })
+			.then(async () => {
 				await this.updateLastTimeSent(database, guild, messageJob);
-			}, messageJob.intervalTime);
-			this.intervals.push(interval);
-		});
+				const interval = setInterval(async () => {
+					await channel.send(messageJob.message, { files: [image] });
+					await this.updateLastTimeSent(database, guild, messageJob);
+				}, messageJob.intervalTime);
+				this.intervals.push(interval);
+			});
 	}
 
 	private async setupInterval(mattis: Mattis, guild: Guild, messageJob: any) {
