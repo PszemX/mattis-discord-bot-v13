@@ -45,7 +45,7 @@ export class SendMessageJob extends BaseJob {
 		const database: any = mattis.Database;
 		const image = new MessageAttachment(`images/${messageJob.image}`);
 		await channel
-			.send({
+			.send(messageJob.message, {
 				content: messageJob.content,
 				files: [image],
 			})
