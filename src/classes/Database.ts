@@ -27,6 +27,8 @@ export class Database extends MongoClient {
 		return this.db(guildId).collection(collection);
 	}
 
+	public getLastCase() {}
+
 	public saveCase() {}
 
 	// private async databaseConnect() {

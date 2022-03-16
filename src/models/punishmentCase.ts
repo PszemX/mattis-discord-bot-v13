@@ -1,12 +1,13 @@
 export const caseModel = (punishment: any) => {
 	return {
-		id: '',
-		type: '',
-		length: '',
-		reason: '',
-		user: '',
-		admin: '',
+		id: '', // 1, 2, 3...
+		type: '', // warn, ban, mute...
+		removed: '', // true, false
+		length: '', // timestamp
+		reason: '', // Badwords
+		user: '', // userId
+		admin: '', // adminId
 		timestamp: Date.now(),
-		endtime: '',
+		endtime: '', // timestamp + length
 	};
 };
