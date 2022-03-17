@@ -75,6 +75,18 @@ export const guildDataModel = (guild: Guild) => {
 					},
 				],
 			},
+			emojiProtection: {
+				enabled: false,
+				ignoredChannels: [],
+				ignoredRoles: [],
+				punishment: '',
+			},
+			capsLockProtection: {
+				enabled: false,
+				ignoredChannels: [],
+				ignoredRoles: [],
+				punishment: '',
+			},
 		},
 	};
 };
