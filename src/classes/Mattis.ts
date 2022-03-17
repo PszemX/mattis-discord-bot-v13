@@ -1,5 +1,4 @@
 import { Client, ClientOptions } from 'discord.js';
-import express from 'express';
 import { resolve } from 'path';
 import { ClientUtils } from '../utilities/ClientUtils';
 import { ActionsManager } from './Managers/ActionsManager';
@@ -9,9 +8,6 @@ import { LogsManager } from './Managers/LogsManager';
 import { HttpServer } from './HttpsServer';
 import { Database } from './Database';
 import * as config from '../config';
-
-
-const app = express();
 
 export class Mattis extends Client {
 	public readonly config = config;
