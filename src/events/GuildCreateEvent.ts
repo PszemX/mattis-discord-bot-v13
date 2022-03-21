@@ -12,6 +12,7 @@ export class GuildCreateEvent extends BaseEvent {
 		await this.mattis.Database.guildsData(guild.id, 'settings')
 			.insertOne(guildDataModel(guild))
 			.then(() => {
+				this.mattis.Guilds.updateGuildsData(guild.id);
 				this.mattis.Logger.debug(`Serwer ${guild.id} dodany do bazy danych.`);
 			});
 	}
