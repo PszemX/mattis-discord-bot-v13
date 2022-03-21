@@ -20,7 +20,6 @@ export const guildDataModel = (guild: Guild) => {
 			'716062861746765877': 10,
 		},
 		warnsStorage: {
-			deleteWarnTime: 0,
 			punishments: {
 				1: {
 					vmute: false,
@@ -45,6 +44,7 @@ export const guildDataModel = (guild: Guild) => {
 					softban: false,
 				},
 			},
+			deleteWarnTime: 0,
 		},
 		actions: {
 			welcomeChannelMessage: {
@@ -98,6 +98,11 @@ export const guildDataModel = (guild: Guild) => {
 			reload: {
 				enabled: true,
 				aliases: ['reload'],
+				cooldown: 3000,
+			},
+			test: {
+				enabled: true,
+				aliases: ['test'],
 				cooldown: 3000,
 			},
 			sendMessageJob: {
