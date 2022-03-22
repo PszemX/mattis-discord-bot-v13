@@ -42,22 +42,24 @@ export class ClientUtils {
 	}
 
 	public async getUserCount(): Promise<number> {
-		return this.client.guilds.cache.reduce(
-			(membersSum: number, guild: Guild) => (membersSum += guild.memberCount),
-			0
-		);
-		// let arr: string[] = [];
-		// if (this.client.shard) {
-		// 	const shardUsers = await this.client.shard.broadcastEval((c) =>
-		// 		c.users.cache.map((x) => x.id)
-		// 	);
-		// 	for (const users of shardUsers) {
-		// 		arr = arr.concat(users);
-		// 	}
-		// } else {
-		// 	arr = this.client.users.cache.map((x) => x.id);
-		// }
-		// return arr.filter((x, i) => arr.indexOf(x) === i).length;
+		let membersCount: number = 0;
+		if (this.client.shard) {
+			const shardGuildsMembers = await this.client.shard.broadcastEval((c) =>
+				c.guilds.cache.map((g) => g.memberCount)
+			);
+			for (const shard of shardGuildsMembers) {
+				membersCount += shard.reduce(
+					(membersSum: number, members: number) => membersSum + members,
+					0
+				);
+			}
+		} else {
+			return this.client.guilds.cache.reduce(
+				(membersSum: number, guild: Guild) => (membersSum += guild.memberCount),
+				0
+			);
+		}
+		return membersCount;
 	}
 
 	public async getChannelCount(textOnly = true): Promise<number> {
@@ -65,19 +67,20 @@ export class ClientUtils {
 
 		if (this.client.shard) {
 			const shardChannels = await this.client.shard.broadcastEval(
-				(c, t) => c.channels.cache
-					.filter((ch) => {
-						if (t) {
-							return (
-								ch.type === 'GUILD_TEXT' ||
+				(c, t) =>
+					c.channels.cache
+						.filter((ch) => {
+							if (t) {
+								return (
+									ch.type === 'GUILD_TEXT' ||
 									ch.type === 'GUILD_PUBLIC_THREAD' ||
 									ch.type === 'GUILD_PRIVATE_THREAD'
-							);
-						}
+								);
+							}
 
-						return true;
-					})
-					.map((ch) => ch.id),
+							return true;
+						})
+						.map((ch) => ch.id),
 				{
 					context: textOnly,
 				}
@@ -175,5 +178,20 @@ export class ClientUtils {
 			timestamp: Date.now(),
 		};
 		return eventData;
+	}
+
+	public async fetchGuild(guildId: string): Promise<Guild | null> {
+		if (this.client.shard) {
+			const guilds = await this.client.shard.broadcastEval(
+				(c, id) => c.guilds.cache.get(id),
+				{
+					context: guildId,
+				}
+			);
+
+			return (guilds as (Guild | null)[]).find((guilds) => !!guilds) || null;
+		} else {
+			return this.client.guilds.cache.get(guildId) || null;
+		}
 	}
 }
