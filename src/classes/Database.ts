@@ -27,6 +27,10 @@ export class Database extends MongoClient {
 		return this.db(guildId).collection(collection);
 	}
 
+	public guildSettings(guildId: string) {
+		return this.guildsData(guildId, 'settings').findOne({ id: guildId });
+	}
+
 	public getLastCase() {}
 
 	public saveCase() {}
