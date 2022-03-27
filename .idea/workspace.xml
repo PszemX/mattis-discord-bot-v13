@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="adb6b336-325e-41d4-bc20-87e32ec9b4a7" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/models/guildData.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/guildData.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.eslintrc.json" beforeDir="false" afterPath="$PROJECT_DIR$/.eslintrc.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/actions/Automod/EmojiProtectionAction.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/actions/Automod/EmojiProtectionAction.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bot.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/bot.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/classes/GuildCache.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/classes/GuildCache.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/classes/Managers/LogsManager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/classes/Managers/LogsManager.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/classes/Mattis.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/classes/Mattis.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -11,6 +20,17 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="746eeb8a-a88d-4849-a7c6-8aeca269736d" />
+        <option name="url" value="https://github.com/PszemX/mattis-discord-bot-v13.git" />
+      </UrlAndAccount>
+    </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="21yGpBrOrX5A05K13qBBOcBRv8X" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -22,7 +42,18 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="javascript.nodejs.core.library.configured.version" value="16.9.0" />
+    <property name="javascript.nodejs.core.library.typings.version" value="16.9.0" />
+    <property name="js.linters.configure.manually.selectedeslint" value="true" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.standard" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.selected.package.eslint" value="C:\Users\User\Desktop\M.A.T.T.I.S\mattis-discord-bot-v13\node_modules\eslint" />
+    <property name="node.js.selected.package.standard" value="" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="ts.external.directory.path" value="C:\Users\User\Desktop\M.A.T.T.I.S\mattis-discord-bot-v13\node_modules\typescript\lib" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -35,10 +66,33 @@
       <updated>1638906110153</updated>
       <workItem from="1643740192291" duration="597000" />
       <workItem from="1646430425175" duration="37000" />
+      <workItem from="1648037624638" duration="1008000" />
+      <workItem from="1648038657744" duration="255000" />
+      <workItem from="1648042874826" duration="601000" />
+      <workItem from="1648043503306" duration="878000" />
+      <workItem from="1648044478573" duration="2351000" />
+      <workItem from="1648398972043" duration="243000" />
+      <workItem from="1648399248655" duration="1110000" />
+      <workItem from="1648404962226" duration="805000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

@@ -1,3 +1,4 @@
+import { Collection } from 'discord.js';
 import { JobsManager } from './Managers/JobsManager';
 
 export class GuildCache {
@@ -55,6 +56,8 @@ export class GuildCache {
 	};
 	public commandsTree: any = null;
 	public jobs: JobsManager | undefined;
+	public membersCache: Collection<string, any> = new Collection();
+	public channelsCache: Collection<string, any> = new Collection();
 	constructor(guildSettings: any) {
 		this.settings = guildSettings;
 	}

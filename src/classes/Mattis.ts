@@ -1,4 +1,4 @@
-import { Client, ClientOptions } from 'discord.js';
+import { Client } from 'discord.js';
 import { resolve } from 'path';
 import { ClientUtils } from '../utilities/ClientUtils';
 import { ActionsManager } from './Managers/ActionsManager';
@@ -20,7 +20,7 @@ export class Mattis extends Client {
 	public readonly Database = new Database();
 
 	constructor() {
-		super(<ClientOptions>config.clientOptions);
+		super(config.clientOptions);
 	}
 
 	public async build() {
@@ -49,10 +49,10 @@ export class Mattis extends Client {
 	- make cacheManager
 	- correct all ESLint errors
 	- automod
-	- moderating commands 
-	- more logs 
+	- moderating commands
+	- more logs
 	- overall codereview
-	- english lang version 
+	- english lang version
 	- default values and more possibilites to set action settings for guild
 	- add jsDoc
 	- correct models/guildsData
