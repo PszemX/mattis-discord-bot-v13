@@ -40,7 +40,6 @@ export class Mattis extends Client {
 }
 
 /* TO DO:
-	- fetchGuild util
 	- fetchUser util
 	- add tags to actions and commands and its usage
 	- change Guilds to used by shard

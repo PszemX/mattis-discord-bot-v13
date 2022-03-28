@@ -1,45 +1,10 @@
-import { Guild, Role } from 'discord.js';
+import { Guild } from 'discord.js';
 import { parse, resolve } from 'path';
-import { FFmpeg } from 'prism-media';
 import { IEventData } from '../typings';
 import { Mattis } from '../classes/Mattis';
 
 export class ClientUtils {
 	public constructor(public readonly client: Mattis) {}
-
-	public async fetchMuteRole(guild: Guild): Promise<Role> {
-		return (
-			guild.roles.cache.find(
-				(x) => x.name === this.client.config.muteRoleName
-			) ??
-			guild.roles.create({
-				mentionable: false,
-				name: this.client.config.muteRoleName,
-				permissions: ['VIEW_CHANNEL', 'READ_MESSAGE_HISTORY'],
-				reason: 'Create Muted role',
-			})
-		);
-	}
-
-	public async fetchDJRole(guild: Guild): Promise<Role> {
-		return (
-			guild.roles.cache.find((x) => x.name === this.client.config.djRoleName) ??
-			guild.roles.create({
-				mentionable: false,
-				name: this.client.config.djRoleName,
-				permissions: ['SEND_MESSAGES', 'CONNECT'],
-				reason: 'Create DJ role',
-			})
-		);
-	}
-
-	public requiredVoters(memberAmount: number): number {
-		return Math.round(memberAmount / 2);
-	}
-
-	public decode(string: string): string {
-		return Buffer.from(string, 'base64').toString('ascii');
-	}
 
 	public async getUserCount(): Promise<number> {
 		let membersCount: number = 0;
@@ -138,28 +103,6 @@ export class ClientUtils {
 		return file ? new file(...args) : undefined;
 	}
 
-	public async importaAction<T>(
-		path: string,
-		...args: any[]
-	): Promise<T | undefined> {
-		const file = await import(resolve(path)).then((m) => m[parse(path).name]);
-		return file ? new file(...args) : undefined;
-	}
-
-	public getFFmpegVersion(): string {
-		try {
-			const ffmpeg = FFmpeg.getInfo();
-			return (
-				ffmpeg.version
-					.split(/_|-| /)
-					.find((x) => /[0-9.]/.test(x))
-					?.replace(/[^0-9.]/g, '') ?? 'Unknown'
-			);
-		} catch (e) {
-			return 'Unknown';
-		}
-	}
-
 	public getEventData(...args: any): IEventData {
 		for (const arg of args) {
 			if (arg?.guildId || arg?.guild?.id || arg?.message?.guildId) {
@@ -171,13 +114,12 @@ export class ClientUtils {
 		const guildCache: IEventData['guildCache'] = guildId
 			? this.client.Guilds.get(guildId)
 			: 'guildless';
-		const eventData = {
+		return {
 			mattis: this.client,
 			guildCache,
 			args: args.length > 1 ? args : args[0],
 			timestamp: Date.now(),
 		};
-		return eventData;
 	}
 
 	public async fetchGuild(guildId: string): Promise<Guild | null> {
