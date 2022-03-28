@@ -39,8 +39,7 @@ export class LogsManager {
 
 		console[level](
 			`${
-				this.options.prod
-					? ''
+				this.options.prod ? ''
 					: level === 'debug'
 					? Colors.Blue
 					: level === 'error'
