@@ -104,7 +104,7 @@ export const guildDataModel = (guild: Guild | null) => {
 					enabled: false,
 					ignoredRoles: [],
 					ignoredChannels: [],
-					wordLongerThan: 9,
+					minMessageLength: 9,
 					maxPercentage: 70,
 					punishment: {
 						delete: false,
@@ -172,7 +172,7 @@ export const guildDataModel = (guild: Guild | null) => {
 					enabled: false,
 					ignoredRoles: [],
 					ignoredChannels: [],
-					wordLongerThan: 9,
+					minMessageLength: 9,
 					maxPercentage: 70,
 					punishment: {
 						delete: false,
@@ -444,7 +444,7 @@ export const guildDataModel = (guild: Guild | null) => {
 				linksProtection: {
 					enabled: false,
 					ignoredRoles: [],
-					ignoredChannels: ['704821116220342352'],
+					ignoredChannels: [],
 					maxMessages: 3,
 					perMilisecondsTime: 20000,
 					enableSites: {
@@ -543,7 +543,7 @@ export const guildDataModel = (guild: Guild | null) => {
 				},
 				spamProtection: {
 					enabled: false,
-					ignoredRoles: ['704964926325653565'],
+					ignoredRoles: [],
 					ignoredChannels: [],
 					maxMessages: 5,
 					perMilisecondsTime: 15000,
@@ -654,7 +654,7 @@ export const guildDataModel = (guild: Guild | null) => {
 							enabled: false,
 							maxMentionsCount: 1,
 							perMilisecondsTime: 3000,
-							ignoredRoles: ['709844560595124234'],
+							ignoredRoles: [],
 							ignoredChannels: [],
 						},
 					},
