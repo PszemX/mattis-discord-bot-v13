@@ -7,11 +7,11 @@ export class CapsLockProtectionAction extends BaseEventAction {
 	}
 
 	public async trigger(EventData: IEventData) {
-		let settings = EventData.guildCache.settings.actions[this.name];
-		let message = EventData.args.content;
+		const settings = EventData.guildCache.settings.actions[this.name];
+		const message = EventData.args.content;
 		if (message.length <= settings.minMessageLength) return false;
-		let caps = message.toUpperCase();
-		let nocaps = message.toLowerCase();
+		const caps = message.toUpperCase();
+		const nocaps = message.toLowerCase();
 		let sum = 0;
 		let length = 0;
 
@@ -21,13 +21,11 @@ export class CapsLockProtectionAction extends BaseEventAction {
 				++length;
 			}
 		}
-		if ((sum / length) * 100 > settings.maxPercentage) return true;
-
-		return false;
+		return (sum / length) * 100 > settings.maxPercentage;
 	}
 
 	public async execute(EventData: IEventData) {
-		let settings = EventData.guildCache.settings.actions[this.name];
+		const settings = EventData.guildCache.settings.actions[this.name];
 		EventData.args.delete();
 		// Kara
 	}

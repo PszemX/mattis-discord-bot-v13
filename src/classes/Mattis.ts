@@ -9,6 +9,7 @@ import { HttpServer } from './HttpsServer';
 import { Database } from './Database';
 import * as config from '../config';
 
+/* The client is the main class of the bot. It's the one that will be used to interact with the bot */
 export class Mattis extends Client {
 	public readonly config = config;
 	public readonly Actions = new ActionsManager(this, resolve(__dirname, '..', 'actions'));
@@ -23,6 +24,10 @@ export class Mattis extends Client {
 		super(config.clientOptions);
 	}
 
+	/**
+	 * It loads the database, loads the actions, loads the events, and then starts the bot
+	 * @returns The bot object.
+	 */
 	public async build() {
 		const start = Date.now();
 		await this.Database.makeConnection();
