@@ -1,11 +1,23 @@
-import { GuildCache } from '../classes/GuildCache';
-import { Mattis } from '../classes/Mattis';
 import {
 	ApplicationCommandOptionData,
 	ApplicationCommandType,
 	ClientEvents,
 	Guild,
 } from 'discord.js';
+import { GuildCache } from '../classes/GuildCache';
+import { Mattis } from '../classes/Mattis';
+
+export interface IMemberCache {
+	channelsChangingProtection: any[],
+	spamProtection: any[],
+	linksProtection: any[],
+	massPingProtection: any[],
+	badWordsProtection: any[]
+}
+
+export interface IChannelCache {
+	sameMessagesProtection: any[],
+}
 
 export interface ILoggerOptions {
 	prod: Boolean;
@@ -15,11 +27,27 @@ export interface IEvent {
 	readonly name: keyof ClientEvents;
 	execute(...args: any): void;
 }
+
+export interface IEventData {
+	readonly mattis: Mattis;
+	readonly guildCache: GuildCache | any;
+	readonly args: any;
+	readonly timestamp: number;
+}
+
 export interface IAction {
 	readonly name: string;
 	readonly event: string;
 	trigger(EventData: IEventData): Promise<Boolean>;
 	execute(EventData: IEventData): Promise<void>;
+}
+
+export interface SlashOption {
+	name?: string;
+	description?: string;
+	type?: ApplicationCommandType;
+	options?: ApplicationCommandOptionData[];
+	defaultPermission?: boolean;
 }
 
 export interface ICommand {
@@ -43,25 +71,10 @@ export interface ICommand {
 	execute(EventData: IEventData, commandParameters: any): any;
 }
 
-export interface IEventData {
-	readonly mattis: Mattis;
-	readonly guildCache: GuildCache | any;
-	readonly args: any;
-	readonly timestamp: number;
-}
-
 export interface IJob {
 	readonly name: string;
 	readonly event: string;
 	execute(mattis: Mattis, guild: Guild, GuildCache: GuildCache): any;
-}
-
-export interface SlashOption {
-	name?: string;
-	description?: string;
-	type?: ApplicationCommandType;
-	options?: ApplicationCommandOptionData[];
-	defaultPermission?: boolean;
 }
 
 export interface ICategoryMeta {
@@ -69,12 +82,11 @@ export interface ICategoryMeta {
 }
 
 declare module 'discord.js' {
-	// @ts-expect-error Override typings
-	export interface Client extends OClient {
+	export interface Client {
 		config: Mattis['config'];
 		Logger: Mattis['Logger'];
 		// request: Mattis['request'];
-		//commands: Mattis['commands'];
+		// commands: Mattis['commands'];
 		Events: Mattis['Events'];
 
 		build(token: string): Promise<this>;
@@ -82,6 +94,6 @@ declare module 'discord.js' {
 
 	export interface Guild {
 		client: Mattis;
-		queue?: any /*ServerQueue*/;
+		queue?: any /* ServerQueue */;
 	}
 }
