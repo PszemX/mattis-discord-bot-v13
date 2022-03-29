@@ -4,15 +4,32 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="adb6b336-325e-41d4-bc20-87e32ec9b4a7" name="Default Changelist" comment="" />
+    <list default="true" id="adb6b336-325e-41d4-bc20-87e32ec9b4a7" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/classes/Managers/CacheManager.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/classes/Managers/GuildsManager.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/classes/Managers/GuildsManager.ts" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript File" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="UPDATE_TYPE" value="REBASE" />
+  </component>
+  <component name="GitToolBoxStore">
+    <option name="projectConfigVersion" value="5" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="21yGpBrOrX5A05K13qBBOcBRv8X" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -42,6 +59,7 @@
       <updated>1638906110153</updated>
       <workItem from="1643740192291" duration="597000" />
       <workItem from="1646430425175" duration="37000" />
+      <workItem from="1648510742922" duration="1718000" />
     </task>
     <servers />
   </component>

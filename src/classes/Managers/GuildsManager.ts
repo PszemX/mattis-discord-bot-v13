@@ -10,23 +10,22 @@ export class GuildsManager extends Collection<string, any> {
 	}
 
 	public async loadGuildsData() {
-		// Stworzenie guildsData dla każdego serwera w bazie danych.
 		const databaseGuildIds = await this.Mattis.Database.guildNamesList();
 
 		for (const guildId of databaseGuildIds) {
 			await this.updateDatabaseGuildSettings(guildId);
-			this.updateGuildsData(guildId);
+			await this.updateGuildsData(guildId);
 		}
 	}
 
 	public async updateGuildsData(guildId: string) {
 		if (this.Mattis.Guilds.get(guildId)) {
-			this.clearJob(this.Mattis.Guilds.get(guildId));
+			await GuildsManager.clearJob(this.Mattis.Guilds.get(guildId));
 		}
 		const guildSettings = await this.Mattis.Database.guildSettings(guildId);
 		const guildCache = await updateGuildsData(this.Mattis, guildSettings);
 		this.set(guildId, guildCache);
-		await this.runJob(guildCache);
+		await GuildsManager.runJob(guildCache);
 	}
 
 	public async updateDatabaseGuildSettings(guildId: string) {
@@ -46,12 +45,9 @@ export class GuildsManager extends Collection<string, any> {
 
 	private updateObject(objectOne: any, objectTwo: any) {
 		// Based on whole guildsData.ts object.
-		let changed: any = {};
+		const changed: any = {};
 		for (const key in objectTwo) {
-			if (Array.isArray(objectTwo[key])) {
-				changed[key] =
-					objectOne[key] == undefined ? objectTwo[key] : objectOne[key];
-			} else if (typeof objectTwo[key] === 'object') {
+			if (typeof objectTwo[key] === 'object' && !Array.isArray(objectTwo[key])) {
 				if (objectOne[key] == undefined) {
 					changed[key] = objectTwo[key];
 				} else {
@@ -76,11 +72,11 @@ export class GuildsManager extends Collection<string, any> {
 		return changed;
 	}
 
-	private async runJob(guildCache: GuildCache) {
+	private static async runJob(guildCache: GuildCache) {
 		if (guildCache.jobs) await guildCache.jobs.run();
 	}
 
-	private async clearJob(guildCache: GuildCache) {
+	private static async clearJob(guildCache: GuildCache) {
 		if (guildCache.jobs) await guildCache.jobs.clear();
 	}
 }
