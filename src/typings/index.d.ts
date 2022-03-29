@@ -1,11 +1,17 @@
 import {
-	ApplicationCommandOptionData,
-	ApplicationCommandType,
-	ClientEvents,
-	Guild,
+  ApplicationCommandOptionData,
+  ApplicationCommandType,
+  ClientEvents,
+  Guild, Message
 } from 'discord.js';
 import { GuildCache } from '../classes/GuildCache';
 import { Mattis } from '../classes/Mattis';
+
+export interface IBadwordData {
+  badword: string,
+  message: Message,
+  timestamp: number
+}
 
 export interface IMemberCache {
 	channelsChangingProtection: any[],
