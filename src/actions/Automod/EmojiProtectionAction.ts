@@ -8,12 +8,10 @@ export class EmojiProtectionAction extends BaseEventAction {
 
 	public async trigger(EventData: IEventData) {
 		const settings = EventData.guildCache.settings.actions[this.name];
-		const message = EventData.args.content.replace(/<a?:[a-z0-9_]+:\d+>|:[a-z0-9_]+:/gi, '😀').replace(/ /g, '');
+		const message = EventData.args.content.replace(/(<a?)?:.+?:(\d{18}>)?/gi, '️♥').replace(/️+/g, '');
 		if (message.length <= settings.minMessageLength) return false;
-		const emojiRegex =
-			/(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff])[\ufe0e\ufe0f]?(?:[\u0300-\u036f\ufe20-\ufe23\u20d0-\u20f0]|\ud83c[\udffb-\udfff])?(?:\u200d(?:[^\ud800-\udfff]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff])[\ufe0e\ufe0f]?(?:[\u0300-\u036f\ufe20-\ufe23\u20d0-\u20f0]|\ud83c[\udffb-\udfff])?)*/gi;
+		const emojiRegex = /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/gi;
 		const newmsg = message.replace(emojiRegex, '');
-
 		return (newmsg.length / message.length) * 100 < settings.maxPercentage;
 	}
 
