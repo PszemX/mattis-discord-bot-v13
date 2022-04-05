@@ -1,5 +1,6 @@
 import { BaseEventAction } from '../../classes/BaseStructures/BaseEventAction';
 import { IEventData } from '../../typings';
+import { Message } from 'discord.js';
 
 export class MassPingProtectionAction extends BaseEventAction {
 	public constructor() {
@@ -7,6 +8,7 @@ export class MassPingProtectionAction extends BaseEventAction {
 	}
 
 	public async trigger(EventData: IEventData) {
+		const settings = EventData.guildCache.settings.actions[this.name];
 		return false;
 	}
 
