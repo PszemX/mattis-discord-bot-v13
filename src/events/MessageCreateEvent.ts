@@ -3,6 +3,7 @@ import latinize from 'latinize';
 import { BaseEvent } from '../classes/BaseStructures/BaseEvent';
 import { IEventData } from '../typings';
 import badwords from '../utilities/badwords.json';
+import { channel } from 'diagnostics_channel';
 
 export class MessageCreateEvent extends BaseEvent {
 	public constructor(mattis: BaseEvent['mattis']) {
@@ -42,9 +43,11 @@ export class MessageCreateEvent extends BaseEvent {
 		const settings = EventData.guildCache.settings.actions.spamProtection;
 		const message = EventData.args;
 		const { member } = message;
+		const { channel } = message;
 		const timestamp = message.createdTimestamp;
-		const hashedCacheData = `spam.${member.id}.${message.id}.${timestamp}`;
-		EventData.guildCache.cacheManager.getMemberCache(member).messages.push(hashedCacheData);
+		const hashedCacheData = `${member.id}.${message.id}.${timestamp}`;
+		EventData.guildCache.cacheManager.getMemberCache(member).messages.push(`spam.${hashedCacheData}`);
+		EventData.guildCache.cacheManager.getMemberCache(channel).messages.push(`sameMessages.${hashedCacheData}`);
 	}
 
 	private badwordsCache(EventData: IEventData): void {
