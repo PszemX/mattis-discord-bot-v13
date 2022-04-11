@@ -47,7 +47,7 @@ export class MessageCreateEvent extends BaseEvent {
 		const timestamp = message.createdTimestamp;
 		const hashedCacheData = `${member.id}.${message.id}.${timestamp}`;
 		EventData.guildCache.cacheManager.getMemberCache(member).messages.push(`spam.${hashedCacheData}`);
-		EventData.guildCache.cacheManager.getMemberCache(channel).messages.push(`sameMessages.${hashedCacheData}`);
+		EventData.guildCache.cacheManager.getChannelCache(channel).messages.push(`sameMessages.${hashedCacheData}`);
 	}
 
 	private badwordsCache(EventData: IEventData): void {
