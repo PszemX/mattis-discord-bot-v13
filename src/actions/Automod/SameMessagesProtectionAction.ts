@@ -16,15 +16,9 @@ export class SameMessagesProtectionAction extends BaseEventAction {
 		const lastChannelMessages = EventData.guildCache.cacheManager
 			.getChannelCache(channel)
 			.sameMessagesProtection.filter(
-				(msg: Message) => Date.now() - msg.createdTimestamp < settings.perMilisecondsTime
+				(msg: Message) => (Date.now() - msg.createdTimestamp < settings.perMilisecondsTime && msg.content === message.content)
 			);
-		let result = 0;
-		for (const channelMessage of lastChannelMessages) {
-			if (channelMessage.content === message.content) {
-				result++;
-			}
-		}
-		return result > settings.maxAmount;
+		return lastChannelMessages.length > settings.maxAmount;
 	}
 
 	public async execute(EventData: IEventData) {
