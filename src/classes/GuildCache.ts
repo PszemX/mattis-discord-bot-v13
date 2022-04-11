@@ -1,5 +1,6 @@
 import { JobsManager } from './Managers/JobsManager';
 import { CacheManager } from './Managers/CacheManager';
+import { guildCacheLastDuration, guildCacheLastInterval } from '../config';
 
 export class GuildCache {
 	public settings: any;
@@ -59,5 +60,11 @@ export class GuildCache {
 	public cacheManager = new CacheManager();
 	constructor(guildSettings: any) {
 		this.settings = guildSettings;
+		this.cleanCacheManager();
+	}
+	private cleanCacheManager() {
+		setInterval(() => {
+			this.cacheManager.cleanCaches();
+		}, guildCacheLastInterval);
 	}
 }

@@ -37,14 +37,12 @@ export class CacheManager {
 		return this.channelsCache.get(channel.id);
 	}
 
-	// public cleanCaches() {
-	// 	setInterval(() => {
-	//         for(const memberCache of this.membersCache){
-	//
-	//         }
-	//         for(const channelCache of this.channelsCache){
-	//
-	//         }
-	// 	}, guildCacheLastInterval);
-	// }
+	public cleanCaches() {
+		for (const memberCache of this.membersCache.keys()) {
+			this.membersCache.delete(memberCache);
+		}
+		for (const channelCache of this.channelsCache.keys()) {
+			this.channelsCache.delete(channelCache);
+		}
+	}
 }
