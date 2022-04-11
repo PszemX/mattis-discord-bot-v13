@@ -1,7 +1,7 @@
 import { Message, User } from 'discord.js';
 import latinize from 'latinize';
 import { BaseEvent } from '../classes/BaseStructures/BaseEvent';
-import { IBadwordData, IEventData } from '../typings';
+import { IEventData } from '../typings';
 import badwords from '../utilities/badwords.json';
 
 export class MessageCreateEvent extends BaseEvent {
