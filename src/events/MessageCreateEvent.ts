@@ -3,7 +3,6 @@ import latinize from 'latinize';
 import { BaseEvent } from '../classes/BaseStructures/BaseEvent';
 import { IEventData } from '../typings';
 import badwords from '../utilities/badwords.json';
-import { channel } from 'diagnostics_channel';
 
 export class MessageCreateEvent extends BaseEvent {
 	public constructor(mattis: BaseEvent['mattis']) {
@@ -40,7 +39,6 @@ export class MessageCreateEvent extends BaseEvent {
 	}
 
 	private spamCache(EventData: IEventData): void {
-		const settings = EventData.guildCache.settings.actions.spamProtection;
 		const message = EventData.args;
 		const { member } = message;
 		const { channel } = message;
@@ -51,7 +49,6 @@ export class MessageCreateEvent extends BaseEvent {
 	}
 
 	private badwordsCache(EventData: IEventData): void {
-		// const settings = EventData.guildCache.settings.actions[this.name];
 		const message = latinize(EventData.args.content.toLowerCase());
 		const { length } = message;
 		const { member } = EventData.args;
