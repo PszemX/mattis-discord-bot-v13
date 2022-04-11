@@ -1,6 +1,6 @@
+import { Message } from 'discord.js';
 import { BaseEventAction } from '../../classes/BaseStructures/BaseEventAction';
 import { IEventData } from '../../typings';
-import { Message } from 'discord.js';
 
 export class SameMessagesProtectionAction extends BaseEventAction {
 	public constructor() {
@@ -10,19 +10,20 @@ export class SameMessagesProtectionAction extends BaseEventAction {
 	public async trigger(EventData: IEventData) {
 		const settings = EventData.guildCache.settings.actions[this.name];
 		const message: Message = EventData.args;
+		const { channel } = message;
 		if (message.content.length < settings.minMessageLength) return false;
+		EventData.guildCache.cacheManager.getChannelCache(channel).sameMessagesProtection.push(message);
 		const lastChannelMessages = EventData.guildCache.cacheManager
-			.getChannelCache(message.channel)
+			.getChannelCache(channel)
 			.sameMessagesProtection.filter(
-				(msg: Message) =>
-					Date.now() - msg.createdTimestamp < settings.perMilisecondsTime
+				(msg: Message) => Date.now() - msg.createdTimestamp < settings.perMilisecondsTime
 			);
 		let result = 0;
-		for (let i = lastChannelMessages.length - 2; i >= 0; --i) {
-			if (lastChannelMessages[i].content == message.content) ++result;
-			else break;
+		for (const channelMessage of lastChannelMessages) {
+			if (channelMessage.content === message.content) {
+				result++;
+			}
 		}
-
 		return result > settings.maxAmount;
 	}
 

@@ -1,6 +1,6 @@
+import { Message } from 'discord.js';
 import { BaseEventAction } from '../../classes/BaseStructures/BaseEventAction';
 import { IEventData } from '../../typings';
-import { Message } from 'discord.js';
 
 export class MassPingProtectionAction extends BaseEventAction {
 	public constructor() {

@@ -5,8 +5,8 @@ import { guildCacheLastDuration, guildCacheLastInterval } from '../../config';
 import { IChannelCache, IMemberCache } from '../../typings';
 
 export class CacheManager {
-	public membersCache: Collection<string, any> = new Collection();
-	public channelsCache: Collection<string, any> = new Collection();
+	public membersCache: Collection<string, IMemberCache> = new Collection();
+	public channelsCache: Collection<string, IChannelCache> = new Collection();
 	super() {}
 
 	public getMemberCache(member: GuildMember) {
@@ -26,13 +26,13 @@ export class CacheManager {
 
 	public getChannelCache(channel: Channel) {
 		if (!channel) return null;
-		if (!this.membersCache.get(channel.id)) {
+		if (!this.channelsCache.get(channel.id)) {
 			const emptyChannelCache: IChannelCache = {
 				sameMessagesProtection: [],
 			};
 			this.channelsCache.set(channel.id, emptyChannelCache);
 		}
-		return this.membersCache.get(channel.id);
+		return this.channelsCache.get(channel.id);
 	}
 
 	// public cleanCaches() {
