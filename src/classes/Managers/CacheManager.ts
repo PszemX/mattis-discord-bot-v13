@@ -7,12 +7,13 @@ import { IChannelCache, IMemberCache } from '../../typings';
 export class CacheManager {
 	public membersCache: Collection<string, IMemberCache> = new Collection();
 	public channelsCache: Collection<string, IChannelCache> = new Collection();
-	super() {}
 
 	public getMemberCache(member: GuildMember) {
 		if (!member) return null;
 		if (!this.membersCache.get(member.id)) {
 			const emptyMemberCache: IMemberCache = {
+				messages: [],
+				voiceStates: [],
 				channelsChangingProtection: [],
 				spamProtection: [],
 				linksProtection: [],
@@ -28,6 +29,7 @@ export class CacheManager {
 		if (!channel) return null;
 		if (!this.channelsCache.get(channel.id)) {
 			const emptyChannelCache: IChannelCache = {
+				messages: [],
 				sameMessagesProtection: [],
 			};
 			this.channelsCache.set(channel.id, emptyChannelCache);
