@@ -1,6 +1,6 @@
 import { JobsManager } from './Managers/JobsManager';
 import { CacheManager } from './Managers/CacheManager';
-import { guildCacheLastDuration, guildCacheLastInterval } from '../config';
+import { guildCacheLastInterval } from '../config';
 
 export class GuildCache {
 	public settings: any;

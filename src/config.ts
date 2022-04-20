@@ -50,9 +50,8 @@ export const defaultPrefix: string = String(process.env.DEFAULT_PREFIX);
 export const isProd: Boolean = process.env.ENVIRONMENT === 'production';
 export const isDev: Boolean = !isProd;
 export const baseLanguage: string = String(process.env.BASE_LANGUAGE);
-export const guildCacheLastDuration: Number = Number(
-	process.env.GUILDCACHE_LAST_DURATION
-);
+export const guildCacheLastDuration: number =
+	Number(process.env.GUILDCACHE_LAST_DURATION) || 3600000;
 export const guildCacheLastInterval: number =
 	Number(process.env.GUILDCACHE_LAST_INTERVAL) || 60000;
 export const commandsCooldown: Number = Number(process.env.COMMANDS_COOLDOWN);

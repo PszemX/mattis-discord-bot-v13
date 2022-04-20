@@ -2,30 +2,25 @@ import {
 	ApplicationCommandOptionData,
 	ApplicationCommandType,
 	ClientEvents,
-	Guild, Message
+	Guild,
+	Message,
 } from 'discord.js';
 import { GuildCache } from '../classes/GuildCache';
 import { Mattis } from '../classes/Mattis';
 
 export interface IBadwordData {
-  badword: string,
-  message: Message,
-  timestamp: number
+	badword: string;
+	message: Message;
+	timestamp: number;
 }
 
 export interface IMemberCache {
-	messages?: any[],
-	voiceStates?: any[],
-	channelsChangingProtection: any[],
-	spamProtection: any[],
-	linksProtection: any[],
-	massPingProtection: any[],
-	badWordsProtection: any[]
+	messages: any[];
+	voiceStates: any[];
 }
 
 export interface IChannelCache {
-	messages?: any[],
-	sameMessagesProtection: any[],
+	messages: any[];
 }
 
 export interface ILoggerOptions {

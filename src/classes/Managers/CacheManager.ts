@@ -1,7 +1,5 @@
-import {
-	Channel, Collection, GuildMember
-} from 'discord.js';
-import { guildCacheLastDuration, guildCacheLastInterval } from '../../config';
+import { Channel, Collection, GuildMember } from 'discord.js';
+import { guildCacheLastDuration } from '../../config';
 import { IChannelCache, IMemberCache } from '../../typings';
 
 export class CacheManager {
@@ -14,11 +12,6 @@ export class CacheManager {
 			const emptyMemberCache: IMemberCache = {
 				messages: [],
 				voiceStates: [],
-				channelsChangingProtection: [],
-				spamProtection: [],
-				linksProtection: [],
-				massPingProtection: [],
-				badWordsProtection: []
 			};
 			this.membersCache.set(member.id, emptyMemberCache);
 		}
@@ -30,7 +23,6 @@ export class CacheManager {
 		if (!this.channelsCache.get(channel.id)) {
 			const emptyChannelCache: IChannelCache = {
 				messages: [],
-				sameMessagesProtection: [],
 			};
 			this.channelsCache.set(channel.id, emptyChannelCache);
 		}
@@ -38,11 +30,35 @@ export class CacheManager {
 	}
 
 	public cleanCaches() {
-		for (const memberCache of this.membersCache.keys()) {
-			this.membersCache.delete(memberCache);
+		for (const memberId of this.membersCache.keys()) {
+			if (this.membersCache.has(memberId)) {
+				// @ts-ignore
+				for (const cache of Object.keys(this.membersCache.get(memberId))) {
+					// @ts-ignore
+					this.membersCache.get(memberId)[cache] = this.membersCache
+						.get(memberId)
+						[cache].filter(
+							(cacheData: string) =>
+								Date.now() - Number(cacheData.split('.').at(-1)) <
+								guildCacheLastDuration
+						);
+				}
+			}
 		}
-		for (const channelCache of this.channelsCache.keys()) {
-			this.channelsCache.delete(channelCache);
+		for (const channelId of this.channelsCache.keys()) {
+			if (this.channelsCache.has(channelId)) {
+				// @ts-ignore
+				for (const cache of Object.keys(this.channelsCache.get(channelId))) {
+					// @ts-ignore
+					this.channelsCache.get(channelId)[cache] = this.channelsCache
+						.get(channelId)
+						[cache].filter(
+							(cacheData: string) =>
+								Date.now() - Number(cacheData.split('.').at(-1)) <
+								guildCacheLastDuration
+						);
+				}
+			}
 		}
 	}
 }
