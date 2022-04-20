@@ -32,6 +32,7 @@ export class CacheManager {
 	public cleanCaches() {
 		for (const memberId of this.membersCache.keys()) {
 			if (this.membersCache.has(memberId)) {
+				console.log(this.membersCache.get(memberId));
 				// @ts-ignore
 				for (const cache of Object.keys(this.membersCache.get(memberId))) {
 					// @ts-ignore

@@ -17,7 +17,7 @@ export class VoiceStateUpdateEvent extends BaseEvent {
 		const member: GuildMember | null = newState.member;
 		if (!member) return;
 		const timestamp = Date.now();
-		const hashedCacheData = `${member.id}.${oldState.channelId}.${newState.channelId}.${timestamp}`;
+		const hashedCacheData = `${oldState.channelId}.${newState.channelId}.${timestamp}`;
 		EventData.guildCache.cacheManager
 			.getMemberCache(member)
 			.voiceStates.push(hashedCacheData);

@@ -16,7 +16,7 @@ export class MessageCreateEvent extends BaseEvent {
 		if (message.guild === null) return;
 		if (message.author.bot) return;
 		const EventData: IEventData = this.mattis.utils.getEventData(message);
-		this.cacheMessage(EventData);
+		await this.cacheMessage(EventData);
 		const { guildCache } = EventData;
 		if (message.content.startsWith(guildCache.settings.prefix)) {
 			await this.mattis.Actions.handleCommand(EventData);
@@ -31,24 +31,37 @@ export class MessageCreateEvent extends BaseEvent {
 		return this.mattis.users.cache.get(id);
 	}
 
-	private cacheMessage(EventData: IEventData): void {
-		this.spamCache(EventData);
-		this.badwordsCache(EventData);
-		this.emojiCache(EventData);
-		this.capslockCache(EventData);
+	private async cacheMessage(EventData: IEventData): Promise<void> {
+		await this.spamCache(EventData).then((result: string) => {
+			this.badwordsCache(result, EventData).then((result: string) => {
+				this.emojiCache(result, EventData).then((result: string) => {
+					this.capslockCache(result, EventData).then((result: string) => {
+						EventData.guildCache.cacheManager
+							.getMemberCache(EventData.args.member)
+							.messages.push(result);
+					});
+				});
+			});
+		});
 	}
 
-	private spamCache(EventData: IEventData): void {
+	private async spamCache(EventData: IEventData): Promise<string> {
 		const message = EventData.args;
 		const { member } = message;
 		const { channel } = message;
 		const timestamp = message.createdTimestamp;
-		const hashedCacheData = `${member.id}.${message.id}.${timestamp}`;
-		EventData.guildCache.cacheManager.getMemberCache(member).messages.push(`spam.${hashedCacheData}`);
-		EventData.guildCache.cacheManager.getChannelCache(channel).messages.push(`sameMessages.${hashedCacheData}`);
+		const hashedCacheData = `${message.id}.${timestamp}`;
+		const cacheResult = `spam.${message.id}.${timestamp}`;
+		EventData.guildCache.cacheManager
+			.getChannelCache(channel)
+			.messages.push(`sameMessages.${hashedCacheData}`);
+		return cacheResult;
 	}
 
-	private badwordsCache(EventData: IEventData): void {
+	private async badwordsCache(
+		cacheResult: string,
+		EventData: IEventData
+	): Promise<string> {
 		const message = latinize(EventData.args.content.toLowerCase());
 		const { length } = message;
 		const { member } = EventData.args;
@@ -64,7 +77,8 @@ export class MessageCreateEvent extends BaseEvent {
 		}
 		const badwordsInMessage: string[] = [];
 		for (const badword of badwords) {
-			const editedMessageLength = editedMessage.match(new RegExp(badword, 'gi'))?.length || 0;
+			const editedMessageLength =
+				editedMessage.match(new RegExp(badword, 'gi'))?.length || 0;
 			for (let i = 0; i < editedMessageLength; i++) {
 				if (editedMessage.includes(badword)) {
 					badwordsInMessage.push(badword);
@@ -74,37 +88,48 @@ export class MessageCreateEvent extends BaseEvent {
 		}
 		if (badwordsInMessage.length) {
 			// eslint-disable-next-line guard-for-in
-			for (const badword in badwordsInMessage) {
-				const hashedCacheData = `badwords.${badword}.${member.id}.${messageId}${timestamp}`;
-				EventData.guildCache.cacheManager.getMemberCache(member).messages.push(hashedCacheData);
+			for (const badword of badwordsInMessage) {
+				cacheResult = `${badword}.${cacheResult}`;
 			}
+			cacheResult = `badwords.${badwordsInMessage.length}.${cacheResult}`;
 		}
+		return cacheResult;
 	}
 
-	private emojiCache(EventData: IEventData): void {
-		const messageId = EventData.args;
+	private async emojiCache(
+		cacheResult: string,
+		EventData: IEventData
+	): Promise<string> {
+		const messageId = EventData.args.id;
 		const { member } = EventData.args;
 		const timestamp = EventData.args.createdTimestamp;
 		const settings = EventData.guildCache.settings.actions.emojiProtection;
 		const outsideEmojiRegex = /(<a?)?:.+?:(\d{18}>)?/gi;
 		const emojiRegex = /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/gi;
-		const message = EventData.args.toString().replace(outsideEmojiRegex, '️♥').replace(emojiRegex, '♥').replace(/️+/g, '');
-		if (message.length <= settings.minMessageLength) return;
+		const message = EventData.args
+			.toString()
+			.replace(outsideEmojiRegex, '️♥')
+			.replace(emojiRegex, '♥')
+			.replace(/️+/g, '');
+		if (message.length <= settings.minMessageLength) return '';
 		const messageWithoutEmojis = message.replace(/♥/g, '');
 		const emojisAmout = message.length - messageWithoutEmojis.length;
 		if ((emojisAmout / message.length) * 100 > settings.maxPercentage) {
-			const hashedCacheData = `emojis.${member.id}.${messageId}${timestamp}`;
-			EventData.guildCache.cacheManager.getMemberCache(member).messages.push(hashedCacheData);
+			cacheResult = `emojis.${cacheResult}`;
 		}
+		return cacheResult;
 	}
 
-	private capslockCache(EventData: IEventData): void {
-		const messageId = EventData.args;
+	private async capslockCache(
+		cacheResult: string,
+		EventData: IEventData
+	): Promise<string> {
+		const messageId = EventData.args.id;
 		const { member } = EventData.args;
 		const timestamp = EventData.args.createdTimestamp;
 		const settings = EventData.guildCache.settings.actions.capsLockProtection;
 		const message = EventData.args.content;
-		if (message.length <= settings.minMessageLength) return;
+		if (message.length <= settings.minMessageLength) return '';
 		const caps = message.toUpperCase();
 		const nocaps = message.toLowerCase();
 		let sum = 0;
@@ -117,8 +142,8 @@ export class MessageCreateEvent extends BaseEvent {
 			}
 		}
 		if ((sum / length) * 100 > settings.maxPercentage) {
-			const hashedCacheData = `capslock.${member.id}.${messageId}${timestamp}`;
-			EventData.guildCache.cacheManager.getMemberCache(member).messages.push(hashedCacheData);
+			cacheResult = `capslock.${cacheResult}`;
 		}
+		return cacheResult;
 	}
 }
