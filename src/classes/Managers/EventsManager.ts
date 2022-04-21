@@ -31,8 +31,8 @@ export class EventsManager {
 					this.Mattis.on(event.name, async (...args) => {
 						const eventData = await this.Mattis.utils.getEventData(...args);
 						if (!eventData.guildCache) return;
+						await event.execute(...args);
 						await this.handleEventAction(eventData, event);
-						event.execute(...args);
 					});
 				}
 			})
