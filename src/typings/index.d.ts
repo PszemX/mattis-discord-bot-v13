@@ -29,7 +29,7 @@ export interface ILoggerOptions {
 
 export interface IEvent {
 	readonly name: keyof ClientEvents;
-	execute(...args: any): void;
+	execute(...args: any): Promise<void>;
 }
 
 export interface IEventData {
