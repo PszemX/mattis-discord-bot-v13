@@ -8,13 +8,12 @@ export class EmojiProtectionAction extends BaseEventAction {
 
 	public async trigger(EventData: IEventData) {
 		const settings = EventData.guildCache.settings.actions[this.name];
-		const outsideEmojiRegex = /(<a?)?:.+?:(\d{18}>)?/gi;
-		const emojiRegex = /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/gi;
-		const message = EventData.args.toString().replace(outsideEmojiRegex, '️♥').replace(emojiRegex, '♥').replace(/️+/g, '');
-		if (message.length <= settings.minMessageLength) return false;
-		const messageWithoutEmojis = message.replace(/♥/g, '');
-		const emojisAmout = message.length - messageWithoutEmojis.length;
-		return (emojisAmout / message.length) * 100 > settings.maxPercentage;
+		const { member } = EventData.args;
+		// Cached messages only including badwords written in set time.
+		const cachedMessages = EventData.guildCache.cacheManager.getMemberCache(
+			member
+		).messages;
+		return cachedMessages.at(-1).includes('emojis');
 	}
 
 	public async execute(EventData: IEventData) {
