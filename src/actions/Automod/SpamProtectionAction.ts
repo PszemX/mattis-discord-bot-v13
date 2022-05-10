@@ -1,4 +1,4 @@
-import { GuildMember, Message } from 'discord.js';
+import { Message } from 'discord.js';
 import { BaseEventAction } from '../../classes/BaseStructures/BaseEventAction';
 import { IEventData } from '../../typings';
 
@@ -15,14 +15,12 @@ export class SpamProtectionAction extends BaseEventAction {
 	 */
 	public async trigger(EventData: IEventData) {
 		const settings = EventData.guildCache.settings.actions[this.name];
-		const message = EventData.args;
+		const message: Message = EventData.args;
 		const { member } = message;
-		EventData.guildCache.cacheManager.getMemberCache(member).spamProtection.push(message);
-		return (
-			EventData.guildCache.cacheManager.getMemberCache(member).spamProtection.filter(
-				(cachedMessage: Message) => Date.now() - cachedMessage.createdTimestamp < settings.perMilisecondsTime,
-			).length > settings.maxMessages
-		);
+		const cachedMessages = EventData.guildCache.cacheManager.getMemberCache(
+			member
+		).messages;
+		return cachedMessages.length > settings.maxMessages;
 	}
 
 	/**
