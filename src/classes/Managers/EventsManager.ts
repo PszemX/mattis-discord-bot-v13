@@ -42,6 +42,12 @@ export class EventsManager {
 			);
 	}
 
+	/**
+	 * It checks if the event has any actions assigned to it, and if it does, it triggers them
+	 * @param {IEventData} eventData - IEventData - this is the data that is passed to the event.
+	 * @param {IEvent} event - IEvent - the event that was triggered
+	 * @returns a promise that resolves to void.
+	 */
 	private async handleEventAction(
 		eventData: IEventData,
 		event: IEvent
@@ -68,7 +74,12 @@ export class EventsManager {
 		}
 	}
 
-	private async handleRawEvent(event: any) {
+	/**
+	 * It listens for reactions on old messages, and then emits an event for the bot to listen to
+	 * @param {any} event - The raw event that was emitted.
+	 * @returns a promise that resolves to void.
+	 */
+	private async handleRawEvent(event: any): Promise<void> {
 		// https://gist.github.com/Danktuary/27b3cef7ef6c42e2d3f5aff4779db8ba
 		const events: any = {
 			MESSAGE_REACTION_ADD: 'messageReactionAdd',
