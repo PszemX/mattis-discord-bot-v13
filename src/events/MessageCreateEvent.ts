@@ -1,9 +1,10 @@
 import { Message, User } from 'discord.js';
 import latinize from 'latinize';
+import uri from 'urijs';
 import md5 from 'md5';
 import { BaseEvent } from '../classes/BaseStructures/BaseEvent';
-import { IEventData } from '../typings';
 import badwords from '../utilities/badwords.json';
+import { IEventData } from '../typings';
 
 export class MessageCreateEvent extends BaseEvent {
 	public constructor(mattis: BaseEvent['mattis']) {
@@ -16,6 +17,7 @@ export class MessageCreateEvent extends BaseEvent {
 		if (message.channel.type === 'DM') return;
 		if (message.guild === null) return;
 		if (message.author.bot) return;
+		if (!message.member) return;
 		const EventData: IEventData = this.mattis.utils.getEventData(message);
 		await this.cacheMessage(EventData);
 		const { guildCache } = EventData;
@@ -34,6 +36,7 @@ export class MessageCreateEvent extends BaseEvent {
 
 	private async cacheMessage(EventData: IEventData): Promise<void> {
 		await this.spamCache(EventData).then((result: string) => {
+			// const a = this.linksCache(result, EventData);
 			this.badwordsCache(result, EventData).then((result: string) => {
 				this.emojiCache(result, EventData).then((result: string) => {
 					this.capslockCache(result, EventData).then((result: string) => {
@@ -141,6 +144,17 @@ export class MessageCreateEvent extends BaseEvent {
 				cacheResult = `capslock.${cacheResult}`;
 			}
 		}
+		return cacheResult;
+	}
+
+	private async linksCache(
+		cacheResult: string,
+		EventData: IEventData
+	): Promise<string> {
+		// var result = uri.withinString(EventData.args.content, function (url) {
+		// 	return url;
+		// });
+		// console.log(result);
 		return cacheResult;
 	}
 }
