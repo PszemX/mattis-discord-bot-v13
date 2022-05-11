@@ -1,5 +1,6 @@
 import { Message, User } from 'discord.js';
 import latinize from 'latinize';
+import md5 from 'md5';
 import { BaseEvent } from '../classes/BaseStructures/BaseEvent';
 import { IEventData } from '../typings';
 import badwords from '../utilities/badwords.json';
@@ -39,6 +40,7 @@ export class MessageCreateEvent extends BaseEvent {
 						EventData.guildCache.cacheManager
 							.getMemberCache(EventData.args.member)
 							.messages.push(result);
+						console.log(result);
 					});
 				});
 			});
@@ -49,11 +51,12 @@ export class MessageCreateEvent extends BaseEvent {
 		const message = EventData.args;
 		const { channel } = message;
 		const timestamp = message.createdTimestamp;
-		const hashedCacheData = `${message.id}.${timestamp}`;
+		const hashedMessageData = `${md5(message.content)}.${timestamp}`;
 		const cacheResult = `spam.${message.id}.${timestamp}`;
 		EventData.guildCache.cacheManager
 			.getChannelCache(channel)
-			.messages.push(`sameMessages.${hashedCacheData}`);
+			.messages.push(`sameMessages.${hashedMessageData}`);
+		console.log(hashedMessageData);
 		return cacheResult;
 	}
 
@@ -61,36 +64,33 @@ export class MessageCreateEvent extends BaseEvent {
 		cacheResult: string,
 		EventData: IEventData
 	): Promise<string> {
-		const settings = EventData.guildCache.settings.actions.badwordsProtection;
-		if (settings.enabled) {
-			const message = latinize(EventData.args.content.toLowerCase());
-			const { length } = message;
-			let editedMessage = '';
-			let singleLetter = message[0];
-			for (let i = 1; i <= length; i++) {
-				if (singleLetter != message[i] && singleLetter != ' ') {
-					editedMessage += singleLetter;
-				}
-				singleLetter = message[i];
+		const message = latinize(EventData.args.content.toLowerCase());
+		const { length } = message;
+		let editedMessage = '';
+		let singleLetter = message[0];
+		for (let i = 1; i <= length; i++) {
+			if (singleLetter != message[i] && singleLetter != ' ') {
+				editedMessage += singleLetter;
 			}
-			const badwordsInMessage: string[] = [];
-			for (const badword of badwords) {
-				const editedMessageLength =
-					editedMessage.match(new RegExp(badword, 'gi'))?.length || 0;
-				for (let i = 0; i < editedMessageLength; i++) {
-					if (editedMessage.includes(badword)) {
-						badwordsInMessage.push(badword);
-						editedMessage = editedMessage.replace(new RegExp(badword, 'i'), '');
-					}
+			singleLetter = message[i];
+		}
+		const badwordsInMessage: string[] = [];
+		for (const badword of badwords) {
+			const editedMessageLength =
+				editedMessage.match(new RegExp(badword, 'gi'))?.length || 0;
+			for (let i = 0; i < editedMessageLength; i++) {
+				if (editedMessage.includes(badword)) {
+					badwordsInMessage.push(badword);
+					editedMessage = editedMessage.replace(new RegExp(badword, 'i'), '');
 				}
 			}
-			if (badwordsInMessage.length) {
-				// eslint-disable-next-line guard-for-in
-				for (const badword of badwordsInMessage) {
-					cacheResult = `${badword}.${cacheResult}`;
-				}
-				cacheResult = `badwords.${badwordsInMessage.length}.${cacheResult}`;
+		}
+		if (badwordsInMessage.length) {
+			// eslint-disable-next-line guard-for-in
+			for (const badword of badwordsInMessage) {
+				cacheResult = `${badword}.${cacheResult}`;
 			}
+			cacheResult = `badwords.${badwordsInMessage.length}.${cacheResult}`;
 		}
 		return cacheResult;
 	}
