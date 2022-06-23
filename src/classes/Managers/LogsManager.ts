@@ -38,22 +38,9 @@ export class LogsManager {
 		if (this.options.prod && level === 'debug') return;
 
 		console[level](
-			`${
-				this.options.prod
-					? ''
-					: level === 'debug'
-					? Colors.Blue
-					: level === 'error'
-					? Colors.Red
-					: level === 'warn'
-					? Colors.Yellow
-					: Colors.Green
-			}╠ [${format(
-				Date.now(),
-				'yyyy-MM-dd HH:mm:ss'
-			)}] [${level}]: ${messages.map((x) => String(x)).join(' ')} ${
-				Colors.Reset
-			}`
+			`╠ [${format(Date.now(), 'yyyy-MM-dd HH:mm:ss')}] [${level}]: ${messages
+				.map((x) => String(x))
+				.join(' ')}`
 		);
 	}
 }
