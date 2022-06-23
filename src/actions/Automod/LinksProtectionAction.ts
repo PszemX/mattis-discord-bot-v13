@@ -17,15 +17,15 @@ export class LinksProtectionAction extends BaseEventAction {
 					Date.now() - Number(cacheData.split('.').at(-1)) <
 						settings.perMilisecondsTime
 			);
-		console.log(cachedMessagesWithLinks);
+		// console.log(cachedMessagesWithLinks);
 		for (const message of cachedMessagesWithLinks) {
-			console.log(message.split('.'));
+			// console.log(message.split('.'));
 		}
 		const enabledSites: string[] =
 			Object.keys(settings.enableSites || {}).filter(
 				(site) => settings.enableSites[site].enabled
 			) || [];
-		console.log(enabledSites);
+		// console.log(enabledSites);
 		return false;
 	}
 

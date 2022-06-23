@@ -35,7 +35,7 @@ export class RpsGameCommand extends BaseCommand {
 		const gameChannel: TextChannel = EventData.args.channel;
 		let opponent: User = EventData.mattis.user!;
 		if (playerTwo) {
-			if (playerTwo == EventData.args.member.id) {
+			if (playerTwo.user.id == EventData.args.member.id) {
 				return;
 			}
 			opponent = playerTwo.user;
