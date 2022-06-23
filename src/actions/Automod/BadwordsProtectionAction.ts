@@ -15,7 +15,8 @@ export class BadwordsProtectionAction extends BaseEventAction {
 		const filteredCache = EventData.guildCache.cacheManager
 			.getMemberCache(member)
 			.messages.filter(
-				(cacheData: string) => cacheData.split('.').includes('badwords') &&
+				(cacheData: string) =>
+					cacheData.split('.').includes('badwords') &&
 					Date.now() - Number(cacheData.split('.').at(-1)) <
 						settings.perMilisecondsTime
 			);

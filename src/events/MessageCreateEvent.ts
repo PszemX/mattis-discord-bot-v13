@@ -36,14 +36,15 @@ export class MessageCreateEvent extends BaseEvent {
 
 	private async cacheMessage(EventData: IEventData): Promise<void> {
 		await this.spamCache(EventData).then((result: string) => {
-			// const a = this.linksCache(result, EventData);
 			this.badwordsCache(result, EventData).then((result: string) => {
 				this.emojiCache(result, EventData).then((result: string) => {
 					this.capslockCache(result, EventData).then((result: string) => {
-						EventData.guildCache.cacheManager
-							.getMemberCache(EventData.args.member)
-							.messages.push(result);
-						console.log(result);
+						this.linksCache(result, EventData).then((result: string) => {
+							EventData.guildCache.cacheManager
+								.getMemberCache(EventData.args.member)
+								.messages.push(result);
+							console.log(result);
+						});
 					});
 				});
 			});
@@ -151,10 +152,15 @@ export class MessageCreateEvent extends BaseEvent {
 		cacheResult: string,
 		EventData: IEventData
 	): Promise<string> {
-		// var result = uri.withinString(EventData.args.content, function (url) {
-		// 	return url;
-		// });
-		// console.log(result);
+		let links: string[] = [];
+		//@ts-ignore
+		uri.withinString(EventData.args.content, (u) => links.push(u) && u);
+		if (links.length) {
+			for (const link of links) {
+				cacheResult = `${link}.${cacheResult}`;
+			}
+			cacheResult = `links.${links.length}.${cacheResult}`;
+		}
 		return cacheResult;
 	}
 }

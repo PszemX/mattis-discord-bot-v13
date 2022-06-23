@@ -30,9 +30,9 @@ const createCommandsTree = (guildCache: any) => {
 	const guildCommands = guildCache.actionsByEvent.command;
 	guildCommands.forEach((command: any) => {
 		const commandSettings = guildCache.settings.actions[command.name];
-		commandSettings.aliases.forEach((trigger: any) => {
-			addCommandByTriggerToTree(command, trigger, tree);
-		});
+		commandSettings.aliases.forEach((trigger: any) =>
+			addCommandByTriggerToTree(command, trigger, tree)
+		);
 	});
 	return tree;
 };

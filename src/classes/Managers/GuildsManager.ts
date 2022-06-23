@@ -47,7 +47,10 @@ export class GuildsManager extends Collection<string, any> {
 		// Based on whole guildsData.ts object.
 		const changed: any = {};
 		for (const key in objectTwo) {
-			if (typeof objectTwo[key] === 'object' && !Array.isArray(objectTwo[key])) {
+			if (
+				typeof objectTwo[key] === 'object' &&
+				!Array.isArray(objectTwo[key])
+			) {
 				if (objectOne[key] == undefined) {
 					changed[key] = objectTwo[key];
 				} else {

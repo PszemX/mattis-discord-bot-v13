@@ -92,8 +92,9 @@ export class SendMessageJob extends BaseJob {
 		messageJob: any
 	) {
 		const currentId = messageJob.id;
-		this.guildMessageJobs.find((i) => i.id == currentId).lastTimeSent =
-			Date.now();
+		this.guildMessageJobs.find(
+			(i) => i.id == currentId
+		).lastTimeSent = Date.now();
 		await database.guildsData(guild.id, 'settings').updateOne(
 			{ id: guild.id },
 			{

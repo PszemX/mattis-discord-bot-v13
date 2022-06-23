@@ -7,13 +7,18 @@ export class ChannelsChangingProtectionAction extends BaseEventAction {
 	}
 
 	public async trigger(EventData: IEventData) {
-		if (!EventData.args[1].channelId || EventData.args[0].channelId == EventData.args[1].channelId) return false;
+		if (
+			!EventData.args[1].channelId ||
+			EventData.args[0].channelId == EventData.args[1].channelId
+		)
+			return false;
 		const settings = EventData.guildCache.settings.actions[this.name];
 		return (
 			EventData.guildCache.cacheManager
 				.getMemberCache(EventData.args[1].member)
 				.channelsChangingProtection.filter(
-					(voiceChannelJoin: any) => Date.now() - voiceChannelJoin.time < settings.perMilisecondsTime
+					(voiceChannelJoin: any) =>
+						Date.now() - voiceChannelJoin.time < settings.perMilisecondsTime
 				).length > settings.maxChannels
 		);
 	}

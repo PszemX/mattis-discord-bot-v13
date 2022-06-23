@@ -35,15 +35,15 @@ const lang = (path: string, data: any, payload?: any, lan?: string): any => {
 		}
 	}
 	switch (typeof translation) {
-	case 'string':
-		return translation;
-	case 'function':
-		return translation(data, payload);
-	default:
-		console.error(
-			`Error: Lang error, wrong path. Language: "${language}", path: "${path}"`
-		);
-		return path;
+		case 'string':
+			return translation;
+		case 'function':
+			return translation(data, payload);
+		default:
+			console.error(
+				`Error: Lang error, wrong path. Language: "${language}", path: "${path}"`
+			);
+			return path;
 	}
 };
 
