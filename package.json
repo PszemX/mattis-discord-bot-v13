@@ -10,7 +10,8 @@
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"compile": "tsc && node .",
-		"start": "node ./index.js"
+		"start": "node ./index.js",
+		"postinstall": "tsc"
 	},
 	"repository": {
 		"type": "git",
