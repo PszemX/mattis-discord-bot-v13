@@ -63,14 +63,13 @@ export class RpsGame extends BaseClient {
 		if (this.playerTwo?.id != clientId) {
 			this.playersCount = 2;
 			this.isMultiplayerGame = true;
-			console.log('MULTI');
 		}
 		await this.gameBegin();
 	}
 
 	private async gameBegin() {
 		if (!this.attachment) await this.createMessageAttachment();
-		if (this.isMultiplayerGame === true) {
+		if (this.isMultiplayerGame) {
 			await this.inviteOpponent();
 		} else {
 			await this.generateGameBeginMessage();
