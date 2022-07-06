@@ -113,7 +113,8 @@ export class MessageCreateEvent extends BaseEvent {
 			const message = EventData.args.content
 				.replace(outsideEmojiRegex, '️♥')
 				.replace(emojiRegex, '♥')
-				.replace(/️+/g, '');
+				.replace(/️+/g, '')
+				.replace(/ /g, '');
 			if (message.length <= settings.minMessageLength) return emojiAmount;
 			const messageWithoutEmojis = message.replace(/♥/g, '');
 			const emojisAmout = message.length - messageWithoutEmojis.length;
