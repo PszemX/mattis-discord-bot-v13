@@ -93,19 +93,12 @@ export class MessageCreateEvent extends BaseEvent {
 		let capslockAmount = 0;
 		const settings = EventData.guildCache.settings.actions.capsLockProtection;
 		if (/*settings.enabled*/ true) {
-			const message = EventData.args.content;
-			if (message.length <= settings.minMessageLength) return capslockAmount;
-			const caps = message.toUpperCase();
-			const nocaps = message.toLowerCase();
-			let sum = 0;
-			let length = 0;
-			for (let i = 0; i < message.length; ++i) {
-				if (caps[i] != nocaps[i]) {
-					if (caps[i] === message[i]) ++sum;
-					++length;
-				}
+			const message = EventData.args.content.replace(/ /g, '');
+			if (message.length < settings.minMessageLength) {
+				return capslockAmount;
 			}
-			capslockAmount = (sum / length) * 100;
+			const capital = message.match(/[A-Z]/g);
+			capslockAmount = (capital.length / message.length) * 100;
 		}
 		return capslockAmount;
 	}
@@ -117,8 +110,7 @@ export class MessageCreateEvent extends BaseEvent {
 			const outsideEmojiRegex = /(<a?)?:.+?:(\d{18}>)?/gi;
 			const emojiRegex =
 				/(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/gi;
-			const message = EventData.args
-				.toString()
+			const message = EventData.args.content
 				.replace(outsideEmojiRegex, '️♥')
 				.replace(emojiRegex, '♥')
 				.replace(/️+/g, '');
