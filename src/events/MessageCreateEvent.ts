@@ -133,7 +133,7 @@ export class MessageCreateEvent extends BaseEvent {
 
 	private async linksCache(EventData: IEventData): Promise<string[]> {
 		const links: string[] = [];
-		const settings = EventData.guildCache.settings.actions.emojiProtection;
+		const settings = EventData.guildCache.settings.actions.linksProtection;
 		if (settings.enabled) {
 			// @ts-ignore
 			uri.withinString(EventData.args.content, (u) => links.push(u) && u);
