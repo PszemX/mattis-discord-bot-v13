@@ -3,8 +3,8 @@ import latinize from 'latinize';
 import uri from 'urijs';
 import md5 from 'md5';
 import { BaseEvent } from '../classes/BaseStructures/BaseEvent';
-import badwords from '../utilities/badwords.json';
 import { IEventData, ICachedMessageData } from '../typings';
+import badwords from '../utilities/badwords.json';
 
 export class MessageCreateEvent extends BaseEvent {
 	public constructor(mattis: BaseEvent['mattis']) {
@@ -44,7 +44,7 @@ export class MessageCreateEvent extends BaseEvent {
 			capslock: await this.capslockCache(EventData),
 			emojis: await this.emojiCache(EventData),
 			links: await this.linksCache(EventData),
-			mentions: [],
+			mentions: await this.mentionsCache(EventData),
 			zalgos: [],
 			spoilers: [],
 			timestamp: message.createdTimestamp,
@@ -143,8 +143,10 @@ export class MessageCreateEvent extends BaseEvent {
 
 	private async mentionsCache(EventData: IEventData): Promise<string[]> {
 		const mentions: string[] = [];
-		const settings = EventData.guildCache.settings.actions.emojiProtection;
-		if (settings.enabled) {
+		const settings = EventData.guildCache.settings.actions.massPingProtection;
+		if (/*settings.enabled*/ true) {
+			const message: Message = EventData.args;
+			console.log(message.mentions);
 		}
 		return mentions;
 	}
