@@ -14,13 +14,27 @@ export interface IBadwordData {
 	timestamp: number;
 }
 
+export interface ICachedMessageData {
+	id: string;
+	messageLength: number;
+	content: string;
+	badwords: string[];
+	capslock: number;
+	emojis: number;
+	links: string[];
+	mentions: string[];
+	zalgos: string[];
+	spoilers: string[];
+	timestamp: number;
+}
+
 export interface IMemberCache {
-	messages: any[];
+	messages: ICachedMessageData[];
 	voiceStates: any[];
 }
 
 export interface IChannelCache {
-	messages: any[];
+	messages: string[];
 }
 
 export interface ILoggerOptions {

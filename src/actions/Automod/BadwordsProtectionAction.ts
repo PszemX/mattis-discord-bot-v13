@@ -1,7 +1,5 @@
-import latinize from 'latinize';
 import { BaseEventAction } from '../../classes/BaseStructures/BaseEventAction';
-import badwords from '../../utilities/badwords.json';
-import { IBadwordData, IEventData } from '../../typings';
+import { ICachedMessageData, IEventData } from '../../typings';
 
 export class BadwordsProtectionAction extends BaseEventAction {
 	public constructor() {
@@ -15,17 +13,13 @@ export class BadwordsProtectionAction extends BaseEventAction {
 		const filteredCache = EventData.guildCache.cacheManager
 			.getMemberCache(member)
 			.messages.filter(
-				(cacheData: string) =>
-					cacheData.split('.').includes('badwords') &&
-					Date.now() - Number(cacheData.split('.').at(-1)) <
-						settings.perMilisecondsTime
+				(cacheData: ICachedMessageData) =>
+					Date.now() - cacheData.timestamp < settings.perMilisecondsTime
 			);
 		// Count all badwords in cached messages.
 		const badwordsSum = filteredCache.reduce(
-			(amount: number, cacheData: string) => {
-				const splittedCache = cacheData.split('.');
-				const index = splittedCache.indexOf('badwords');
-				const badwordsAmount = Number(splittedCache.at(index + 1));
+			(amount: number, cacheData: ICachedMessageData) => {
+				const badwordsAmount = cacheData.badwords.length;
 				return amount + badwordsAmount;
 			},
 			0

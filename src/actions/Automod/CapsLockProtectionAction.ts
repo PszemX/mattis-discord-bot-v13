@@ -10,10 +10,9 @@ export class CapsLockProtectionAction extends BaseEventAction {
 		const settings = EventData.guildCache.settings.actions[this.name];
 		const { member } = EventData.args;
 		// Cached messages only including badwords written in set time.
-		const cachedMessages = EventData.guildCache.cacheManager.getMemberCache(
-			member
-		).messages;
-		return cachedMessages.at(-1).includes('capslock');
+		const cachedMessages =
+			EventData.guildCache.cacheManager.getMemberCache(member).messages;
+		return cachedMessages[0].capslock > settings.maxPercentage;
 	}
 
 	public async execute(EventData: IEventData) {

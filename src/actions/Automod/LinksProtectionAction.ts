@@ -1,5 +1,5 @@
 import { BaseEventAction } from '../../classes/BaseStructures/BaseEventAction';
-import { IEventData } from '../../typings';
+import { ICachedMessageData, IEventData } from '../../typings';
 
 export class LinksProtectionAction extends BaseEventAction {
 	public constructor() {
@@ -12,15 +12,9 @@ export class LinksProtectionAction extends BaseEventAction {
 		const cachedMessagesWithLinks = EventData.guildCache.cacheManager
 			.getMemberCache(member)
 			.messages.filter(
-				(cacheData: string) =>
-					cacheData.split('.').includes('links') &&
-					Date.now() - Number(cacheData.split('.').at(-1)) <
-						settings.perMilisecondsTime
+				(cacheData: ICachedMessageData) =>
+					Date.now() - cacheData.timestamp < settings.perMilisecondsTime
 			);
-		// console.log(cachedMessagesWithLinks);
-		for (const message of cachedMessagesWithLinks) {
-			// console.log(message.split('.'));
-		}
 		const enabledSites: string[] =
 			Object.keys(settings.enableSites || {}).filter(
 				(site) => settings.enableSites[site].enabled
