@@ -1,4 +1,4 @@
-import { Message, User } from 'discord.js';
+import { MessageMentions, Message, User } from 'discord.js';
 import latinize from 'latinize';
 import uri from 'urijs';
 import md5 from 'md5';
@@ -38,8 +38,8 @@ export class MessageCreateEvent extends BaseEvent {
 		const message: Message = EventData.args;
 		const cachedMessageData: ICachedMessageData = {
 			id: message.id,
-			messageLength: message.cleanContent.length,
-			content: md5(message.cleanContent),
+			messageLength: message.content.length,
+			content: md5(message.content),
 			badwords: await this.badwordsCache(EventData),
 			capslock: await this.capslockCache(EventData),
 			emojis: await this.emojiCache(EventData),
@@ -64,7 +64,7 @@ export class MessageCreateEvent extends BaseEvent {
 	private async badwordsCache(EventData: IEventData): Promise<string[]> {
 		const badwordsInMessage: string[] = [];
 		const settings = EventData.guildCache.settings.actions.badwordsProtection;
-		if (settings.enabled) {
+		if (/*settings.enabled*/ true) {
 			const message = latinize(EventData.args.content.toLowerCase());
 			const { length } = message;
 			let editedMessage = '';
@@ -92,14 +92,13 @@ export class MessageCreateEvent extends BaseEvent {
 	private async capslockCache(EventData: IEventData): Promise<number> {
 		let capslockAmount = 0;
 		const settings = EventData.guildCache.settings.actions.capsLockProtection;
-		if (settings.enabled) {
+		if (/*settings.enabled*/ true) {
 			const message = EventData.args.content;
 			if (message.length <= settings.minMessageLength) return capslockAmount;
 			const caps = message.toUpperCase();
 			const nocaps = message.toLowerCase();
 			let sum = 0;
 			let length = 0;
-
 			for (let i = 0; i < message.length; ++i) {
 				if (caps[i] != nocaps[i]) {
 					if (caps[i] === message[i]) ++sum;
@@ -114,7 +113,7 @@ export class MessageCreateEvent extends BaseEvent {
 	private async emojiCache(EventData: IEventData): Promise<number> {
 		const settings = EventData.guildCache.settings.actions.emojiProtection;
 		let emojiAmount = 0;
-		if (settings.enabled) {
+		if (/*settings.enabled*/ true) {
 			const outsideEmojiRegex = /(<a?)?:.+?:(\d{18}>)?/gi;
 			const emojiRegex =
 				/(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/gi;
@@ -134,7 +133,7 @@ export class MessageCreateEvent extends BaseEvent {
 	private async linksCache(EventData: IEventData): Promise<string[]> {
 		const links: string[] = [];
 		const settings = EventData.guildCache.settings.actions.linksProtection;
-		if (settings.enabled) {
+		if (/*settings.enabled*/ true) {
 			// @ts-ignore
 			uri.withinString(EventData.args.content, (u) => links.push(u) && u);
 		}
@@ -142,11 +141,23 @@ export class MessageCreateEvent extends BaseEvent {
 	}
 
 	private async mentionsCache(EventData: IEventData): Promise<string[]> {
-		const mentions: string[] = [];
+		let mentions: string[] = [];
 		const settings = EventData.guildCache.settings.actions.massPingProtection;
 		if (/*settings.enabled*/ true) {
 			const message: Message = EventData.args;
-			console.log(message.mentions);
+			const {
+				USERS_PATTERN,
+				CHANNELS_PATTERN,
+				ROLES_PATTERN,
+				EVERYONE_PATTERN,
+			} = MessageMentions;
+			const matchedMentions: RegExpMatchArray[] = [
+				...message.content.matchAll(USERS_PATTERN),
+				...message.content.matchAll(CHANNELS_PATTERN),
+				...message.content.matchAll(ROLES_PATTERN),
+				...message.content.matchAll(EVERYONE_PATTERN),
+			];
+			mentions = matchedMentions.map((i) => i[0]);
 		}
 		return mentions;
 	}
