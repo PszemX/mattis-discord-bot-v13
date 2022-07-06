@@ -26,14 +26,6 @@ export class MessageCreateEvent extends BaseEvent {
 		}
 	}
 
-	private getUserFromMention(mention: string): User | undefined {
-		const matches = /^<@!?(\d+)>$/.exec(mention);
-		if (!matches) return undefined;
-
-		const id = matches[1];
-		return this.mattis.users.cache.get(id);
-	}
-
 	private async cacheMessage(EventData: IEventData): Promise<void> {
 		const message: Message = EventData.args;
 		const cachedMessageData: ICachedMessageData = {
