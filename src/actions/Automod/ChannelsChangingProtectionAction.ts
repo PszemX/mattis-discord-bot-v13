@@ -7,11 +7,10 @@ export class ChannelsChangingProtectionAction extends BaseEventAction {
 	}
 
 	public async trigger(EventData: IEventData) {
-		if (
+		const checkChannels =
 			!EventData.args[1].channelId ||
-			EventData.args[0].channelId == EventData.args[1].channelId
-		)
-			return false;
+			EventData.args[0].channelId == EventData.args[1].channelId;
+		if (checkChannels) return false;
 		const settings = EventData.guildCache.settings.actions[this.name];
 		return (
 			EventData.guildCache.cacheManager
