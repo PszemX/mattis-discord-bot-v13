@@ -9,7 +9,6 @@ export class EmojiProtectionAction extends BaseEventAction {
 	public async trigger(EventData: IEventData) {
 		const settings = EventData.guildCache.settings.actions[this.name];
 		const { member } = EventData.args;
-		// Cached messages only including badwords written in set time.
 		const cachedMessages =
 			EventData.guildCache.cacheManager.getMemberCache(member).messages;
 		return cachedMessages[0].emojis > settings.maxPercentage;
