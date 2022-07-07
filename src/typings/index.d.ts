@@ -17,6 +17,7 @@ export interface IBadwordData {
 export interface ICachedMessageData {
 	id: string;
 	messageLength: number;
+	channelId: string;
 	content: string;
 	badwords: string[];
 	capslock: number;
@@ -24,7 +25,7 @@ export interface ICachedMessageData {
 	links: string[];
 	mentions: string[];
 	zalgos: number;
-	spoilers: string[];
+	spoilers: number;
 	timestamp: number;
 }
 

@@ -32,6 +32,7 @@ export class MessageCreateEvent extends BaseEvent {
 		const cachedMessageData: ICachedMessageData = {
 			id: message.id,
 			messageLength: length,
+			channelId: message.channelId,
 			content: md5(message.content),
 			badwords: await this.badwordsCache(EventData),
 			capslock: await this.capslockCache(EventData),
@@ -39,7 +40,7 @@ export class MessageCreateEvent extends BaseEvent {
 			links: await this.linksCache(EventData),
 			mentions: await this.mentionsCache(EventData),
 			zalgos: await this.zalgosCache(EventData),
-			spoilers: [],
+			spoilers: await this.spoilersCache(EventData),
 			timestamp: message.createdTimestamp,
 		};
 		console.log(cachedMessageData);
@@ -163,5 +164,17 @@ export class MessageCreateEvent extends BaseEvent {
 			zalgosAmount = parseFloat(zalgosAmount.toFixed(3));
 		}
 		return zalgosAmount;
+	}
+
+	private async spoilersCache(EventData: IEventData): Promise<number> {
+		let spoilersAmount = 0;
+		// const settings = EventData.guildCache.settings.actions.spoilersProtection;
+		if (/*settings.enabled*/ true) {
+			const message: string = EventData.args.content;
+			const matchedSpoilers = [...message.matchAll(/\|\|.+?\|\|/gi)] || [];
+			const spoilers = matchedSpoilers.map((i) => i[0]);
+			spoilersAmount = spoilers.length;
+		}
+		return spoilersAmount;
 	}
 }
