@@ -159,7 +159,7 @@ export class MessageCreateEvent extends BaseEvent {
 			if (message.length < settings.minMessageLength) {
 				return zalgosAmount;
 			}
-			const zalgos = message.filter((i) => i.match('/[\xCC\xCD]/')) || [];
+			const zalgos = message.filter((i) => i.match(/\p{M}{3,}/u)) || [];
 			zalgosAmount = (zalgos.length / message.length) * 100;
 			zalgosAmount = parseFloat(zalgosAmount.toFixed(3));
 		}
