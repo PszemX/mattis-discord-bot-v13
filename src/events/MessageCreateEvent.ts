@@ -36,10 +36,10 @@ export class MessageCreateEvent extends BaseEvent {
 			content: md5(message.content),
 			badwords: await this.badwordsCache(EventData),
 			capslock: await this.capslockCache(EventData),
-			emojis: await this.emojiCache(EventData),
+			emojis: await this.emojisCache(EventData),
 			links: await this.linksCache(EventData),
 			mentions: await this.mentionsCache(EventData),
-			zalgos: [],
+			zalgos: await this.zalgosCache(EventData),
 			spoilers: [],
 			timestamp: message.createdTimestamp,
 		};
@@ -100,9 +100,9 @@ export class MessageCreateEvent extends BaseEvent {
 		return capslockAmount;
 	}
 
-	private async emojiCache(EventData: IEventData): Promise<number> {
-		const settings = EventData.guildCache.settings.actions.emojiProtection;
+	private async emojisCache(EventData: IEventData): Promise<number> {
 		let emojisAmout = 0;
+		const settings = EventData.guildCache.settings.actions.emojiProtection;
 		if (/*settings.enabled*/ true) {
 			const emojiRegex =
 				/(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/gi;
@@ -147,5 +147,22 @@ export class MessageCreateEvent extends BaseEvent {
 			mentions = matchedMentions.map((i) => i[0]);
 		}
 		return mentions;
+	}
+
+	private async zalgosCache(EventData: IEventData): Promise<number> {
+		let zalgosAmount = 0;
+		const settings = EventData.guildCache.settings.actions.zalgosProtection;
+		if (/*settings.enabled*/ true) {
+			const message: string[] = this.mattis.utils.convertTextToArray(
+				EventData.args.content
+			);
+			if (message.length < settings.minMessageLength) {
+				return zalgosAmount;
+			}
+			const zalgos = message.filter((i) => i.match('/[\xCC\xCD]/')) || [];
+			zalgosAmount = (zalgos.length / message.length) * 100;
+			zalgosAmount = parseFloat(zalgosAmount.toFixed(3));
+		}
+		return zalgosAmount;
 	}
 }

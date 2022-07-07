@@ -23,7 +23,7 @@ export interface ICachedMessageData {
 	emojis: number;
 	links: string[];
 	mentions: string[];
-	zalgos: string[];
+	zalgos: number;
 	spoilers: string[];
 	timestamp: number;
 }
