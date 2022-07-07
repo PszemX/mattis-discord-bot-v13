@@ -1,4 +1,5 @@
 import { MessageMentions, Message, User } from 'discord.js';
+import GraphemeSplitter from 'grapheme-splitter';
 import latinize from 'latinize';
 import uri from 'urijs';
 import md5 from 'md5';
@@ -89,30 +90,33 @@ export class MessageCreateEvent extends BaseEvent {
 			if (message.length < settings.minMessageLength) {
 				return capslockAmount;
 			}
-			const capital = message.match(/[A-Z]/g);
+			const capital = message.match(/[A-Z]/g) || [];
 			capslockAmount = (capital.length / message.length) * 100;
+			capslockAmount = parseFloat(capslockAmount.toFixed(3));
 		}
 		return capslockAmount;
 	}
 
 	private async emojiCache(EventData: IEventData): Promise<number> {
 		const settings = EventData.guildCache.settings.actions.emojiProtection;
-		let emojiAmount = 0;
+		let emojisAmout = 0;
 		if (/*settings.enabled*/ true) {
 			const outsideEmojiRegex = /(<a?)?:.+?:(\d{18}>)?/gi;
 			const emojiRegex =
 				/(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/gi;
-			const message = EventData.args.content
-				.replace(outsideEmojiRegex, '️♥')
-				.replace(emojiRegex, '♥')
-				.replace(/️+/g, '')
-				.replace(/ /g, '');
-			if (message.length <= settings.minMessageLength) return emojiAmount;
-			const messageWithoutEmojis = message.replace(/♥/g, '');
-			const emojisAmout = message.length - messageWithoutEmojis.length;
-			emojiAmount = (emojisAmout / message.length) * 100;
+			const splitter = new GraphemeSplitter();
+			const message: string[] = splitter.splitGraphemes(
+				EventData.args.content
+					.replace(outsideEmojiRegex, '️♥')
+					.replace(/️+/g, '')
+					.replace(/ /g, '')
+			);
+			if (message.length <= settings.minMessageLength) return emojisAmout;
+			const onlyEmojis = message.filter((i) => i.match(emojiRegex));
+			emojisAmout = (onlyEmojis.length / message.length) * 100;
+			emojisAmout = parseFloat(emojisAmout.toFixed(3));
 		}
-		return emojiAmount;
+		return emojisAmout;
 	}
 
 	private async linksCache(EventData: IEventData): Promise<string[]> {
