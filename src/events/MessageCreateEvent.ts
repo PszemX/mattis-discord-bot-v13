@@ -1,5 +1,4 @@
-import { MessageMentions, Message, User } from 'discord.js';
-import GraphemeSplitter from 'grapheme-splitter';
+import { MessageMentions, Message } from 'discord.js';
 import latinize from 'latinize';
 import uri from 'urijs';
 import md5 from 'md5';

@@ -1,6 +1,6 @@
 import { Channel, Collection, GuildMember } from 'discord.js';
+import { ICachedMessageData, IChannelCache, IMemberCache } from '../../typings';
 import { guildCacheLastDuration } from '../../config';
-import { IChannelCache, IMemberCache } from '../../typings';
 
 export class CacheManager {
 	public membersCache: Collection<string, IMemberCache> = new Collection();
@@ -38,9 +38,8 @@ export class CacheManager {
 					this.membersCache.get(memberId)[cache] = this.membersCache
 						.get(memberId)
 						[cache].filter(
-							(cacheData: string) =>
-								Date.now() - Number(cacheData.split('.').at(-1)) <
-								guildCacheLastDuration
+							(cacheData: ICachedMessageData) =>
+								Date.now() - cacheData.timestamp < guildCacheLastDuration
 						);
 				}
 			}
