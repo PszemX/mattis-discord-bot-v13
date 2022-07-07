@@ -1,10 +1,13 @@
+import GraphemeSplitter from 'grapheme-splitter';
 import { Guild } from 'discord.js';
 import { parse, resolve } from 'path';
 import { IEventData } from '../typings';
 import { Mattis } from '../classes/Mattis';
 
 export class ClientUtils {
-	public constructor(public readonly client: Mattis) {}
+	private splitter = new GraphemeSplitter();
+
+	constructor(public readonly client: Mattis) {}
 
 	public async getUserCount(): Promise<number> {
 		let membersCount: number = 0;
@@ -96,6 +99,14 @@ export class ClientUtils {
 
 		return this.client.guilds.cache.filter((x) => x.queue?.playing === true)
 			.size;
+	}
+
+	public convertTextToArray(text: string): string[] {
+		const outsideEmojiRegex = /(<a?)?:.+?:(\d{18}>)?/gi;
+		const message: string[] = this.splitter.splitGraphemes(
+			text.replace(outsideEmojiRegex, '️♥').replace(/️+/g, '').replace(/ /g, '')
+		);
+		return message;
 	}
 
 	public async import<T>(path: string, ...args: any[]): Promise<T | undefined> {

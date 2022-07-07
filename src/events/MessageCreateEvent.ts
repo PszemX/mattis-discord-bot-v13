@@ -29,9 +29,10 @@ export class MessageCreateEvent extends BaseEvent {
 
 	private async cacheMessage(EventData: IEventData): Promise<void> {
 		const message: Message = EventData.args;
+		const { length } = this.mattis.utils.convertTextToArray(message.content);
 		const cachedMessageData: ICachedMessageData = {
 			id: message.id,
-			messageLength: message.content.length,
+			messageLength: length,
 			content: md5(message.content),
 			badwords: await this.badwordsCache(EventData),
 			capslock: await this.capslockCache(EventData),
@@ -86,11 +87,13 @@ export class MessageCreateEvent extends BaseEvent {
 		let capslockAmount = 0;
 		const settings = EventData.guildCache.settings.actions.capsLockProtection;
 		if (/*settings.enabled*/ true) {
-			const message = EventData.args.content.replace(/ /g, '');
+			const message: string[] = this.mattis.utils.convertTextToArray(
+				EventData.args.content
+			);
 			if (message.length < settings.minMessageLength) {
 				return capslockAmount;
 			}
-			const capital = message.match(/[A-Z]/g) || [];
+			const capital = message.filter((i) => i.match(/[A-Z]/g)) || [];
 			capslockAmount = (capital.length / message.length) * 100;
 			capslockAmount = parseFloat(capslockAmount.toFixed(3));
 		}
@@ -101,15 +104,10 @@ export class MessageCreateEvent extends BaseEvent {
 		const settings = EventData.guildCache.settings.actions.emojiProtection;
 		let emojisAmout = 0;
 		if (/*settings.enabled*/ true) {
-			const outsideEmojiRegex = /(<a?)?:.+?:(\d{18}>)?/gi;
 			const emojiRegex =
 				/(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/gi;
-			const splitter = new GraphemeSplitter();
-			const message: string[] = splitter.splitGraphemes(
+			const message: string[] = this.mattis.utils.convertTextToArray(
 				EventData.args.content
-					.replace(outsideEmojiRegex, '️♥')
-					.replace(/️+/g, '')
-					.replace(/ /g, '')
 			);
 			if (message.length <= settings.minMessageLength) return emojisAmout;
 			const onlyEmojis = message.filter((i) => i.match(emojiRegex));
