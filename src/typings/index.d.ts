@@ -26,6 +26,7 @@ export interface ICachedMessageData {
 	mentions: string[];
 	zalgos: number;
 	spoilers: number;
+	files: string[];
 	timestamp: number;
 }
 

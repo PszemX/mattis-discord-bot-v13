@@ -41,6 +41,7 @@ export class MessageCreateEvent extends BaseEvent {
 			mentions: await this.mentionsCache(EventData),
 			zalgos: await this.zalgosCache(EventData),
 			spoilers: await this.spoilersCache(EventData),
+			files: await this.fileTypesCache(EventData),
 			timestamp: message.createdTimestamp,
 		};
 		console.log(cachedMessageData);
@@ -173,5 +174,15 @@ export class MessageCreateEvent extends BaseEvent {
 			spoilersAmount = spoilers.length;
 		}
 		return spoilersAmount;
+	}
+
+	private async fileTypesCache(EventData: IEventData): Promise<string[]> {
+		let files: string[] = [];
+		const settings = EventData.guildCache.settings.actions.fileTypesProtection;
+		if (/*settings.enabled*/ true) {
+			const message: Message = EventData.args;
+			files = message.attachments.map((i) => i.id);
+		}
+		return files;
 	}
 }
