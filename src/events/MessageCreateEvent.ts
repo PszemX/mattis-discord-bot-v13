@@ -93,9 +93,8 @@ export class MessageCreateEvent extends BaseEvent {
 			if (message.length < settings.minMessageLength) {
 				return capslockAmount;
 			}
-			const capital = message.filter((i) => i.match(/[A-Z]/g)) || [];
-			capslockAmount = (capital.length / message.length) * 100;
-			capslockAmount = parseFloat(capslockAmount.toFixed(3));
+			const capslock = message.filter((i) => i.match(/[A-Z]/g)) || [];
+			capslockAmount = capslock.length;
 		}
 		return capslockAmount;
 	}
@@ -110,9 +109,8 @@ export class MessageCreateEvent extends BaseEvent {
 				EventData.args.content
 			);
 			if (message.length <= settings.minMessageLength) return emojisAmout;
-			const onlyEmojis = message.filter((i) => i.match(emojiRegex));
-			emojisAmout = (onlyEmojis.length / message.length) * 100;
-			emojisAmout = parseFloat(emojisAmout.toFixed(3));
+			const emojis = message.filter((i) => i.match(emojiRegex));
+			emojisAmout = emojis.length;
 		}
 		return emojisAmout;
 	}
@@ -160,8 +158,7 @@ export class MessageCreateEvent extends BaseEvent {
 				return zalgosAmount;
 			}
 			const zalgos = message.filter((i) => i.match(/\p{M}{3,}/u)) || [];
-			zalgosAmount = (zalgos.length / message.length) * 100;
-			zalgosAmount = parseFloat(zalgosAmount.toFixed(3));
+			zalgosAmount = zalgos.length;
 		}
 		return zalgosAmount;
 	}
