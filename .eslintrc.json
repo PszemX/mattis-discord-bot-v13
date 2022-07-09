@@ -41,6 +41,7 @@
 		"no-await-in-loop": "off",
 		"no-restricted-syntax": "off",
 		"no-plusplus": "off",
+		"no-continue": "off",
 		"eqeqeq": "off",
 		"operator-linebreak": "off",
 		"@angular-eslint/no-empty-lifecycle-method": "off"

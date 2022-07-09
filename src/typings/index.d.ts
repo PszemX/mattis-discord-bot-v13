@@ -8,10 +8,8 @@ import {
 import { GuildCache } from '../classes/GuildCache';
 import { Mattis } from '../classes/Mattis';
 
-export interface IBadwordData {
-	badword: string;
-	message: Message;
-	timestamp: number;
+export interface IRepeatedWordsCachedObject {
+	[key: string]: number;
 }
 
 export interface ICachedMessageData {
@@ -19,6 +17,7 @@ export interface ICachedMessageData {
 	messageLength: number;
 	channelId: string;
 	content: string;
+	repeatedWords: IRepeatedWordsCachedObject;
 	badwords: string[];
 	capslock: number;
 	emojis: number;

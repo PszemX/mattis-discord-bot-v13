@@ -3,7 +3,11 @@ import latinize from 'latinize';
 import uri from 'urijs';
 import md5 from 'md5';
 import { BaseEvent } from '../classes/BaseStructures/BaseEvent';
-import { IEventData, ICachedMessageData } from '../typings';
+import {
+	IEventData,
+	ICachedMessageData,
+	IRepeatedWordsCachedObject,
+} from '../typings';
 import badwords from '../utilities/badwords.json';
 
 export class MessageCreateEvent extends BaseEvent {
@@ -34,6 +38,7 @@ export class MessageCreateEvent extends BaseEvent {
 			messageLength: length,
 			channelId: message.channelId,
 			content: md5(message.content),
+			repeatedWords: await this.repeatedWordsCache(EventData),
 			badwords: await this.badwordsCache(EventData),
 			capslock: await this.capslockCache(EventData),
 			emojis: await this.emojisCache(EventData),
@@ -54,6 +59,31 @@ export class MessageCreateEvent extends BaseEvent {
 			.messages.push(
 				`${md5(message.cleanContent)}.${message.createdTimestamp}`
 			);
+	}
+
+	private async repeatedWordsCache(
+		EventData: IEventData
+	): Promise<IRepeatedWordsCachedObject> {
+		const repeatedWords: IRepeatedWordsCachedObject = {};
+		// const settings =
+		// 	EventData.guildCache.settings.actions.repeatedWordsProtection;
+		if (/*settings.enabled*/ true) {
+			const messageWordsArray: string[] = EventData.args.content
+				.toLowerCase()
+				.replace(/[^\w\s]/gm, '')
+				.split(' ');
+			for (const word of Array.from(new Set(messageWordsArray))) {
+				if (repeatedWords[word]) {
+					continue;
+				}
+				const { length } = messageWordsArray.filter((w) => w === word);
+				if (length < 2) {
+					continue;
+				}
+				repeatedWords[word] = length;
+			}
+		}
+		return repeatedWords;
 	}
 
 	private async badwordsCache(EventData: IEventData): Promise<string[]> {
@@ -109,7 +139,9 @@ export class MessageCreateEvent extends BaseEvent {
 			const message: string[] = this.mattis.utils.convertTextToArray(
 				EventData.args.content
 			);
-			if (message.length <= settings.minMessageLength) return emojisAmout;
+			if (message.length <= settings.minMessageLength) {
+				return emojisAmout;
+			}
 			const emojis = message.filter((i) => i.match(emojiRegex));
 			emojisAmout = emojis.length;
 		}
