@@ -65,8 +65,8 @@ export class MessageCreateEvent extends BaseEvent {
 		EventData: IEventData
 	): Promise<IRepeatedWordsCachedObject> {
 		const repeatedWords: IRepeatedWordsCachedObject = {};
-		// const settings =
-		// 	EventData.guildCache.settings.actions.repeatedWordsProtection;
+		const settings =
+			EventData.guildCache.settings.actions.repeatedWordsProtection;
 		if (/*settings.enabled*/ true) {
 			const messageWordsArray: string[] = EventData.args.content
 				.toLowerCase()
