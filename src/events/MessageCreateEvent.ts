@@ -1,4 +1,4 @@
-import { MessageMentions, Message } from 'discord.js';
+import { MessageMentions, Message, GuildMember } from 'discord.js';
 import latinize from 'latinize';
 import uri from 'urijs';
 import md5 from 'md5';
@@ -7,6 +7,7 @@ import {
 	IEventData,
 	ICachedMessageData,
 	IRepeatedWordsCachedObject,
+	IGuildSettings,
 } from '../typings';
 import badwords from '../utilities/badwords.json';
 
@@ -89,7 +90,11 @@ export class MessageCreateEvent extends BaseEvent {
 	private async badwordsCache(EventData: IEventData): Promise<string[]> {
 		const badwordsInMessage: string[] = [];
 		const settings = EventData.guildCache.settings.actions.badwordsProtection;
-		if (/*settings.enabled*/ true) {
+		const permittedToCache: boolean = this.checkPermissions(
+			settings,
+			EventData.args
+		);
+		if (/*settings.enabled*/ true && permittedToCache) {
 			const message = latinize(EventData.args.content.toLowerCase());
 			const { length } = message;
 			let editedMessage = '';
@@ -216,5 +221,59 @@ export class MessageCreateEvent extends BaseEvent {
 			files = message.attachments.map((i) => i.id);
 		}
 		return files;
+	}
+
+	private checkPermissions(
+		actionSettings: IGuildSettings,
+		message: Message
+	): boolean {
+		// Check roles permission.
+		const permissionByRole: boolean = this.checkRolesPermission(
+			actionSettings.rolesPermissionMode,
+			message
+		);
+
+		// Check channel permission.
+		const permissionByChannel: boolean = this.checkChannelsPermission(
+			actionSettings.channelsPermissionMode,
+			message
+		);
+		return permissionByRole && permissionByChannel;
+	}
+
+	private checkRolesPermission(
+		rolesPermissionMode: IGuildSettings,
+		message: Message
+	): boolean {
+		const messageMember: GuildMember = message.member!;
+		if (rolesPermissionMode.onlyAllowed.enabled) {
+			const allowedRoles = rolesPermissionMode.onlyAllowed.roles;
+			return !allowedRoles.some((role: string) =>
+				messageMember.roles.cache.has(role)
+			);
+		}
+		if (rolesPermissionMode.onlyBlocked.enabled) {
+			const blockedRoles = rolesPermissionMode.onlyBlocked.roles;
+			return blockedRoles.some((role: string) =>
+				messageMember.roles.cache.has(role)
+			);
+		}
+		return true;
+	}
+
+	private checkChannelsPermission(
+		channelsPermissionMode: IGuildSettings,
+		message: Message
+	): boolean {
+		const messageChannel: string = message.channelId;
+		if (channelsPermissionMode.onlyAllowed.enabled) {
+			const allowedChannels = channelsPermissionMode.onlyAllowed.channels;
+			return !allowedChannels.includes(messageChannel);
+		}
+		if (channelsPermissionMode.onlyBlocked.enabled) {
+			const blockedChannels = channelsPermissionMode.onlyBlocked.channels;
+			return blockedChannels.includes(messageChannel);
+		}
+		return true;
 	}
 }

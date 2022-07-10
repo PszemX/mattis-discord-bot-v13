@@ -1,13 +1,6 @@
 import { BaseCommand } from '../../classes/BaseStructures/BaseCommand';
 import { IEventData } from '../../typings';
 import { guildDataDefaultModel } from '../../models/guildDataDefault';
-import {
-	diff,
-	addedDiff,
-	deletedDiff,
-	updatedDiff,
-	detailedDiff,
-} from 'deep-object-diff';
 
 export class TestCommand extends BaseCommand {
 	public constructor() {

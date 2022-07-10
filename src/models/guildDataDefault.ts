@@ -238,10 +238,31 @@ export const guildDataDefaultModel = (guild: Guild | null) => {
 				},
 				badwordsProtection: {
 					enabled: false,
-					ignoredRoles: [],
-					ignoredChannels: [],
-					maxBadwordsCount: 3,
-					perMilisecondsTime: 15000,
+					badwordsList: [],
+					includeGeneralBadwordsList: true,
+					rolesPermissionMode: {
+						onlyAllowed: {
+							enabled: true,
+							roles: [],
+						},
+						onlyBlocked: {
+							enabled: false,
+							roles: [],
+						},
+					},
+					channelsPermissionMode: {
+						onlyAllowed: {
+							enabled: true,
+							channels: [],
+						},
+						onlyBlocked: {
+							enabled: false,
+							channels: [],
+						},
+					},
+					maxBadwordsAmountPerMessage: 3,
+					maxBadwordsAmountPerTime: 10,
+					milisecondsTimeLimit: 15000,
 					punishment: {
 						delete: false,
 						warn: false,
