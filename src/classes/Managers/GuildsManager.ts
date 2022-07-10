@@ -1,8 +1,17 @@
+import {
+	diff,
+	addedDiff,
+	deletedDiff,
+	updatedDiff,
+	detailedDiff,
+} from 'deep-object-diff';
 import { Collection, Guild } from 'discord.js';
+import { guildDataKeysUpdateRequest } from '../../utilities/guildDataUpdatedKeys';
+import { guildDataDefaultModel } from '../../models/guildDataDefault';
 import { updateGuildsData } from '../../utilities/updateGuildsData';
-import { Mattis } from '../Mattis';
+import { IGuildSettings } from '../../typings';
 import { GuildCache } from '../GuildCache';
-import { guildDataModel } from '../../models/guildData';
+import { Mattis } from '../Mattis';
 
 export class GuildsManager extends Collection<string, any> {
 	public constructor(public readonly Mattis: Mattis) {
@@ -35,44 +44,88 @@ export class GuildsManager extends Collection<string, any> {
 		);
 		const updatedGuildSettings = this.updateObject(
 			guildSettings,
-			guildDataModel(fetchedGuild)
+			guildDataDefaultModel(fetchedGuild)
 		);
-		await this.Mattis.Database.guildsData(guildId, 'settings').replaceOne(
-			{ id: guildId },
-			updatedGuildSettings
-		);
+		// console.log(updatedGuildSettings);
+		// await this.Mattis.Database.guildsData(guildId, 'settings').replaceOne(
+		// 	{ id: guildId },
+		// 	updatedGuildSettings
+		// );
 	}
 
-	private updateObject(objectOne: any, objectTwo: any) {
-		// Based on whole guildsData.ts object.
-		const changed: any = {};
-		for (const key in objectTwo) {
-			if (
-				typeof objectTwo[key] === 'object' &&
-				!Array.isArray(objectTwo[key])
-			) {
-				if (objectOne[key] == undefined) {
-					changed[key] = objectTwo[key];
-				} else {
-					changed[key] = this.updateObject(objectOne[key], objectTwo[key]);
-				}
+	private updateObject(actualObject: any, expectedObject: IGuildSettings) {
+		// Update key names for guild settings.
+		const modifiedActualObject: IGuildSettings = this.updateObjectKeyNames(
+			actualObject,
+			guildDataKeysUpdateRequest
+		);
+
+		// Update other guild settings entires (add or remove).
+		const updatedObject: IGuildSettings = this.updateObjectEntries(
+			modifiedActualObject,
+			expectedObject
+		);
+		return updatedObject;
+	}
+
+	private updateObjectKeyNames(
+		actualObject: IGuildSettings,
+		requestedModifications: any[]
+	) {
+		let modifiedActualObject: IGuildSettings = { ...actualObject };
+		for (const request of Object.values(requestedModifications)) {
+			modifiedActualObject = {
+				...this.changeKeyName(modifiedActualObject, request),
+			};
+		}
+		console.log(modifiedActualObject);
+		return modifiedActualObject;
+	}
+
+	private changeKeyName(
+		actualObject: IGuildSettings,
+		request: IGuildSettings
+	): IGuildSettings {
+		const changedActualObject = { ...actualObject };
+		for (const key in request) {
+			if (typeof request[key] === 'object' && !Array.isArray(request[key])) {
+				changedActualObject[key] = {
+					...this.changeKeyName(changedActualObject[key], request[key]),
+				};
 			} else {
-				changed[key] =
-					objectOne[key] == undefined ? objectTwo[key] : objectOne[key];
+				changedActualObject[request[key]] = changedActualObject[key];
+				delete changedActualObject[key];
 			}
 		}
-		// // Based only on new things in settings.
-		// let changed: any = objectOne;
-		// const comparison: any = addedDiff(objectOne, objectTwo);
-		// for (const key in comparison) {
-		// 	if (typeof comparison[key] === 'object') {
-		// 		if (objectOne[key] == undefined) objectOne[key] = {};
-		// 		changed[key] = this.changedObject(objectOne[key], objectTwo[key]);
-		// 	} else {
-		// 		changed[key] = comparison[key];
-		// 	}
-		// }
-		return changed;
+		return changedActualObject;
+	}
+
+	private updateObjectEntries(
+		actualObject: IGuildSettings,
+		expectedObject: IGuildSettings
+	) {
+		const updatedObject: IGuildSettings = {};
+		for (const key in expectedObject) {
+			if (
+				typeof expectedObject[key] === 'object' &&
+				!Array.isArray(expectedObject[key])
+			) {
+				if (actualObject[key] == undefined) {
+					updatedObject[key] = expectedObject[key];
+				} else {
+					updatedObject[key] = this.updateObjectEntries(
+						actualObject[key],
+						expectedObject[key]
+					);
+				}
+			} else {
+				updatedObject[key] =
+					actualObject[key] == undefined
+						? expectedObject[key]
+						: actualObject[key];
+			}
+		}
+		return updatedObject;
 	}
 
 	private static async runJob(guildCache: GuildCache) {

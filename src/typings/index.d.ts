@@ -42,6 +42,10 @@ export interface ILoggerOptions {
 	prod: Boolean;
 }
 
+export interface IGuildSettings {
+	[key: string]: any;
+}
+
 export interface IEvent {
 	readonly name: keyof ClientEvents;
 	execute(...args: any): Promise<void>;

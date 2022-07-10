@@ -1,6 +1,6 @@
 import { BaseCommand } from '../../classes/BaseStructures/BaseCommand';
 import { IEventData } from '../../typings';
-import { guildDataModel } from '../../models/guildData';
+import { guildDataDefaultModel } from '../../models/guildDataDefault';
 import {
 	diff,
 	addedDiff,
@@ -33,7 +33,10 @@ export class TestCommand extends BaseCommand {
 			const guildSettings: any = await EventData.mattis.Database.guildSettings(
 				guild.id
 			);
-			const changed = this.changedObject(guildSettings, guildDataModel(guild));
+			const changed = this.changedObject(
+				guildSettings,
+				guildDataDefaultModel(guild)
+			);
 			await EventData.mattis.Guilds.updateDatabaseGuildSettings(guild.id);
 		}
 		await EventData.args.delete();

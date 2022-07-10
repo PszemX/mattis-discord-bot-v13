@@ -1,7 +1,7 @@
 import { Guild } from 'discord.js';
 import { defaultPrefix, baseLanguage } from '../config';
 
-export const guildDataModel = (guild: Guild | null) => {
+export const guildDataDefaultModel = (guild: Guild | null) => {
 	if (guild) {
 		return {
 			id: guild.id,
@@ -913,7 +913,6 @@ export const guildDataModel = (guild: Guild | null) => {
 				},
 			},
 		};
-	} else {
-		return {};
 	}
+	return {};
 };

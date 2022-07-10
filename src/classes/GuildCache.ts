@@ -1,9 +1,10 @@
-import { JobsManager } from './Managers/JobsManager';
 import { CacheManager } from './Managers/CacheManager';
+import { JobsManager } from './Managers/JobsManager';
 import { guildCacheLastInterval } from '../config';
+import { IGuildSettings } from '../typings';
 
 export class GuildCache {
-	public settings: any;
+	public settings: IGuildSettings;
 	public actionsByEvent: any = {
 		command: [],
 		job: [],

@@ -1,6 +1,6 @@
 import { Guild } from 'discord.js';
 import { BaseEvent } from '../classes/BaseStructures/BaseEvent';
-import { guildDataModel } from '../models/guildData';
+import { guildDataDefaultModel } from '../models/guildDataDefault';
 
 export class GuildCreateEvent extends BaseEvent {
 	public constructor(mattis: BaseEvent['mattis']) {
@@ -10,7 +10,7 @@ export class GuildCreateEvent extends BaseEvent {
 	public async execute(guild: Guild): Promise<void> {
 		if (await this.checkGuildDatabaseExistance(guild.id)) return;
 		await this.mattis.Database.guildsData(guild.id, 'settings')
-			.insertOne(guildDataModel(guild))
+			.insertOne(guildDataDefaultModel(guild))
 			.then(() => {
 				this.mattis.Guilds.updateGuildsData(guild.id);
 				this.mattis.Logger.debug(`Serwer ${guild.id} dodany do bazy danych.`);
