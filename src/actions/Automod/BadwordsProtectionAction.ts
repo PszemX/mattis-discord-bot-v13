@@ -9,14 +9,19 @@ export class BadwordsProtectionAction extends BaseEventAction {
 	public async trigger(EventData: IEventData) {
 		const settings = EventData.guildCache.settings.actions[this.name];
 		const { member } = EventData.args;
-		// Cached messages only including badwords written in set time.
-		const filteredCache = EventData.guildCache.cacheManager
-			.getMemberCache(member)
-			.messages.filter(
-				(cacheData: ICachedMessageData) =>
-					Date.now() - cacheData.timestamp < settings.perMilisecondsTime
-			);
-		// Count all badwords in cached messages.
+		const messageMemberCache =
+			EventData.guildCache.cacheManager.getMemberCache(member);
+		const cachedMessages = messageMemberCache.messages;
+		const maxBadwordsPerMessage = settings.maxBadwordsAmountPerMessage;
+		// Check if last member's message contains less badwords than allowed.
+		if (cachedMessages.at(-1).badwords.length > maxBadwordsPerMessage) {
+			return true;
+		}
+		// Check if member's messages in time limit contains less badwords than allowed.
+		const filteredCache = cachedMessages.filter(
+			(cacheData: ICachedMessageData) =>
+				Date.now() - cacheData.timestamp < settings.milisecondsTimeLimit
+		);
 		const badwordsSum = filteredCache.reduce(
 			(amount: number, cacheData: ICachedMessageData) => {
 				const badwordsAmount = cacheData.badwords.length;
@@ -24,7 +29,7 @@ export class BadwordsProtectionAction extends BaseEventAction {
 			},
 			0
 		);
-		return badwordsSum > settings.maxBadwordsCount;
+		return badwordsSum > settings.maxBadwordsAmountPerTime;
 	}
 
 	public async execute(EventData: IEventData) {
