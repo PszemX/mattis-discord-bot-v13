@@ -1,10 +1,3 @@
-import {
-	diff,
-	addedDiff,
-	deletedDiff,
-	updatedDiff,
-	detailedDiff,
-} from 'deep-object-diff';
 import { Collection, Guild } from 'discord.js';
 import { guildDataKeysUpdateRequest } from '../../utilities/guildDataUpdatedKeys';
 import { guildDataDefaultModel } from '../../models/guildDataDefault';

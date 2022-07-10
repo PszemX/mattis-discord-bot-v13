@@ -1,7 +1,1 @@
-export const guildDataKeysUpdateRequest: any[] = [
-	{
-		actions: {
-			welcomeRole: 'welcomeRoles',
-		},
-	},
-];
+export const guildDataKeysUpdateRequest: any[] = [];
