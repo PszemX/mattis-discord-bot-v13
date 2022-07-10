@@ -105,9 +105,12 @@ export class MessageCreateEvent extends BaseEvent {
 				}
 				singleLetter = message[i];
 			}
+			const guildBadwords = settings.badwordsList.map((badword: string) =>
+				badword.toLowerCase()
+			);
 			const badwordsList = settings.includeGeneralBadwordsList
-				? settings.badwordsList.concat(badwords)
-				: settings.badwordsList;
+				? guildBadwords.concat(badwords)
+				: guildBadwords;
 			for (const badword of badwordsList) {
 				const editedMessageLength =
 					editedMessage.match(new RegExp(badword, 'gi'))?.length || 0;
