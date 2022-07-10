@@ -94,7 +94,7 @@ export class MessageCreateEvent extends BaseEvent {
 			settings,
 			EventData.args
 		);
-		if (/*settings.enabled*/ true && permittedToCache) {
+		if (settings.enabled && permittedToCache) {
 			const message = latinize(EventData.args.content.toLowerCase());
 			const { length } = message;
 			let editedMessage = '';
