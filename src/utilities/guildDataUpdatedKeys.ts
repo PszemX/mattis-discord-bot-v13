@@ -1,12 +1,7 @@
 export const guildDataKeysUpdateRequest: any[] = [
 	{
 		actions: {
-			test: {
-				aliases: 'triggers',
-			},
+			welcomeRole: 'welcomeRoles',
 		},
-	},
-	{
-		actions: 'akcje',
 	},
 ];

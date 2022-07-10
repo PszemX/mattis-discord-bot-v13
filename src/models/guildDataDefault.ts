@@ -38,9 +38,9 @@ export const guildDataDefaultModel = (guild: Guild | null) => {
 					text: '',
 					deleteTime: 0,
 				},
-				welcomeRole: {
+				welcomeRoles: {
 					enabled: false,
-					roleId: '',
+					roles: [],
 				},
 				messageVerification: {
 					enabled: false,

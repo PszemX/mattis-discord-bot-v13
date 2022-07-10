@@ -47,10 +47,10 @@ export class GuildsManager extends Collection<string, any> {
 			guildDataDefaultModel(fetchedGuild)
 		);
 		// console.log(updatedGuildSettings);
-		// await this.Mattis.Database.guildsData(guildId, 'settings').replaceOne(
-		// 	{ id: guildId },
-		// 	updatedGuildSettings
-		// );
+		await this.Mattis.Database.guildsData(guildId, 'settings').replaceOne(
+			{ id: guildId },
+			updatedGuildSettings
+		);
 	}
 
 	private updateObject(actualObject: any, expectedObject: IGuildSettings) {
@@ -78,7 +78,6 @@ export class GuildsManager extends Collection<string, any> {
 				...this.changeKeyName(modifiedActualObject, request),
 			};
 		}
-		console.log(modifiedActualObject);
 		return modifiedActualObject;
 	}
 
@@ -88,13 +87,15 @@ export class GuildsManager extends Collection<string, any> {
 	): IGuildSettings {
 		const changedActualObject = { ...actualObject };
 		for (const key in request) {
-			if (typeof request[key] === 'object' && !Array.isArray(request[key])) {
-				changedActualObject[key] = {
-					...this.changeKeyName(changedActualObject[key], request[key]),
-				};
-			} else {
-				changedActualObject[request[key]] = changedActualObject[key];
-				delete changedActualObject[key];
+			if (changedActualObject[key]) {
+				if (typeof request[key] === 'object' && !Array.isArray(request[key])) {
+					changedActualObject[key] = {
+						...this.changeKeyName(changedActualObject[key], request[key]),
+					};
+				} else {
+					changedActualObject[request[key]] = changedActualObject[key];
+					delete changedActualObject[key];
+				}
 			}
 		}
 		return changedActualObject;
