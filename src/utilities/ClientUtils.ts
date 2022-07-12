@@ -1,7 +1,7 @@
 import GraphemeSplitter from 'grapheme-splitter';
-import { Guild } from 'discord.js';
+import { Guild, Message } from 'discord.js';
 import { parse, resolve } from 'path';
-import { IEventData } from '../typings';
+import { IEventData, IGuildSettings } from '../typings';
 import { Mattis } from '../classes/Mattis';
 
 export class ClientUtils {
@@ -108,6 +108,16 @@ export class ClientUtils {
 		);
 		return message;
 	}
+
+	public async punishMember(
+		settings: IGuildSettings,
+		member: Member
+	): Promise<void> {}
+
+	public async responseMember(
+		settings: IGuildSettings,
+		member: Member
+	): Promise<Message> {}
 
 	public async import<T>(path: string, ...args: any[]): Promise<T | undefined> {
 		const file = await import(resolve(path)).then((m) => m[parse(path).name]);

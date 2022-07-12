@@ -7,6 +7,9 @@ export class LinksProtectionAction extends BaseEventAction {
 	}
 
 	public async trigger(EventData: IEventData) {
+		const discordInviteRegex =
+			/(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/.+[a-z]/g;
+
 		const settings = EventData.guildCache.settings.actions[this.name];
 		const { member } = EventData.args;
 		const cachedMessagesWithLinks = EventData.guildCache.cacheManager

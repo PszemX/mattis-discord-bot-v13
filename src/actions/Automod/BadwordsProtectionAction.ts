@@ -34,8 +34,11 @@ export class BadwordsProtectionAction extends BaseEventAction {
 
 	public async execute(EventData: IEventData) {
 		const settings = EventData.guildCache.settings.actions[this.name];
-		console.log('Badword');
-		EventData.args.delete();
+		const { member } = EventData.args;
 		// Kara
+		// await EventData.mattis.utils.punishMember(settings, member);
+		// await EventData.mattis.utils.responseMember(settings, member);
+		// EventData.guildCache.cacheManager.getMemberCache(member).messages.pop();
+		// await EventData.mattis.utils.logAction(settings, member);
 	}
 }
